@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-soft: #f1f5f9;
+  --surface-border: #cbd5e1;
+  --muted: #475569;
+  --accent: #0369a1;
+  --accent-strong: #075985;
+  --on-accent: #ffffff;
+  --card-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="dark"] {
+  --background: #0b1220;
+  --foreground: #e5e7eb;
+  --surface: #111827;
+  --surface-soft: #1f2937;
+  --surface-border: #334155;
+  --muted: #94a3b8;
+  --accent: #7dd3fc;
+  --accent-strong: #38bdf8;
+  --on-accent: #082f49;
+  --card-shadow: 0 10px 30px rgba(2, 6, 23, 0.45);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-heading: var(--font-heading);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+  min-height: 100vh;
+}
+
+.ambient-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 8% -10%, rgba(14, 165, 233, 0.12), transparent 26%),
+    radial-gradient(circle at 92% -20%, rgba(56, 189, 248, 0.12), transparent 22%);
+}
+
+:root[data-theme="dark"] .ambient-bg {
+  background:
+    radial-gradient(circle at 8% -10%, rgba(14, 165, 233, 0.2), transparent 26%),
+    radial-gradient(circle at 92% -20%, rgba(56, 189, 248, 0.16), transparent 22%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0), rgba(2, 6, 23, 0.5));
+}
+
+.panel {
+  position: relative;
+  border: 1px solid var(--surface-border);
+  border-radius: 1rem;
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+  padding: 1.5rem;
+}
+
+.theme-switcher {
+  position: fixed;
+  top: 0.9rem;
+  right: 0.9rem;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid var(--surface-border);
+  border-radius: 0.7rem;
+  padding: 0.35rem 0.45rem;
+  box-shadow: var(--card-shadow);
+}
+
+.theme-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.theme-select {
+  border: 1px solid var(--surface-border);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  color: var(--foreground);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.35rem;
+}
+
+.hero-panel {
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+  min-height: 19rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: var(--card-shadow);
+  background-image:
+    linear-gradient(to right, rgba(2, 6, 23, 0.7), rgba(2, 6, 23, 0.45)),
+    url("/img/houston-logo.png");
+  background-position: center;
+  background-size: cover;
+}
+
+:root[data-theme="dark"] .hero-panel {
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.card {
+  border: 1px solid var(--surface-border);
+  border-radius: 0.85rem;
+  background: var(--surface);
+  box-shadow: var(--card-shadow);
+  padding: 1rem;
+}
+
+.badge {
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  letter-spacing: 0.11em;
+  line-height: 1;
+  padding: 0.45rem 0.7rem;
+  text-transform: uppercase;
+}
+
+.button-primary {
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 0.62rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: var(--on-accent);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.62rem 0.95rem;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.button-primary:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.button-secondary {
+  border: 1px solid var(--surface-border);
+  border-radius: 0.62rem;
+  color: var(--foreground);
+  font-weight: 600;
+  padding: 0.62rem 0.95rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.button-secondary:hover {
+  background-color: var(--surface-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.search {
+  border: 1px solid var(--surface-border);
+  border-radius: 0.7rem;
+  background: var(--surface);
+  color: var(--foreground);
+  padding: 0.72rem 0.95rem;
+}
+
+.search::placeholder {
+  color: var(--muted);
+}
+
+.chip {
+  border: 1px solid var(--surface-border);
+  border-radius: 9999px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  padding: 0.5rem 0.72rem;
+  text-transform: uppercase;
+}
+
+.chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.chip-active {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent-strong);
+}
+
+.font-heading {
+  font-family: var(--font-heading), sans-serif;
+}
+
+:root[data-theme="dark"] .search {
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+:root[data-theme="dark"] .chip {
+  border: 1px solid var(--surface-border);
+  color: var(--muted);
+}
+
+:root[data-theme="dark"] .chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+:root[data-theme="dark"] .chip-active {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: var(--accent-strong);
+}
+
+.text-main {
+  color: var(--foreground);
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.text-accent {
+  color: var(--accent-strong);
+}
+
+.border-default {
+  border-color: var(--surface-border);
+}
+
+.bg-surface {
+  background-color: var(--surface);
+}
+
+.bg-surface-soft {
+  background-color: var(--surface-soft);
+}
+
+.icon-badge {
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent-strong);
+}

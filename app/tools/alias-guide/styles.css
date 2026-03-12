@@ -1,0 +1,34 @@
+.alias-rich .code {
+  background: var(--surface-soft);
+  border-radius: 0.25rem;
+  color: var(--foreground);
+  font-family: "Courier New", Courier, monospace;
+  padding: 0.1rem 0.3rem;
+}
+
+.alias-rich .command {
+  font-family: "Courier New", Courier, monospace;
+}
+
+.alias-rich a,
+.alias-rich a:visited {
+  color: var(--accent-strong);
+  text-decoration: underline;
+}
+
+.alias-rich a:hover {
+  color: var(--accent);
+}
+
+.alias-rich br {
+  content: "";
+  display: block;
+  margin: 0.15rem 0;
+}
+
+.alias-intro .icon {
+  display: inline-block;
+  margin-right: 0.3rem;
+  vertical-align: middle;
+  width: 1.1rem;
+}

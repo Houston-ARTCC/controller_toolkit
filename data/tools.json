@@ -1,0 +1,46 @@
+[
+  {
+    "id": "tfms",
+    "name": "TFMS Viewer",
+    "description": "Live ZHU traffic flow summaries with specialty and split projections.",
+    "url": "https://github.com/Houston-ARTCC/tfms",
+    "liveUrl": "https://tfms.houston.center/",
+    "category": "Traffic",
+    "status": "Live",
+    "icon": "radar",
+    "tags": ["TFMS", "Traffic", "Splits", "VATSIM"]
+  },
+  {
+    "id": "alias-guide",
+    "name": "Alias Guide",
+    "description": "Searchable command reference for CRC aliases and controller workflows.",
+    "url": "https://github.com/Houston-ARTCC/alias-guide",
+    "liveUrl": "/tools/alias-guide",
+    "category": "Reference",
+    "status": "Migrated",
+    "icon": "book",
+    "tags": ["Alias", "CRC", "Reference", "Training"]
+  },
+  {
+    "id": "split-map",
+    "name": "Split Map",
+    "description": "Generate and visualize ZHU enroute split configurations.",
+    "url": "https://github.com/Houston-ARTCC/split-map",
+    "liveUrl": "https://splits.houston.center/",
+    "category": "Planning",
+    "status": "Live",
+    "icon": "layers",
+    "tags": ["Sectors", "Enroute", "Planning", "Maps"]
+  },
+  {
+    "id": "rvm-list",
+    "name": "RVM Reference",
+    "description": "Searchable list of ZHU radar vector maps and quick identifiers.",
+    "url": "https://github.com/Houston-ARTCC/rvm-list",
+    "liveUrl": "https://rvm.houston.center/",
+    "category": "Reference",
+    "status": "Refactor Planned",
+    "icon": "map",
+    "tags": ["RVM", "Maps", "Reference", "TRACON"]
+  }
+]
