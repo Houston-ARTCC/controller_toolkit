@@ -4,7 +4,7 @@ import { getToolById, getTools } from "@/lib/tools";
 
 export function generateStaticParams() {
   return getTools()
-    .filter((tool) => tool.id !== "alias-guide")
+    .filter((tool) => !tool.liveUrl.startsWith("/"))
     .map((tool) => ({ id: tool.id }));
 }
 

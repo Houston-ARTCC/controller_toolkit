@@ -1,45 +1,72 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
-function countEntries(sections) {
-  return sections.reduce(
-    (total, section) => total + section.tables.reduce((sum, table) => sum + table.entries.length, 0),
-    0,
-  );
+const SECTION_TABLE_CONFIG = {
+  Autotrack: {
+    columns: [
+      { label: "Command", sourceIndex: 0, emphasize: true },
+      { label: "Result", sourceIndex: 2 },
+    ],
+  },
+  "Standard Routes": {
+    columns: [
+      { label: "Entering", sourceIndex: 0, emphasize: true },
+      { label: "Returns", sourceIndex: 1 },
+    ],
+  },
+};
+
+function subscribeToHashChanges(onStoreChange) {
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  window.addEventListener("hashchange", onStoreChange);
+  window.addEventListener("popstate", onStoreChange);
+
+  return () => {
+    window.removeEventListener("hashchange", onStoreChange);
+    window.removeEventListener("popstate", onStoreChange);
+  };
+}
+
+function getHashValue() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  return decodeURIComponent(window.location.hash.replace(/^#/, ""));
 }
 
 function normalizeGuideData(guideData) {
   const sections = (guideData.sections || []).map((section) => {
     const tables = (section.tables || []).map((table) => {
-      const commandIndex = (table.columns || []).findIndex((column) => /command/i.test(column));
-
       const entries = (table.entries || []).map((entry) => ({
         ...entry,
-        searchText: entry.cells.map((cell) => cell.text).join(" ").toLowerCase(),
+        searchText: (entry.cells || []).map((cell) => cell.text).join(" ").toLowerCase(),
       }));
 
-      const tableSearchText = `${table.title} ${(table.columns || []).join(" ")} ${entries
-        .map((entry) => entry.cells.map((cell) => cell.text).join(" "))
+      const tableSearchText = `${table.title || ""} ${(table.columns || []).join(" ")} ${entries
+        .map((entry) => (entry.cells || []).map((cell) => cell.text).join(" "))
         .join(" ")}`.toLowerCase();
 
       return {
         ...table,
-        commandIndex: commandIndex >= 0 ? commandIndex : 0,
-        searchText: tableSearchText,
         entries,
+        searchText: tableSearchText,
       };
     });
 
     const sectionSearchText = `${section.title} ${(section.intro || [])
-      .map((intro) => intro.text)
+      .map((item) => item.text)
       .join(" ")} ${tables.map((table) => table.searchText).join(" ")}`.toLowerCase();
 
     return {
       ...section,
-      searchText: sectionSearchText,
       tables,
+      searchText: sectionSearchText,
     };
   });
 
@@ -49,281 +76,131 @@ function normalizeGuideData(guideData) {
   };
 }
 
-function subscribeToUrlChanges(onStoreChange) {
-  if (typeof window === "undefined") {
-    return () => {};
+function getGlobalFirstColumnWidthCh(sections) {
+  let longest = 0;
+
+  for (const section of sections || []) {
+    for (const table of section.tables || []) {
+      for (const entry of table.entries || []) {
+        const commandText = (entry.cells?.[0]?.text || "").replace(/\s+/g, " ").trim();
+        if (commandText.length > longest) {
+          longest = commandText.length;
+        }
+      }
+    }
   }
 
-  window.addEventListener("popstate", onStoreChange);
-  window.addEventListener("hashchange", onStoreChange);
-
-  return () => {
-    window.removeEventListener("popstate", onStoreChange);
-    window.removeEventListener("hashchange", onStoreChange);
-  };
+  // Keep width readable and bounded across desktop/mobile.
+  return Math.max(14, Math.min(34, longest + 2));
 }
 
-function getAliasParamFromUrl() {
-  if (typeof window === "undefined") {
-    return "";
-  }
+function defaultColumns(table) {
+  const sourceColumns = table.columns || [];
 
-  return new URLSearchParams(window.location.search).get("alias") || "";
-}
-
-function SectionExplorer({ section, enablePermalinks = false }) {
-  const groups = section.tables.map((table, index) => {
-    const titleLooksGeneric = /^Table \d+$/i.test(table.title || "");
-    const groupTitle =
-      titleLooksGeneric && section.tables.length === 1
-        ? "Commands"
-        : table.title || `Group ${index + 1}`;
-
-    const entries = table.entries.map((entry) => ({
-      ...entry,
-      groupId: table.id,
-      groupTitle,
-      commandHtml: entry.cells[table.commandIndex]?.html || entry.cells[0]?.html || "",
-      detailHtml:
-        entry.cells.find((cell, cellIndex) => cellIndex !== table.commandIndex)?.html || "",
+  if (sourceColumns.length > 0) {
+    return sourceColumns.map((label, sourceIndex) => ({
+      label,
+      sourceIndex,
+      emphasize: sourceIndex === 0,
     }));
-
-    return {
-      id: table.id,
-      title: groupTitle,
-      entries,
-    };
-  });
-
-  const allEntries = groups.flatMap((group) => group.entries);
-  const [selectedId, setSelectedId] = useState("");
-  const [manualOpenGroupId, setManualOpenGroupId] = useState(null);
-  const [copiedLinkId, setCopiedLinkId] = useState("");
-  const aliasFromUrl = useSyncExternalStore(
-    subscribeToUrlChanges,
-    getAliasParamFromUrl,
-    () => "",
-  );
-
-  const selectedFromUrl = enablePermalinks
-    ? allEntries.find((entry) => entry.id === aliasFromUrl) || null
-    : null;
-  const selectedEntry =
-    allEntries.find((entry) => entry.id === selectedId) || selectedFromUrl || null;
-  const effectiveOpenGroupId = manualOpenGroupId ?? selectedEntry?.groupId ?? "";
-
-  const getAliasUrl = (entryId) => {
-    const url = new URL(window.location.href);
-    url.searchParams.set("alias", entryId);
-    url.hash = section.id;
-    return url.toString();
-  };
-
-  const selectEntry = (entry) => {
-    setSelectedId(entry.id);
-    setManualOpenGroupId(entry.groupId);
-
-    if (!enablePermalinks || typeof window === "undefined") {
-      return;
-    }
-
-    const url = getAliasUrl(entry.id);
-    window.history.replaceState({}, "", url);
-  };
-
-  const copyAliasUrl = async (entry) => {
-    if (!enablePermalinks || typeof window === "undefined") {
-      return;
-    }
-
-    const url = getAliasUrl(entry.id);
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopiedLinkId(entry.id);
-      setTimeout(() => setCopiedLinkId(""), 1200);
-    } catch {
-      setCopiedLinkId("");
-    }
-  };
-
-  const toggleGroup = (groupId) => {
-    setManualOpenGroupId((prev) => {
-      const current = prev ?? selectedEntry?.groupId ?? "";
-      return current === groupId ? "" : groupId;
-    });
-  };
-
-  if (allEntries.length === 0) {
-    return (
-      <article className="card">
-        <p className="text-muted">
-          No matching entries found for this search.
-        </p>
-      </article>
-    );
   }
 
-  return (
-    <section className="mt-4 grid gap-3 lg:grid-cols-[20rem_1fr]">
-      <aside className="border-default bg-surface-soft rounded-xl border p-3">
-        <p className="text-muted mb-2 text-xs uppercase tracking-[0.16em]">
-          Commands
-        </p>
-        <div className="max-h-[70vh] space-y-3 overflow-y-auto pr-1">
-          {groups.map((group) => (
-            <section key={group.id}>
-              <button
-                className="border-default bg-surface w-full rounded-lg border px-3 py-2 text-left"
-                onClick={() => toggleGroup(group.id)}
-                type="button"
-              >
-                <div className="flex items-center justify-between gap-2">
-                  <h3 className="text-muted text-xs font-semibold uppercase tracking-[0.16em]">
-                    {group.title}
-                  </h3>
-                  <span className="text-muted text-xs">
-                    {effectiveOpenGroupId === group.id ? "-" : "+"} {group.entries.length}
-                  </span>
-                </div>
-              </button>
-              {effectiveOpenGroupId === group.id ? (
-                <ul className="mt-2 space-y-2">
-                  {group.entries.map((entry) => {
-                    const isActive = entry.id === selectedEntry?.id;
-                    return (
-                      <li key={entry.id}>
-                      <button
-                        className={
-                          isActive
-                            ? "border-default bg-surface w-full rounded-lg border px-3 py-2 text-left"
-                            : "border-default bg-surface-soft w-full rounded-lg border px-3 py-2 text-left transition hover:bg-surface"
-                        }
-                        onClick={() => selectEntry(entry)}
-                        type="button"
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <span
-                            className={isActive ? "alias-rich text-accent font-mono text-sm font-semibold" : "alias-rich text-main font-mono text-sm font-semibold"}
-                            dangerouslySetInnerHTML={{ __html: entry.commandHtml }}
-                          />
-                          {enablePermalinks ? (
-                            <span
-                              className="text-muted border-default bg-surface rounded border px-1.5 py-0.5 text-[10px] uppercase tracking-[0.08em]"
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                copyAliasUrl(entry);
-                              }}
-                              role="button"
-                              tabIndex={0}
-                              onKeyDown={(event) => {
-                                if (event.key === "Enter" || event.key === " ") {
-                                  event.preventDefault();
-                                  event.stopPropagation();
-                                  copyAliasUrl(entry);
-                                }
-                              }}
-                            >
-                              {copiedLinkId === entry.id ? "Copied" : "Link"}
-                            </span>
-                          ) : null}
-                        </div>
-                      </button>
-                    </li>
-                  );
-                  })}
-                </ul>
-              ) : null}
-            </section>
-          ))}
-        </div>
-      </aside>
-
-      <article className="border-default bg-surface h-fit rounded-xl border p-5 shadow-sm lg:sticky lg:top-4">
-        {selectedEntry ? (
-          <>
-            <p className="text-muted mb-2 text-xs uppercase tracking-[0.16em]">
-              Category
-            </p>
-            <p className="text-accent mb-3 text-sm font-semibold">{selectedEntry.groupTitle}</p>
-            <p className="text-muted mb-2 text-xs uppercase tracking-[0.16em]">
-              Selected Command
-            </p>
-            <div
-              className="alias-rich text-main font-mono text-lg font-semibold"
-              dangerouslySetInnerHTML={{ __html: selectedEntry.commandHtml }}
-            />
-            <div className="border-default my-4 border-t" />
-            <p className="text-muted mb-2 text-xs uppercase tracking-[0.16em]">
-              Meaning
-            </p>
-            <div
-              className="alias-rich text-main text-base leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: selectedEntry.detailHtml }}
-            />
-          </>
-        ) : (
-          <p className="text-muted text-sm">
-            Choose an alias on the left to see details.
-          </p>
-        )}
-      </article>
-    </section>
-  );
+  return [
+    { label: "Command", sourceIndex: 0, emphasize: true },
+    { label: "Result", sourceIndex: 1 },
+  ];
 }
 
-function InformationalTableSection({
-  section,
-  leftLabel = "Command",
-  rightLabel = "Result",
-  leftIndex = 0,
-  rightIndex = null,
-  emphasizeLeft = true,
-}) {
-  const table = section.tables[0];
-  const entries = table?.entries || [];
-  const resolvedRightIndex =
-    rightIndex ?? Math.max((table?.columns?.length || 1) - 1, 0);
+function getDisplayColumns(sectionTitle, table) {
+  const config = SECTION_TABLE_CONFIG[sectionTitle];
+  return config?.columns || defaultColumns(table);
+}
 
-  if (entries.length === 0) {
-    return (
-      <article className="card mt-4">
-        <p className="text-muted">No guidance is available yet for this section.</p>
-      </article>
-    );
+function ReferenceTable({
+  copiedLinkId,
+  currentHash,
+  firstColumnWidthCh,
+  onCopyLink,
+  sectionTitle,
+  table,
+}) {
+  const displayColumns = getDisplayColumns(sectionTitle, table);
+  const hasGenericTitle = /^table\s+\d+$/i.test((table.title || "").trim());
+  const showTableTitle = Boolean(table.title) && !hasGenericTitle;
+
+  if ((table.entries || []).length === 0) {
+    return null;
   }
 
   return (
-    <section className="mt-4">
-      <div className="border-default bg-surface overflow-x-auto rounded-xl border">
+    <section key={table.id}>
+      {showTableTitle ? (
+        <h3 className="font-heading text-main text-xl font-semibold">{table.title}</h3>
+      ) : null}
+      <div className="border-default bg-surface mt-3 overflow-x-auto rounded-xl border">
         <table className="min-w-full text-sm">
+          <colgroup>
+            {displayColumns.map((column, index) => (
+              <col
+                key={`${table.id}-coldef-${column.sourceIndex}`}
+                style={index === 0 ? { width: `${firstColumnWidthCh}ch` } : undefined}
+              />
+            ))}
+            <col style={{ width: "5.5rem" }} />
+          </colgroup>
           <thead className="bg-surface-soft">
             <tr>
-              <th className="text-muted border-default border-b px-4 py-3 text-left text-xs uppercase tracking-[0.16em]">
-                {leftLabel}
-              </th>
-              <th className="text-muted border-default border-b px-4 py-3 text-left text-xs uppercase tracking-[0.16em]">
-                {rightLabel}
+              {displayColumns.map((column) => (
+                <th
+                  className="text-muted border-default border-b px-4 py-3 text-left text-xs uppercase tracking-[0.16em]"
+                  key={`${table.id}-head-${column.sourceIndex}`}
+                >
+                  {column.label}
+                </th>
+              ))}
+              <th
+                aria-label="Entry Link"
+                className="text-muted border-default border-b px-4 py-3 text-right text-xs uppercase tracking-[0.16em]"
+              >
+                <span className="sr-only">Entry Link</span>
               </th>
             </tr>
           </thead>
           <tbody>
-            {entries.map((entry) => (
-              <tr className="border-default border-b last:border-b-0" key={entry.id}>
-                <td
-                  className={
-                    emphasizeLeft
-                      ? "alias-rich text-accent px-4 py-3 font-mono font-semibold"
-                      : "alias-rich text-main px-4 py-3 font-mono"
-                  }
-                >
-                  <span dangerouslySetInnerHTML={{ __html: entry.cells[leftIndex]?.html || "" }} />
-                </td>
-                <td className="alias-rich text-main px-4 py-3">
-                  <span
-                    dangerouslySetInnerHTML={{
-                      __html: entry.cells[resolvedRightIndex]?.html || "",
-                    }}
-                  />
+            {table.entries.map((entry) => (
+              <tr
+                className={
+                  entry.id === currentHash
+                    ? "alias-anchor-hit border-default border-b last:border-b-0"
+                    : "border-default border-b last:border-b-0"
+                }
+                id={entry.id}
+                key={entry.id}
+              >
+                {displayColumns.map((column, columnPosition) => {
+                  const html = entry.cells[column.sourceIndex]?.html || "";
+                  const cellClass = column.emphasize
+                    ? "alias-rich text-accent px-4 py-3 font-mono font-semibold"
+                    : "alias-rich text-main px-4 py-3";
+
+                  return (
+                    <td className={cellClass} key={`${entry.id}-col-${column.sourceIndex}`}>
+                      {columnPosition === 0 ? (
+                        <span dangerouslySetInnerHTML={{ __html: html }} />
+                      ) : (
+                        <span dangerouslySetInnerHTML={{ __html: html }} />
+                      )}
+                    </td>
+                  );
+                })}
+                <td className="px-4 py-3 text-right">
+                  <button
+                    className="text-muted border-default bg-surface-soft shrink-0 rounded border px-1.5 py-0.5 text-[10px] uppercase tracking-[0.08em]"
+                    onClick={() => onCopyLink(entry.id)}
+                    type="button"
+                  >
+                    {copiedLinkId === entry.id ? "Copied" : "Link"}
+                  </button>
                 </td>
               </tr>
             ))}
@@ -336,8 +213,15 @@ function InformationalTableSection({
 
 export default function AliasGuidePage({ guideData }) {
   const [query, setQuery] = useState("");
+  const [copiedLinkId, setCopiedLinkId] = useState("");
+  const [activeSectionId, setActiveSectionId] = useState("");
+  const currentHash = useSyncExternalStore(subscribeToHashChanges, getHashValue, () => "");
 
   const normalized = useMemo(() => normalizeGuideData(guideData), [guideData]);
+  const firstColumnWidthCh = useMemo(
+    () => getGlobalFirstColumnWidthCh(normalized.sections),
+    [normalized.sections],
+  );
 
   const filteredSections = useMemo(() => {
     const filter = query.toLowerCase().trim();
@@ -355,6 +239,7 @@ export default function AliasGuidePage({ guideData }) {
             const entries = table.entries.filter(
               (entry) => sectionMatches || tableMatches || entry.searchText.includes(filter),
             );
+
             return {
               ...table,
               entries,
@@ -374,16 +259,86 @@ export default function AliasGuidePage({ guideData }) {
       .filter(Boolean);
   }, [normalized.sections, query]);
 
-  const totalEntries = countEntries(normalized.sections);
-  const matchedEntries = countEntries(filteredSections);
+  const resolvedActiveSectionId = useMemo(() => {
+    if (filteredSections.length === 0) {
+      return "";
+    }
 
-  const explorerSectionTitles = new Set([
-    "CRC/ZHU Basics",
-    "Pilot Help Messages",
-  ]);
+    return filteredSections.some((section) => section.id === activeSectionId)
+      ? activeSectionId
+      : filteredSections[0].id;
+  }, [activeSectionId, filteredSections]);
+
+  useEffect(() => {
+    if (filteredSections.length === 0 || typeof window === "undefined") {
+      return;
+    }
+
+    const elements = filteredSections
+      .map((section) => document.getElementById(section.id))
+      .filter(Boolean);
+
+    if (elements.length === 0) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting);
+        if (visible.length === 0) {
+          return;
+        }
+
+        visible.sort(
+          (a, b) =>
+            b.intersectionRatio - a.intersectionRatio ||
+            a.boundingClientRect.top - b.boundingClientRect.top,
+        );
+
+        setActiveSectionId(visible[0].target.id);
+      },
+      {
+        root: null,
+        rootMargin: "-18% 0px -62% 0px",
+        threshold: [0.1, 0.25, 0.5, 0.75],
+      },
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, [filteredSections]);
+
+  useEffect(() => {
+    if (!currentHash || typeof window === "undefined") {
+      return;
+    }
+
+    const target = document.getElementById(currentHash);
+    if (!target) {
+      return;
+    }
+
+    const topPadding = 120;
+    const targetTop = window.scrollY + target.getBoundingClientRect().top - topPadding;
+    window.scrollTo({ top: Math.max(targetTop, 0), behavior: "smooth" });
+  }, [currentHash]);
+
+  const copyEntryLink = async (entryId) => {
+    const url = new URL(window.location.href);
+    url.hash = entryId;
+
+    try {
+      await navigator.clipboard.writeText(url.toString());
+      setCopiedLinkId(entryId);
+      setTimeout(() => setCopiedLinkId(""), 1200);
+    } catch {
+      setCopiedLinkId("");
+    }
+  };
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-6 py-8 md:px-10">
+    <main className="relative min-h-screen px-6 py-8 md:px-10 lg:pl-24">
       <div className="ambient-bg" />
       <div className="mx-auto max-w-[90rem] space-y-6">
         <header className="panel">
@@ -397,27 +352,21 @@ export default function AliasGuidePage({ guideData }) {
             Alias Guide
           </h1>
           <p className="text-muted mt-2 max-w-4xl">
-            Refactored for faster use with sidebar navigation, instant search, and card-based command
-            browsing.
+            Structured reference view. Every section uses the same layout pattern for easier
+            editing and readability.
           </p>
 
           <div className="mt-5 grid gap-3 md:grid-cols-[2fr_1fr]">
             <input
               className="search"
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search command, example, phraseology, or notes"
+              placeholder="Search command text, examples, and descriptions"
               type="search"
               value={query}
             />
             <div className="text-muted flex flex-wrap gap-2 text-xs uppercase tracking-[0.16em]">
-              <span className="border-default bg-surface-soft rounded-full border px-3 py-1">
-                {normalized.sections.length} Sections
-              </span>
-              <span className="border-default bg-surface-soft rounded-full border px-3 py-1">
-                {matchedEntries} / {totalEntries} Commands
-              </span>
               {normalized.meta.updated ? (
-                <span className="border-default bg-surface-soft rounded-full border px-3 py-1">
+                <span className="border-default bg-surface-soft inline-flex items-center rounded-full border px-3 py-1 text-center">
                   {normalized.meta.updated}
                 </span>
               ) : null}
@@ -425,25 +374,30 @@ export default function AliasGuidePage({ guideData }) {
           </div>
         </header>
 
-        <div className="grid gap-5 lg:grid-cols-[18rem_1fr]">
-          <aside className="panel h-fit lg:sticky lg:top-4">
-            <h2 className="font-heading text-main text-2xl font-semibold">Sections</h2>
-            <nav className="mt-3 max-h-[70vh] space-y-2 overflow-y-auto pr-1">
+        <div className="group/sections fixed left-2 top-1/2 z-50 hidden -translate-y-1/2 lg:block">
+          <div className="relative flex items-center">
+            <div className="button-primary -rotate-90 origin-left rounded-t-xl rounded-b-none rounded-l-none px-6 py-3 text-base font-extrabold uppercase tracking-[0.2em] shadow-lg transition group-hover/sections:translate-x-1">
+              Sections
+            </div>
+            <nav className="section-flyout absolute left-full ml-3 max-h-[75vh] w-72 space-y-2 overflow-y-auto rounded-xl p-3 opacity-0 shadow-xl transition duration-200 group-hover/sections:opacity-100 group-focus-within/sections:opacity-100">
               {filteredSections.map((section) => (
                 <a
-                  className="border-default text-main block rounded-lg border px-3 py-2 text-sm transition hover:bg-surface-soft"
+                  className={
+                    resolvedActiveSectionId === section.id
+                      ? "border-accent bg-surface-soft text-main block rounded-lg border px-3 py-2 text-sm transition"
+                      : "border-default text-main block rounded-lg border px-3 py-2 text-sm transition hover:bg-surface-soft"
+                  }
                   href={`#${section.id}`}
                   key={section.id}
                 >
                   <p className="font-semibold">{section.title}</p>
-                  <p className="text-muted text-xs">
-                    {section.tables.reduce((sum, table) => sum + table.entries.length, 0)} entries
-                  </p>
                 </a>
               ))}
             </nav>
-          </aside>
+          </div>
+        </div>
 
+        <div className="space-y-5">
           <section className="space-y-5" aria-live="polite">
             {filteredSections.length === 0 ? (
               <article className="card">
@@ -470,76 +424,19 @@ export default function AliasGuidePage({ guideData }) {
                     </div>
                   ) : null}
 
-                  {section.title === "Autotrack" ? (
-                    <InformationalTableSection
-                      leftLabel="Command"
-                      rightLabel="Result"
-                      section={section}
-                    />
-                  ) : section.title === "Standard Routes" ? (
-                    <InformationalTableSection
-                      leftLabel="Entering"
-                      rightLabel="Returns"
-                      section={section}
-                    />
-                  ) : explorerSectionTitles.has(section.title) ? (
-                    <SectionExplorer
-                      enablePermalinks={
-                        section.title === "CRC/ZHU Basics" ||
-                        section.title === "Pilot Help Messages"
-                      }
-                      section={section}
-                    />
-                  ) : (
-                    <div className="mt-5 space-y-5">
-                      {section.tables.map((table) => (
-                        <section key={table.id}>
-                          <h3 className="font-heading text-main text-xl font-semibold">{table.title}</h3>
-                          <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                            {table.entries.map((entry) => {
-                              const commandHtml =
-                                entry.cells[table.commandIndex]?.html || entry.cells[0]?.html || "";
-
-                              return (
-                                <article className="border-default bg-surface rounded-xl border p-4 shadow-sm" key={entry.id}>
-                                  <div className="mb-3">
-                                    <div
-                                      className="alias-rich text-main font-mono text-sm font-semibold"
-                                      dangerouslySetInnerHTML={{ __html: commandHtml }}
-                                    />
-                                  </div>
-
-                                  <dl className="space-y-2">
-                                    {entry.cells.map((cell, index) => {
-                                      if (index === table.commandIndex) {
-                                        return null;
-                                      }
-
-                                      const label =
-                                        table.columns[index] ||
-                                        (table.commandIndex === 0 && index === 1 ? "Details" : `Field ${index + 1}`);
-
-                                      return (
-                                        <div key={`${entry.id}-field-${index}`}>
-                                          <dt className="text-muted text-xs uppercase tracking-[0.16em]">
-                                            {label}
-                                          </dt>
-                                          <dd
-                                            className="alias-rich text-main text-sm"
-                                            dangerouslySetInnerHTML={{ __html: cell.html }}
-                                          />
-                                        </div>
-                                      );
-                                    })}
-                                  </dl>
-                                </article>
-                              );
-                            })}
-                          </div>
-                        </section>
-                      ))}
-                    </div>
-                  )}
+                  <div className="mt-5 space-y-5">
+                    {section.tables.map((table) => (
+                      <ReferenceTable
+                        copiedLinkId={copiedLinkId}
+                        currentHash={currentHash}
+                        firstColumnWidthCh={firstColumnWidthCh}
+                        key={table.id}
+                        onCopyLink={copyEntryLink}
+                        sectionTitle={section.title}
+                        table={table}
+                      />
+                    ))}
+                  </div>
                 </article>
               ))
             )}

@@ -253,3 +253,9 @@ body {
   background: color-mix(in srgb, var(--accent) 14%, transparent);
   color: var(--accent-strong);
 }
+
+.section-flyout {
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--surface-border));
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface));
+  color: var(--foreground);
+}

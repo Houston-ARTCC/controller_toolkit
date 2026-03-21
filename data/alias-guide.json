@@ -1,94 +1,94 @@
 {
   "meta": {
     "title": "Alias Reference",
-    "updated": "Updated: August 18, 2025 New: CRC Basics > .STRIPS",
+    "updated": "Updated: March 21, 2026",
     "migratedAt": "2026-03-12T00:12:52.725Z",
     "sourceFile": "data/alias-guide-markup.html"
   },
   "sections": [
     {
-      "id": "section-crc-zhu-basics-1",
+      "id": "crc-zhu-basics",
       "title": "CRC/ZHU Basics",
       "intro": [],
       "tables": [
         {
-          "id": "section-crc-zhu-basics-1-table-1",
+          "id": "crc-zhu-basics-table-1",
           "title": "Table 1",
           "columns": [
             "Command",
-            "Returns"
+            "Result"
           ],
           "entries": [
             {
-              "id": "section-crc-zhu-basics-1-t1-r1",
+              "id": "alias",
               "cells": [
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r1-c1",
+                  "id": "alias-c1",
                   "html": ".ALIAS",
                   "text": ".ALIAS"
                 },
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r1-c2",
+                  "id": "alias-c2",
                   "html": "Opens ZHU Alias Reference website.",
                   "text": "Opens ZHU Alias Reference website."
                 }
               ]
             },
             {
-              "id": "section-crc-zhu-basics-1-t1-r2",
+              "id": "rvm",
               "cells": [
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r2-c1",
+                  "id": "rvm-c1",
                   "html": ".RVM",
                   "text": ".RVM"
                 },
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r2-c2",
+                  "id": "rvm-c2",
                   "html": "Opens ZHU Radar Vector Map website.",
                   "text": "Opens ZHU Radar Vector Map website."
                 }
               ]
             },
             {
-              "id": "section-crc-zhu-basics-1-t1-r3",
+              "id": "strips",
               "cells": [
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r3-c1",
+                  "id": "strips-c1",
                   "html": ".STRIPS",
                   "text": ".STRIPS"
                 },
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r3-c2",
+                  "id": "strips-c2",
                   "html": "Opens ZHU flight strip marking policy.",
                   "text": "Opens ZHU flight strip marking policy."
                 }
               ]
             },
             {
-              "id": "section-crc-zhu-basics-1-t1-r4",
+              "id": "h",
               "cells": [
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r4-c1",
+                  "id": "h-c1",
                   "html": ".H<br>.WHO<br>.LTX<br>.LASTTX",
                   "text": ".H .WHO .LTX .LASTTX"
                 },
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r4-c2",
+                  "id": "h-c2",
                   "html": "Issues the CRC built-in last transmission command.",
                   "text": "Issues the CRC built-in last transmission command."
                 }
               ]
             },
             {
-              "id": "section-crc-zhu-basics-1-t1-r5",
+              "id": "aipref",
               "cells": [
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r5-c1",
+                  "id": "aipref-c1",
                   "html": ".AIPREF ####",
                   "text": ".AIPREF ####"
                 },
                 {
-                  "id": "section-crc-zhu-basics-1-t1-r5-c2",
+                  "id": "aipref-c2",
                   "html": "Opens the VATSIM AIP (CTAF frequencies) for the specified airport (####)",
                   "text": "Opens the VATSIM AIP (CTAF frequencies) for the specified airport (####)"
                 }
@@ -99,106 +99,106 @@
       ]
     },
     {
-      "id": "section-pilot-help-messages-2",
+      "id": "pilot-help-messages",
       "title": "Pilot Help Messages",
       "intro": [
         {
-          "id": "section-pilot-help-messages-2-intro-1",
+          "id": "pilot-help-messages-intro-1",
           "html": "Syntax: Type callsign and press aircraft select (default in CRC is <span class=\"code\">Numpad Add</span>). Type the alias command (not case-sensitive) and press Enter. All pilot help commands send a private message to the pilot.",
           "text": "Syntax: Type callsign and press aircraft select (default in CRC is Numpad Add). Type the alias command (not case-sensitive) and press Enter. All pilot help commands send a private message to the pilot."
         }
       ],
       "tables": [
         {
-          "id": "section-pilot-help-messages-2-table-1",
+          "id": "pilot-help-messages-table-1",
           "title": "WALLOPs",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t1-r1",
+              "id": "wallpc",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t1-r1-c1",
+                  "id": "wallpc-c1",
                   "html": ".WALLPC",
                   "text": ".WALLPC"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t1-r1-c2",
+                  "id": "wallpc-c2",
                   "html": "Wallop indicating the pilot is unable to maintain control or command of aircraft",
                   "text": "Wallop indicating the pilot is unable to maintain control or command of aircraft"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t1-r2",
+              "id": "wallch",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t1-r2-c1",
+                  "id": "wallch-c1",
                   "html": ".WALLCH",
                   "text": ".WALLCH"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t1-r2-c2",
+                  "id": "wallch-c2",
                   "html": "Wallop indicating the pilot is unable to follow charted procedures as directed/planned",
                   "text": "Wallop indicating the pilot is unable to follow charted procedures as directed/planned"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t1-r3",
+              "id": "wallhm",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t1-r3-c1",
+                  "id": "wallhm-c1",
                   "html": ".WALLHM",
                   "text": ".WALLHM"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t1-r3-c2",
+                  "id": "wallhm-c2",
                   "html": "Wallop indicating the pilot has a stuck mic and isn't responding",
                   "text": "Wallop indicating the pilot has a stuck mic and isn't responding"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t1-r4",
+              "id": "wallnordo",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t1-r4-c1",
+                  "id": "wallnordo-c1",
                   "html": ".WALLNORDO ####",
                   "text": ".WALLNORDO ####"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t1-r4-c2",
+                  "id": "wallnordo-c2",
                   "html": "Wallop for NORDO aircraft, first contact-me sent at ####Z",
                   "text": "Wallop for NORDO aircraft, first contact-me sent at ####Z"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t1-r5",
+              "id": "wallnordox",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t1-r5-c1",
+                  "id": "wallnordox-c1",
                   "html": ".WALLNORDOX ####",
                   "text": ".WALLNORDOX ####"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t1-r5-c2",
+                  "id": "wallnordox-c2",
                   "html": "Wallop for NORDO aircraft, first contact-me sent at ####Z, will be conflict soon",
                   "text": "Wallop for NORDO aircraft, first contact-me sent at ####Z, will be conflict soon"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t1-r6",
+              "id": "wallcaca",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t1-r6-c1",
+                  "id": "wallcaca-c1",
                   "html": ".WALLCACA",
                   "text": ".WALLCACA"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t1-r6-c2",
+                  "id": "wallcaca-c2",
                   "html": "Wallop for NORDO aircraft, is immediate conflict",
                   "text": "Wallop for NORDO aircraft, is immediate conflict"
                 }
@@ -207,35 +207,35 @@
           ]
         },
         {
-          "id": "section-pilot-help-messages-2-table-2",
+          "id": "pilot-help-messages-table-2",
           "title": "Flight Plan Missing",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t2-r1",
+              "id": "plan",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t2-r1-c1",
+                  "id": "plan-c1",
                   "html": ".PLAN",
                   "text": ".PLAN"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t2-r1-c2",
+                  "id": "plan-c2",
                   "html": "No flight plan with connected callsign.",
                   "text": "No flight plan with connected callsign."
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t2-r2",
+              "id": "planc",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t2-r2-c1",
+                  "id": "planc-c1",
                   "html": ".PLANC",
                   "text": ".PLANC"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t2-r2-c2",
+                  "id": "planc-c2",
                   "html": "Similar, but not same callsign on submitted flight plan",
                   "text": "Similar, but not same callsign on submitted flight plan"
                 }
@@ -244,95 +244,95 @@
           ]
         },
         {
-          "id": "section-pilot-help-messages-2-table-3",
+          "id": "pilot-help-messages-table-3",
           "title": "Bad Flight Plan Information",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t3-r1",
+              "id": "badcall",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t3-r1-c1",
+                  "id": "badcall-c1",
                   "html": ".BADCALL ###",
                   "text": ".BADCALL ###"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t3-r1-c2",
+                  "id": "badcall-c2",
                   "html": "Chosen callsign is not the same as real-world airline (###)",
                   "text": "Chosen callsign is not the same as real-world airline (###)"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t3-r2",
+              "id": "badreg",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t3-r2-c1",
+                  "id": "badreg-c1",
                   "html": ".BADREG",
                   "text": ".BADREG"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t3-r2-c2",
+                  "id": "badreg-c2",
                   "html": "Chosen registration does not comply with U.S.-registrered aircraft standards",
                   "text": "Chosen registration does not comply with U.S.-registrered aircraft standards"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t3-r3",
+              "id": "badeq",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t3-r3-c1",
+                  "id": "badeq-c1",
                   "html": ".BADEQ",
                   "text": ".BADEQ"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t3-r3-c2",
+                  "id": "badeq-c2",
                   "html": "Invalid or incorrect ICAO equipment suffix",
                   "text": "Invalid or incorrect ICAO equipment suffix"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t3-r4",
+              "id": "badtype",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t3-r4-c1",
+                  "id": "badtype-c1",
                   "html": ".BADTYPE",
                   "text": ".BADTYPE"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t3-r4-c2",
+                  "id": "badtype-c2",
                   "html": "Invalid or incorrect aircraft type",
                   "text": "Invalid or incorrect aircraft type"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t3-r5",
+              "id": "badtype2",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t3-r5-c1",
+                  "id": "badtype2-c1",
                   "html": ".BADTYPE2 ####",
                   "text": ".BADTYPE2 ####"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t3-r5-c2",
+                  "id": "badtype2-c2",
                   "html": "Invalid or incorrect aircraft type, the correct type is ####",
                   "text": "Invalid or incorrect aircraft type, the correct type is ####"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t3-r6",
+              "id": "badproc",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t3-r6-c1",
+                  "id": "badproc-c1",
                   "html": ".BADPROC",
                   "text": ".BADPROC"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t3-r6-c2",
+                  "id": "badproc-c2",
                   "html": "Missing SID/STAR in flight plan. Links to IFR Route analyzer",
                   "text": "Missing SID/STAR in flight plan. Links to IFR Route analyzer"
                 }
@@ -341,35 +341,35 @@
           ]
         },
         {
-          "id": "section-pilot-help-messages-2-table-4",
+          "id": "pilot-help-messages-table-4",
           "title": "Bad Spawn",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t4-r1",
+              "id": "badrwy",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t4-r1-c1",
+                  "id": "badrwy-c1",
                   "html": ".BADRWY",
                   "text": ".BADRWY"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t4-r1-c2",
+                  "id": "badrwy-c2",
                   "html": "Spawned on runway",
                   "text": "Spawned on runway"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t4-r2",
+              "id": "badtwy",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t4-r2-c1",
+                  "id": "badtwy-c1",
                   "html": ".BADTWY",
                   "text": ".BADTWY"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t4-r2-c2",
+                  "id": "badtwy-c2",
                   "html": "Spawned on taxiway",
                   "text": "Spawned on taxiway"
                 }
@@ -378,80 +378,80 @@
           ]
         },
         {
-          "id": "section-pilot-help-messages-2-table-5",
+          "id": "pilot-help-messages-table-5",
           "title": "Unauthorized Movements",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t5-r1",
+              "id": "badpush",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t5-r1-c1",
+                  "id": "badpush-c1",
                   "html": ".BADPUSH",
                   "text": ".BADPUSH"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t5-r1-c2",
+                  "id": "badpush-c2",
                   "html": "Pushed without permission",
                   "text": "Pushed without permission"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t5-r2",
+              "id": "badtaxi",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t5-r2-c1",
+                  "id": "badtaxi-c1",
                   "html": ".BADTAXI",
                   "text": ".BADTAXI"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t5-r2-c2",
+                  "id": "badtaxi-c2",
                   "html": "Taxi without permission",
                   "text": "Taxi without permission"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t5-r3",
+              "id": "badtwr",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t5-r3-c1",
+                  "id": "badtwr-c1",
                   "html": ".BADTWR",
                   "text": ".BADTWR"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t5-r3-c2",
+                  "id": "badtwr-c2",
                   "html": "Takeoff without permission",
                   "text": "Takeoff without permission"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t5-r4",
+              "id": "badair",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t5-r4-c1",
+                  "id": "badair-c1",
                   "html": ".BADAIR",
                   "text": ".BADAIR"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t5-r4-c2",
+                  "id": "badair-c2",
                   "html": "In controlled airspace",
                   "text": "In controlled airspace"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t5-r5",
+              "id": "badmodec",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t5-r5-c1",
+                  "id": "badmodec-c1",
                   "html": ".BADMODEC",
                   "text": ".BADMODEC"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t5-r5-c2",
+                  "id": "badmodec-c2",
                   "html": "Informs pilot that Mode C is required at the airport",
                   "text": "Informs pilot that Mode C is required at the airport"
                 }
@@ -460,65 +460,65 @@
           ]
         },
         {
-          "id": "section-pilot-help-messages-2-table-6",
+          "id": "pilot-help-messages-table-6",
           "title": "Bad Pilot Phraseology",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t6-r1",
+              "id": "badfl",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t6-r1-c1",
+                  "id": "badfl-c1",
                   "html": ".BADFL",
                   "text": ".BADFL"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t6-r1-c2",
+                  "id": "badfl-c2",
                   "html": "Pilot incorrectly used \"flight level\" when referencing altitude",
                   "text": "Pilot incorrectly used \"flight level\" when referencing altitude"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t6-r2",
+              "id": "badalc",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t6-r2-c1",
+                  "id": "badalc-c1",
                   "html": ".BADALC",
                   "text": ".BADALC"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t6-r2-c2",
+                  "id": "badalc-c2",
                   "html": "Requests the pilot includes altitude or flight level on initial contact",
                   "text": "Requests the pilot includes altitude or flight level on initial contact"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t6-r3",
+              "id": "badvfr",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t6-r3-c1",
+                  "id": "badvfr-c1",
                   "html": ".BADVFR",
                   "text": ".BADVFR"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t6-r3-c2",
+                  "id": "badvfr-c2",
                   "html": "Informs pilot VFR flight information is not visible to ATC in the U.S. and requests they include more information on intial contact",
                   "text": "Informs pilot VFR flight information is not visible to ATC in the U.S. and requests they include more information on intial contact"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t6-r4",
+              "id": "badrc",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t6-r4-c1",
+                  "id": "badrc-c1",
                   "html": ".BADRC",
                   "text": ".BADRC"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t6-r4-c2",
+                  "id": "badrc-c2",
                   "html": "Radio checks are not needed",
                   "text": "Radio checks are not needed"
                 }
@@ -527,95 +527,95 @@
           ]
         },
         {
-          "id": "section-pilot-help-messages-2-table-7",
+          "id": "pilot-help-messages-table-7",
           "title": "Bad Procedure Compliance",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t7-r1",
+              "id": "badalt",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t7-r1-c1",
+                  "id": "badalt-c1",
                   "html": ".BADALT",
                   "text": ".BADALT"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t7-r1-c2",
+                  "id": "badalt-c2",
                   "html": "Pilot did not comply with altitude of procedure",
                   "text": "Pilot did not comply with altitude of procedure"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t7-r2",
+              "id": "baddof",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t7-r2-c1",
+                  "id": "baddof-c1",
                   "html": ".BADDOF",
                   "text": ".BADDOF"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t7-r2-c2",
+                  "id": "baddof-c2",
                   "html": "Pilot did not comply with altitude for direction of flight",
                   "text": "Pilot did not comply with altitude for direction of flight"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t7-r3",
+              "id": "badlat",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t7-r3-c1",
+                  "id": "badlat-c1",
                   "html": ".BADLAT",
                   "text": ".BADLAT"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t7-r3-c2",
+                  "id": "badlat-c2",
                   "html": "Pilot did not comply with lateral course of procedure",
                   "text": "Pilot did not comply with lateral course of procedure"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t7-r4",
+              "id": "badvec",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t7-r4-c1",
+                  "id": "badvec-c1",
                   "html": ".BADVEC",
                   "text": ".BADVEC"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t7-r4-c2",
+                  "id": "badvec-c2",
                   "html": "Pilot did not comply with vector segment of procedure",
                   "text": "Pilot did not comply with vector segment of procedure"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t7-r5",
+              "id": "badspd",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t7-r5-c1",
+                  "id": "badspd-c1",
                   "html": ".BADSPD",
                   "text": ".BADSPD"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t7-r5-c2",
+                  "id": "badspd-c2",
                   "html": "Pilot did not comply with published speed restriction",
                   "text": "Pilot did not comply with published speed restriction"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t7-r6",
+              "id": "badturn",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t7-r6-c1",
+                  "id": "badturn-c1",
                   "html": ".BADTURN",
                   "text": ".BADTURN"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t7-r6-c2",
+                  "id": "badturn-c2",
                   "html": "Pilot did not comply with direction of IAH departure turn",
                   "text": "Pilot did not comply with direction of IAH departure turn"
                 }
@@ -624,140 +624,140 @@
           ]
         },
         {
-          "id": "section-pilot-help-messages-2-table-8",
+          "id": "pilot-help-messages-table-8",
           "title": "Pilot Resources",
           "columns": [],
           "entries": [
             {
-              "id": "section-pilot-help-messages-2-t8-r1",
+              "id": "pilot",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r1-c1",
+                  "id": "pilot-c1",
                   "html": ".PILOT",
                   "text": ".PILOT"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r1-c2",
+                  "id": "pilot-c2",
                   "html": "Sends link to VATSIM Pilot Resource Center",
                   "text": "Sends link to VATSIM Pilot Resource Center"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r2",
+              "id": "iahpilot",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r2-c1",
+                  "id": "iahpilot-c1",
                   "html": ".IAHPILOT",
                   "text": ".IAHPILOT"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r2-c2",
+                  "id": "iahpilot-c2",
                   "html": "Sends link to KIAH Pilot Brieing on ZHU Website",
                   "text": "Sends link to KIAH Pilot Brieing on ZHU Website"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r3",
+              "id": "chartd",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r3-c1",
+                  "id": "chartd-c1",
                   "html": ".CHARTD",
                   "text": ".CHARTD"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r3-c2",
+                  "id": "chartd-c2",
                   "html": "Sends link to charts for departure airport",
                   "text": "Sends link to charts for departure airport"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r4",
+              "id": "charta",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r4-c1",
+                  "id": "charta-c1",
                   "html": ".CHARTA",
                   "text": ".CHARTA"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r4-c2",
+                  "id": "charta-c2",
                   "html": "Sends link to charts for arrival airport",
                   "text": "Sends link to charts for arrival airport"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r5",
+              "id": "charts",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r5-c1",
+                  "id": "charts-c1",
                   "html": ".CHARTS K###",
                   "text": ".CHARTS K###"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r5-c2",
+                  "id": "charts-c2",
                   "html": "Sends link to charts for specified airport (K###)",
                   "text": "Sends link to charts for specified airport (K###)"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r6",
+              "id": "chartdd",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r6-c1",
+                  "id": "chartdd-c1",
                   "html": ".CHARTDD",
                   "text": ".CHARTDD"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r6-c2",
+                  "id": "chartdd-c2",
                   "html": "Sends link to airport diagram for departure airport",
                   "text": "Sends link to airport diagram for departure airport"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r7",
+              "id": "chartad",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r7-c1",
+                  "id": "chartad-c1",
                   "html": ".CHARTAD",
                   "text": ".CHARTAD"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r7-c2",
+                  "id": "chartad-c2",
                   "html": "Sends link to airport diagram to arrival airport",
                   "text": "Sends link to airport diagram to arrival airport"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r8",
+              "id": "chartsd",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r8-c1",
+                  "id": "chartsd-c1",
                   "html": ".CHARTSD K###",
                   "text": ".CHARTSD K###"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r8-c2",
+                  "id": "chartsd-c2",
                   "html": "Sends link to airport diagram for specified airport (K###)",
                   "text": "Sends link to airport diagram for specified airport (K###)"
                 }
               ]
             },
             {
-              "id": "section-pilot-help-messages-2-t8-r9",
+              "id": "aip",
               "cells": [
                 {
-                  "id": "section-pilot-help-messages-2-t8-r9-c1",
+                  "id": "aip-c1",
                   "html": ".AIP K###",
                   "text": ".AIP K###"
                 },
                 {
-                  "id": "section-pilot-help-messages-2-t8-r9-c2",
+                  "id": "aip-c2",
                   "html": "Sends link to VATSIM AIP for specified airport (K###)",
                   "text": "Sends link to VATSIM AIP for specified airport (K###)"
                 }
@@ -768,12 +768,12 @@
       ]
     },
     {
-      "id": "section-autotrack-3",
+      "id": "autotrack",
       "title": "Autotrack",
       "intro": [],
       "tables": [
         {
-          "id": "section-autotrack-3-table-1",
+          "id": "autotrack-table-1",
           "title": "Table 1",
           "columns": [
             "Command",
@@ -782,60 +782,60 @@
           ],
           "entries": [
             {
-              "id": "section-autotrack-3-t1-r1",
+              "id": "autotrack",
               "cells": [
                 {
-                  "id": "section-autotrack-3-t1-r1-c1",
+                  "id": "autotrack-c1",
                   "html": ".autotrack ICAO<br>.autotrack -ICAO",
                   "text": ".autotrack ICAO .autotrack -ICAO"
                 },
                 {
-                  "id": "section-autotrack-3-t1-r1-c2",
+                  "id": "autotrack-c2",
                   "html": ".autotrack KIAH<br>.autotrack -KIAH",
                   "text": ".autotrack KIAH .autotrack -KIAH"
                 },
                 {
-                  "id": "section-autotrack-3-t1-r1-c3",
+                  "id": "autotrack-c3",
                   "html": "Add a single airport to the autotrack list.<br>Removes a single airport from the autotrack list.",
                   "text": "Add a single airport to the autotrack list. Removes a single airport from the autotrack list."
                 }
               ]
             },
             {
-              "id": "section-autotrack-3-t1-r2",
+              "id": "zhutrackday",
               "cells": [
                 {
-                  "id": "section-autotrack-3-t1-r2-c1",
+                  "id": "zhutrackday-c1",
                   "html": ".zhutrackday<br>.zhutrackmid",
                   "text": ".zhutrackday .zhutrackmid"
                 },
                 {
-                  "id": "section-autotrack-3-t1-r2-c2",
+                  "id": "zhutrackday-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-autotrack-3-t1-r2-c3",
+                  "id": "zhutrackday-c3",
                   "html": "Adds autotrack of all ZHU controlled airports.<br>Adds autotrack of 24/7 towered airports. Used for late night (0300Z+) center operations.",
                   "text": "Adds autotrack of all ZHU controlled airports. Adds autotrack of 24/7 towered airports. Used for late night (0300Z+) center operations."
                 }
               ]
             },
             {
-              "id": "section-autotrack-3-t1-r3",
+              "id": "i90track",
               "cells": [
                 {
-                  "id": "section-autotrack-3-t1-r3-c1",
+                  "id": "i90track-c1",
                   "html": ".i90track<br>.austrack<br>.sattrack<br>.mobtrack<br>.gpttrack<br>.btrtrack<br>.lfttrack<br>.lchtrack<br>.vlytrack<br>.nqitrack<br>.dlftrack<br>.msytrack<br>.poetrack",
                   "text": ".i90track .austrack .sattrack .mobtrack .gpttrack .btrtrack .lfttrack .lchtrack .vlytrack .nqitrack .dlftrack .msytrack .poetrack"
                 },
                 {
-                  "id": "section-autotrack-3-t1-r3-c2",
+                  "id": "i90track-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-autotrack-3-t1-r3-c3",
+                  "id": "i90track-c3",
                   "html": "Adds autotrack of specified TRACON airports.<br>Use <span class=\"code\">notrack</span> after TRACON to remove those airports from the autotrack list: <span class=\"code\">.I90notrack</span>",
                   "text": "Adds autotrack of specified TRACON airports. Use notrack after TRACON to remove those airports from the autotrack list: .I90notrack"
                 }
@@ -846,23 +846,23 @@
       ]
     },
     {
-      "id": "section-standard-routes-4",
+      "id": "standard-routes",
       "title": "Standard Routes",
       "intro": [
         {
-          "id": "section-standard-routes-4-intro-1",
+          "id": "standard-routes-intro-1",
           "html": "Results are printed in the CRC message window &gt; Notes tab.<br><b>Leading <span class=\"code\">K</span> is required. Only airport pairs with specific ZHU preferred routes are included.</b>",
           "text": "Results are printed in the CRC message window > Notes tab. Leading K is required. Only airport pairs with specific ZHU preferred routes are included."
         },
         {
-          "id": "section-standard-routes-4-intro-2",
+          "id": "standard-routes-intro-2",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.K[DEP]K[ARR]</span>",
           "text": ".K[DEP]K[ARR]"
         }
       ],
       "tables": [
         {
-          "id": "section-standard-routes-4-table-1",
+          "id": "standard-routes-table-1",
           "title": "Table 1",
           "columns": [
             "Entering",
@@ -870,30 +870,30 @@
           ],
           "entries": [
             {
-              "id": "section-standard-routes-4-t1-r1",
+              "id": "ksatkdfw",
               "cells": [
                 {
-                  "id": "section-standard-routes-4-t1-r1-c1",
+                  "id": "ksatkdfw-c1",
                   "html": ".KSATKDFW",
                   "text": ".KSATKDFW"
                 },
                 {
-                  "id": "section-standard-routes-4-t1-r1-c2",
+                  "id": "ksatkdfw-c2",
                   "html": "[RNAV Jet DFWN] ALAMO3 GOBBY ...",
                   "text": "[RNAV Jet DFWN] ALAMO3 GOBBY ..."
                 }
               ]
             },
             {
-              "id": "section-standard-routes-4-t1-r2",
+              "id": "kiahkdfw",
               "cells": [
                 {
-                  "id": "section-standard-routes-4-t1-r2-c1",
+                  "id": "kiahkdfw-c1",
                   "html": ".KIAHKDFW",
                   "text": ".KIAHKDFW"
                 },
                 {
-                  "id": "section-standard-routes-4-t1-r2-c2",
+                  "id": "kiahkdfw-c2",
                   "html": "[RNAV] BLTWY7 CRIED REEKO3 ...",
                   "text": "[RNAV] BLTWY7 CRIED REEKO3 ..."
                 }
@@ -904,33 +904,33 @@
       ]
     },
     {
-      "id": "section-loa-recall-5",
+      "id": "loa-recall",
       "title": "LOA Recall",
       "intro": [
         {
-          "id": "section-loa-recall-5-intro-1",
+          "id": "loa-recall-intro-1",
           "html": "Some results are printed in the CRC chat window while others may open ZHU website resources.",
           "text": "Some results are printed in the CRC chat window while others may open ZHU website resources."
         },
         {
-          "id": "section-loa-recall-5-intro-2",
+          "id": "loa-recall-intro-2",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.[ZHU SPECIALTY]S[DESTINATION SPECIALTY]S</span> or <span class=\"command\" style=\"font-size: larger;\">[ARTCC]</span>",
           "text": ".[ZHU SPECIALTY]S[DESTINATION SPECIALTY]S or [ARTCC]"
         },
         {
-          "id": "section-loa-recall-5-intro-3",
+          "id": "loa-recall-intro-3",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.[ZHU SPECIALTY]S[TRACON]T</span>",
           "text": ".[ZHU SPECIALTY]S[TRACON]T"
         },
         {
-          "id": "section-loa-recall-5-intro-4",
+          "id": "loa-recall-intro-4",
           "html": "<b>LOA Recall Parameters</b>",
           "text": "LOA Recall Parameters"
         }
       ],
       "tables": [
         {
-          "id": "section-loa-recall-5-table-1",
+          "id": "loa-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Entering",
@@ -938,30 +938,30 @@
           ],
           "entries": [
             {
-              "id": "section-loa-recall-5-t1-r1",
+              "id": "newslfks",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t1-r1-c1",
+                  "id": "newslfks-c1",
                   "html": ".NEWSLFKS",
                   "text": ".NEWSLFKS"
                 },
                 {
-                  "id": "section-loa-recall-5-t1-r1-c2",
+                  "id": "newslfks-c2",
                   "html": "From NEW Specialty to LFK Specialty",
                   "text": "From NEW Specialty to LFK Specialty"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t1-r2",
+              "id": "ausszfw",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t1-r2-c1",
+                  "id": "ausszfw-c1",
                   "html": ".AUSSZFW",
                   "text": ".AUSSZFW"
                 },
                 {
-                  "id": "section-loa-recall-5-t1-r2-c2",
+                  "id": "ausszfw-c2",
                   "html": "From AUS Specialty to ZFW",
                   "text": "From AUS Specialty to ZFW"
                 }
@@ -970,7 +970,7 @@
           ]
         },
         {
-          "id": "section-loa-recall-5-table-2",
+          "id": "loa-recall-table-2",
           "title": "Table 2",
           "columns": [
             "Entering",
@@ -978,45 +978,45 @@
           ],
           "entries": [
             {
-              "id": "section-loa-recall-5-t2-r1",
+              "id": "aussaust",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t2-r1-c1",
+                  "id": "aussaust-c1",
                   "html": ".AUSSAUST",
                   "text": ".AUSSAUST"
                 },
                 {
-                  "id": "section-loa-recall-5-t2-r1-c2",
+                  "id": "aussaust-c2",
                   "html": "AUS Specialty to AUS TRACON",
                   "text": "AUS Specialty to AUS TRACON"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t2-r2",
+              "id": "lfksi90t",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t2-r2-c1",
+                  "id": "lfksi90t-c1",
                   "html": ".LFKSI90T",
                   "text": ".LFKSI90T"
                 },
                 {
-                  "id": "section-loa-recall-5-t2-r2-c2",
+                  "id": "lfksi90t-c2",
                   "html": "LFK Specialty to I90 TRACON",
                   "text": "LFK Specialty to I90 TRACON"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t2-r3",
+              "id": "crpsi90c",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t2-r3-c1",
+                  "id": "crpsi90c-c1",
                   "html": ".CRPSI90C",
                   "text": ".CRPSI90C"
                 },
                 {
-                  "id": "section-loa-recall-5-t2-r3-c2",
+                  "id": "crpsi90c-c2",
                   "html": "CRP Specialty to I90 College Station area*",
                   "text": "CRP Specialty to I90 College Station area*"
                 }
@@ -1025,7 +1025,7 @@
           ]
         },
         {
-          "id": "section-loa-recall-5-table-3",
+          "id": "loa-recall-table-3",
           "title": "Table 3",
           "columns": [
             "Specialty",
@@ -1037,245 +1037,245 @@
           ],
           "entries": [
             {
-              "id": "section-loa-recall-5-t3-r1",
+              "id": "austin",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t3-r1-c1",
+                  "id": "austin-c1",
                   "html": "Austin",
                   "text": "Austin"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r1-c2",
+                  "id": "austin-c2",
                   "html": "AUSS",
                   "text": "AUSS"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r1-c3",
+                  "id": "austin-c3",
                   "html": "Fort Worth",
                   "text": "Fort Worth"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r1-c4",
+                  "id": "austin-c4",
                   "html": "ZFW",
                   "text": "ZFW"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r1-c5",
+                  "id": "austin-c5",
                   "html": "Quick Reference Cards",
                   "text": "Quick Reference Cards"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r1-c6",
+                  "id": "austin-c6",
                   "html": "I90T",
                   "text": "I90T"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t3-r2",
+              "id": "corpus",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t3-r2-c1",
+                  "id": "corpus-c1",
                   "html": "Corpus",
                   "text": "Corpus"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r2-c2",
+                  "id": "corpus-c2",
                   "html": "CRPS",
                   "text": "CRPS"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r2-c3",
+                  "id": "corpus-c3",
                   "html": "Atlanta",
                   "text": "Atlanta"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r2-c4",
+                  "id": "corpus-c4",
                   "html": "ZTL",
                   "text": "ZTL"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r2-c5",
+                  "id": "corpus-c5",
                   "html": "I90 College Station area arrivals",
                   "text": "I90 College Station area arrivals"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r2-c6",
+                  "id": "corpus-c6",
                   "html": "I90C",
                   "text": "I90C"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t3-r3",
+              "id": "lake",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t3-r3-c1",
+                  "id": "lake-c1",
                   "html": "Lake Charles",
                   "text": "Lake Charles"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r3-c2",
+                  "id": "lake-c2",
                   "html": "LCHS",
                   "text": "LCHS"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r3-c3",
+                  "id": "lake-c3",
                   "html": "Jacksonville",
                   "text": "Jacksonville"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r3-c4",
+                  "id": "lake-c4",
                   "html": "ZJX",
                   "text": "ZJX"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r3-c5",
+                  "id": "lake-c5",
                   "html": "I90 Industry area arrivals",
                   "text": "I90 Industry area arrivals"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r3-c6",
+                  "id": "lake-c6",
                   "html": "I90I",
                   "text": "I90I"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t3-r4",
+              "id": "lufkin",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t3-r4-c1",
+                  "id": "lufkin-c1",
                   "html": "Lufkin",
                   "text": "Lufkin"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r4-c2",
+                  "id": "lufkin-c2",
                   "html": "LFKS",
                   "text": "LFKS"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r4-c3",
+                  "id": "lufkin-c3",
                   "html": "Monterrey",
                   "text": "Monterrey"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r4-c4",
+                  "id": "lufkin-c4",
                   "html": "MTY",
                   "text": "MTY"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r4-c5",
+                  "id": "lufkin-c5",
                   "html": "I90 Beaumont area arrivals",
                   "text": "I90 Beaumont area arrivals"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r4-c6",
+                  "id": "lufkin-c6",
                   "html": "I90B",
                   "text": "I90B"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t3-r5",
+              "id": "new",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t3-r5-c1",
+                  "id": "new-c1",
                   "html": "New Orleans",
                   "text": "New Orleans"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r5-c2",
+                  "id": "new-c2",
                   "html": "NEWS",
                   "text": "NEWS"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r5-c3",
+                  "id": "new-c3",
                   "html": "Merida",
                   "text": "Merida"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r5-c4",
+                  "id": "new-c4",
                   "html": "MID",
                   "text": "MID"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r5-c5",
+                  "id": "new-c5",
                   "html": "I90 Overflights",
                   "text": "I90 Overflights"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r5-c6",
+                  "id": "new-c6",
                   "html": "I90O",
                   "text": "I90O"
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t3-r6",
+              "id": "ocean",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t3-r6-c1",
+                  "id": "ocean-c1",
                   "html": "Ocean",
                   "text": "Ocean"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r6-c2",
+                  "id": "ocean-c2",
                   "html": "OCNS",
                   "text": "OCNS"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r6-c3",
+                  "id": "ocean-c3",
                   "html": "Havana",
                   "text": "Havana"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r6-c4",
+                  "id": "ocean-c4",
                   "html": "HAV",
                   "text": "HAV"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r6-c5",
+                  "id": "ocean-c5",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r6-c6",
+                  "id": "ocean-c6",
                   "html": "",
                   "text": ""
                 }
               ]
             },
             {
-              "id": "section-loa-recall-5-t3-r7",
+              "id": "rocksprings",
               "cells": [
                 {
-                  "id": "section-loa-recall-5-t3-r7-c1",
+                  "id": "rocksprings-c1",
                   "html": "Rocksprings",
                   "text": "Rocksprings"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r7-c2",
+                  "id": "rocksprings-c2",
                   "html": "RSGS",
                   "text": "RSGS"
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r7-c3",
+                  "id": "rocksprings-c3",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r7-c4",
+                  "id": "rocksprings-c4",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r7-c5",
+                  "id": "rocksprings-c5",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-loa-recall-5-t3-r7-c6",
+                  "id": "rocksprings-c6",
                   "html": "",
                   "text": ""
                 }
@@ -1286,23 +1286,23 @@
       ]
     },
     {
-      "id": "section-sop-recall-6",
+      "id": "sop-recall",
       "title": "SOP Recall",
       "intro": [
         {
-          "id": "section-sop-recall-6-intro-1",
+          "id": "sop-recall-intro-1",
           "html": "Some results are printed in the CRC chat window while others may open ZHU website resources.",
           "text": "Some results are printed in the CRC chat window while others may open ZHU website resources."
         },
         {
-          "id": "section-sop-recall-6-intro-2",
+          "id": "sop-recall-intro-2",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.[AIRPORT]INFO</span>",
           "text": ".[AIRPORT]INFO"
         }
       ],
       "tables": [
         {
-          "id": "section-sop-recall-6-table-1",
+          "id": "sop-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Entering",
@@ -1310,30 +1310,30 @@
           ],
           "entries": [
             {
-              "id": "section-sop-recall-6-t1-r1",
+              "id": "iahinfo",
               "cells": [
                 {
-                  "id": "section-sop-recall-6-t1-r1-c1",
+                  "id": "iahinfo-c1",
                   "html": ".IAHINFO",
                   "text": ".IAHINFO"
                 },
                 {
-                  "id": "section-sop-recall-6-t1-r1-c2",
+                  "id": "iahinfo-c2",
                   "html": "VATSIM ZHU specific KIAH information",
                   "text": "VATSIM ZHU specific KIAH information"
                 }
               ]
             },
             {
-              "id": "section-sop-recall-6-t1-r2",
+              "id": "newinfo",
               "cells": [
                 {
-                  "id": "section-sop-recall-6-t1-r2-c1",
+                  "id": "newinfo-c1",
                   "html": ".NEWINFO",
                   "text": ".NEWINFO"
                 },
                 {
-                  "id": "section-sop-recall-6-t1-r2-c2",
+                  "id": "newinfo-c2",
                   "html": "VATSIM ZHU specific KNEW information",
                   "text": "VATSIM ZHU specific KNEW information"
                 }
@@ -1344,28 +1344,28 @@
       ]
     },
     {
-      "id": "section-approach-plate-recall-7",
+      "id": "approach-plate-recall",
       "title": "Approach Plate Recall",
       "intro": [
         {
-          "id": "section-approach-plate-recall-7-intro-1",
+          "id": "approach-plate-recall-intro-1",
           "html": "All chart recall commands open the selected FAA chart in your computer's default browser.",
           "text": "All chart recall commands open the selected FAA chart in your computer's default browser."
         },
         {
-          "id": "section-approach-plate-recall-7-intro-2",
+          "id": "approach-plate-recall-intro-2",
           "html": "<img class=\"icon\" src=\"/alias-guide/images/warning.png\"><b>Single digit runways include a leading 0 UNLESS an approach variation AND/OR sidedness designator is used.<br>\n    <img class=\"icon\" src=\"/alias-guide/images/warning.png\">If a double-digit runway includes approach variation AND/OR sidedness, the leading digit is omitted.<br>\n    <img class=\"icon\" src=\"/alias-guide/images/warning.png\">Do not forget the <span class=\"code\">C</span> following all chart recall aliases.</b>",
           "text": "Single digit runways include a leading 0 UNLESS an approach variation AND/OR sidedness designator is used. If a double-digit runway includes approach variation AND/OR sidedness, the leading digit is omitted. Do not forget the C following all chart recall aliases."
         },
         {
-          "id": "section-approach-plate-recall-7-intro-3",
+          "id": "approach-plate-recall-intro-3",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.[AIRPORT][APPROACH CODE]([VARIATION Z/Y/X])[RUNWAY]([L/C/R])C</span>",
           "text": ".[AIRPORT][APPROACH CODE]([VARIATION Z/Y/X])[RUNWAY]([L/C/R])C"
         }
       ],
       "tables": [
         {
-          "id": "section-approach-plate-recall-7-table-1",
+          "id": "approach-plate-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Approach Type",
@@ -1375,125 +1375,125 @@
           ],
           "entries": [
             {
-              "id": "section-approach-plate-recall-7-t1-r1",
+              "id": "ils",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t1-r1-c1",
+                  "id": "ils-c1",
                   "html": "ILS",
                   "text": "ILS"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r1-c2",
+                  "id": "ils-c2",
                   "html": "I",
                   "text": "I"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r1-c3",
+                  "id": "ils-c3",
                   "html": "LOC/DME",
                   "text": "LOC/DME"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r1-c4",
+                  "id": "ils-c4",
                   "html": "K",
                   "text": "K"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t1-r2",
+              "id": "rnav",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t1-r2-c1",
+                  "id": "rnav-c1",
                   "html": "RNAV (GPS/RNP)",
                   "text": "RNAV (GPS/RNP)"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r2-c2",
+                  "id": "rnav-c2",
                   "html": "R",
                   "text": "R"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r2-c3",
+                  "id": "rnav-c3",
                   "html": "VOR/DME",
                   "text": "VOR/DME"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r2-c4",
+                  "id": "rnav-c4",
                   "html": "F",
                   "text": "F"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t1-r3",
+              "id": "visual",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t1-r3-c1",
+                  "id": "visual-c1",
                   "html": "Visual",
                   "text": "Visual"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r3-c2",
+                  "id": "visual-c2",
                   "html": "V",
                   "text": "V"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r3-c3",
+                  "id": "visual-c3",
                   "html": "LOC",
                   "text": "LOC"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r3-c4",
+                  "id": "visual-c4",
                   "html": "L",
                   "text": "L"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t1-r4",
+              "id": "vor",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t1-r4-c1",
+                  "id": "vor-c1",
                   "html": "VOR",
                   "text": "VOR"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r4-c2",
+                  "id": "vor-c2",
                   "html": "O",
                   "text": "O"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r4-c3",
+                  "id": "vor-c3",
                   "html": "LDA",
                   "text": "LDA"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r4-c4",
+                  "id": "vor-c4",
                   "html": "D",
                   "text": "D"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t1-r5",
+              "id": "ndb",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t1-r5-c1",
+                  "id": "ndb-c1",
                   "html": "NDB",
                   "text": "NDB"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r5-c2",
+                  "id": "ndb-c2",
                   "html": "N",
                   "text": "N"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r5-c3",
+                  "id": "ndb-c3",
                   "html": "TACAN",
                   "text": "TACAN"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t1-r5-c4",
+                  "id": "ndb-c4",
                   "html": "T",
                   "text": "T"
                 }
@@ -1502,7 +1502,7 @@
           ]
         },
         {
-          "id": "section-approach-plate-recall-7-table-2",
+          "id": "approach-plate-recall-table-2",
           "title": "Table 2",
           "columns": [
             "Example",
@@ -1510,120 +1510,120 @@
           ],
           "entries": [
             {
-              "id": "section-approach-plate-recall-7-t2-r1",
+              "id": "iahi8lc",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r1-c1",
+                  "id": "iahi8lc-c1",
                   "html": ".IAHI8LC",
                   "text": ".IAHI8LC"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r1-c2",
+                  "id": "iahi8lc-c2",
                   "html": "Houston Intercon ILS 8L",
                   "text": "Houston Intercon ILS 8L"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t2-r2",
+              "id": "iahi09c",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r2-c1",
+                  "id": "iahi09c-c1",
                   "html": ".IAHI09C",
                   "text": ".IAHI09C"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r2-c2",
+                  "id": "iahi09c-c2",
                   "html": "Houston Intercon ILS 9",
                   "text": "Houston Intercon ILS 9"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t2-r3",
+              "id": "iahi27c",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r3-c1",
+                  "id": "iahi27c-c1",
                   "html": ".IAHI27C",
                   "text": ".IAHI27C"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r3-c2",
+                  "id": "iahi27c-c2",
                   "html": "Houston Intercon ILS 27",
                   "text": "Houston Intercon ILS 27"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t2-r4",
+              "id": "iahrz7c",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r4-c1",
+                  "id": "iahrz7c-c1",
                   "html": ".IAHRZ7C",
                   "text": ".IAHRZ7C"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r4-c2",
+                  "id": "iahrz7c-c2",
                   "html": "Houston Intercon RNAV-Z 27",
                   "text": "Houston Intercon RNAV-Z 27"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t2-r5",
+              "id": "gptoy4c",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r5-c1",
+                  "id": "gptoy4c-c1",
                   "html": ".GPTOY4C",
                   "text": ".GPTOY4C"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r5-c2",
+                  "id": "gptoy4c-c2",
                   "html": "Gulfport VOR-Y 14",
                   "text": "Gulfport VOR-Y 14"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t2-r6",
+              "id": "gpttz4c",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r6-c1",
+                  "id": "gpttz4c-c1",
                   "html": ".GPTTZ4C",
                   "text": ".GPTTZ4C"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r6-c2",
+                  "id": "gpttz4c-c2",
                   "html": "Gulfport TACAN Z 14",
                   "text": "Gulfport TACAN Z 14"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t2-r7",
+              "id": "crprz1c",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r7-c1",
+                  "id": "crprz1c-c1",
                   "html": ".CRPRZ1C",
                   "text": ".CRPRZ1C"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r7-c2",
+                  "id": "crprz1c-c2",
                   "html": "Corpus Christi RNAV-Z 31",
                   "text": "Corpus Christi RNAV-Z 31"
                 }
               ]
             },
             {
-              "id": "section-approach-plate-recall-7-t2-r8",
+              "id": "dlff1cc",
               "cells": [
                 {
-                  "id": "section-approach-plate-recall-7-t2-r8-c1",
+                  "id": "dlff1cc-c1",
                   "html": ".DLFF1CC",
                   "text": ".DLFF1CC"
                 },
                 {
-                  "id": "section-approach-plate-recall-7-t2-r8-c2",
+                  "id": "dlff1cc-c2",
                   "html": "Laughlin VOR/DME 31C",
                   "text": "Laughlin VOR/DME 31C"
                 }
@@ -1634,28 +1634,28 @@
       ]
     },
     {
-      "id": "section-sid-star-plate-recall-8",
+      "id": "sid-star-plate-recall",
       "title": "SID/STAR Plate Recall",
       "intro": [
         {
-          "id": "section-sid-star-plate-recall-8-intro-1",
+          "id": "sid-star-plate-recall-intro-1",
           "html": "All chart recall commands open the selected FAA chart in your computer's default browser.",
           "text": "All chart recall commands open the selected FAA chart in your computer's default browser."
         },
         {
-          "id": "section-sid-star-plate-recall-8-intro-2",
+          "id": "sid-star-plate-recall-intro-2",
           "html": "<img class=\"icon\" src=\"/alias-guide/images/warning.png\"><b>Note: do not use revision numbers. Digits in alias are only for procedure page numbers (if applicable).<br>\n    <img class=\"icon\" src=\"/alias-guide/images/warning.png\">Do not forget the <span class=\"code\">C</span> following all chart recall aliases.</b>",
           "text": "Note: do not use revision numbers. Digits in alias are only for procedure page numbers (if applicable). Do not forget the C following all chart recall aliases."
         },
         {
-          "id": "section-sid-star-plate-recall-8-intro-3",
+          "id": "sid-star-plate-recall-intro-3",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.[AIRPORT][PROCEDURE NAME]([PAGE])C</span>",
           "text": ".[AIRPORT][PROCEDURE NAME]([PAGE])C"
         }
       ],
       "tables": [
         {
-          "id": "section-sid-star-plate-recall-8-table-1",
+          "id": "sid-star-plate-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Example",
@@ -1663,60 +1663,60 @@
           ],
           "entries": [
             {
-              "id": "section-sid-star-plate-recall-8-t1-r1",
+              "id": "satbowiec",
               "cells": [
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r1-c1",
+                  "id": "satbowiec-c1",
                   "html": ".SATBOWIEC",
                   "text": ".SATBOWIEC"
                 },
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r1-c2",
+                  "id": "satbowiec-c2",
                   "html": "San Antonio BOWIE SID",
                   "text": "San Antonio BOWIE SID"
                 }
               ]
             },
             {
-              "id": "section-sid-star-plate-recall-8-t1-r2",
+              "id": "satbowie2c",
               "cells": [
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r2-c1",
+                  "id": "satbowie2c-c1",
                   "html": ".SATBOWIE2C",
                   "text": ".SATBOWIE2C"
                 },
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r2-c2",
+                  "id": "satbowie2c-c2",
                   "html": "San Antonio BOWIE SID page 2",
                   "text": "San Antonio BOWIE SID page 2"
                 }
               ]
             },
             {
-              "id": "section-sid-star-plate-recall-8-t1-r3",
+              "id": "houwappl3c",
               "cells": [
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r3-c1",
+                  "id": "houwappl3c-c1",
                   "html": ".HOUWAPPL3C",
                   "text": ".HOUWAPPL3C"
                 },
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r3-c2",
+                  "id": "houwappl3c-c2",
                   "html": "Hobby WAPPL STAR page 3",
                   "text": "Hobby WAPPL STAR page 3"
                 }
               ]
             },
             {
-              "id": "section-sid-star-plate-recall-8-t1-r4",
+              "id": "msymnstrc",
               "cells": [
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r4-c1",
+                  "id": "msymnstrc-c1",
                   "html": ".MSYMNSTRC",
                   "text": ".MSYMNSTRC"
                 },
                 {
-                  "id": "section-sid-star-plate-recall-8-t1-r4-c2",
+                  "id": "msymnstrc-c2",
                   "html": "New Orleans MNSTR STAR",
                   "text": "New Orleans MNSTR STAR"
                 }
@@ -1727,28 +1727,28 @@
       ]
     },
     {
-      "id": "section-miscellaneous-chart-recall-9",
+      "id": "miscellaneous-chart-recall",
       "title": "Miscellaneous Chart Recall",
       "intro": [
         {
-          "id": "section-miscellaneous-chart-recall-9-intro-1",
+          "id": "miscellaneous-chart-recall-intro-1",
           "html": "All chart recall commands open the selected FAA chart in your computer's default browser.<br>",
           "text": "All chart recall commands open the selected FAA chart in your computer's default browser."
         },
         {
-          "id": "section-miscellaneous-chart-recall-9-intro-2",
+          "id": "miscellaneous-chart-recall-intro-2",
           "html": "<img class=\"icon\" src=\"/alias-guide/images/warning.png\"><b>Do not forget the <span class=\"code\">C</span> following all chart recall aliases.</b>",
           "text": "Do not forget the C following all chart recall aliases."
         },
         {
-          "id": "section-miscellaneous-chart-recall-9-intro-3",
+          "id": "miscellaneous-chart-recall-intro-3",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.[AIRPORT][CODE]C</span>",
           "text": ".[AIRPORT][CODE]C"
         }
       ],
       "tables": [
         {
-          "id": "section-miscellaneous-chart-recall-9-table-1",
+          "id": "miscellaneous-chart-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Chart Type",
@@ -1756,90 +1756,90 @@
           ],
           "entries": [
             {
-              "id": "section-miscellaneous-chart-recall-9-t1-r1",
+              "id": "airport",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r1-c1",
+                  "id": "airport-c1",
                   "html": "Airport Diagram",
                   "text": "Airport Diagram"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r1-c2",
+                  "id": "airport-c2",
                   "html": "APD",
                   "text": "APD"
                 }
               ]
             },
             {
-              "id": "section-miscellaneous-chart-recall-9-t1-r2",
+              "id": "lahso",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r2-c1",
+                  "id": "lahso-c1",
                   "html": "LAHSO",
                   "text": "LAHSO"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r2-c2",
+                  "id": "lahso-c2",
                   "html": "LAHSO",
                   "text": "LAHSO"
                 }
               ]
             },
             {
-              "id": "section-miscellaneous-chart-recall-9-t1-r3",
+              "id": "takeoff",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r3-c1",
+                  "id": "takeoff-c1",
                   "html": "Takeoff Minimums",
                   "text": "Takeoff Minimums"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r3-c2",
+                  "id": "takeoff-c2",
                   "html": "TM",
                   "text": "TM"
                 }
               ]
             },
             {
-              "id": "section-miscellaneous-chart-recall-9-t1-r4",
+              "id": "hot",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r4-c1",
+                  "id": "hot-c1",
                   "html": "Hot Spots",
                   "text": "Hot Spots"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r4-c2",
+                  "id": "hot-c2",
                   "html": "HS",
                   "text": "HS"
                 }
               ]
             },
             {
-              "id": "section-miscellaneous-chart-recall-9-t1-r5",
+              "id": "radar",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r5-c1",
+                  "id": "radar-c1",
                   "html": "Radar Minimums",
                   "text": "Radar Minimums"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r5-c2",
+                  "id": "radar-c2",
                   "html": "RM",
                   "text": "RM"
                 }
               ]
             },
             {
-              "id": "section-miscellaneous-chart-recall-9-t1-r6",
+              "id": "odp",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r6-c1",
+                  "id": "odp-c1",
                   "html": "ODP",
                   "text": "ODP"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t1-r6-c2",
+                  "id": "odp-c2",
                   "html": "ODP",
                   "text": "ODP"
                 }
@@ -1848,7 +1848,7 @@
           ]
         },
         {
-          "id": "section-miscellaneous-chart-recall-9-table-2",
+          "id": "miscellaneous-chart-recall-table-2",
           "title": "Table 2",
           "columns": [
             "Example",
@@ -1856,30 +1856,30 @@
           ],
           "entries": [
             {
-              "id": "section-miscellaneous-chart-recall-9-t2-r1",
+              "id": "ausapdc",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t2-r1-c1",
+                  "id": "ausapdc-c1",
                   "html": ".AUSAPDC",
                   "text": ".AUSAPDC"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t2-r1-c2",
+                  "id": "ausapdc-c2",
                   "html": "Austin Airport Diagram",
                   "text": "Austin Airport Diagram"
                 }
               ]
             },
             {
-              "id": "section-miscellaneous-chart-recall-9-t2-r2",
+              "id": "iahlahsoc",
               "cells": [
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t2-r2-c1",
+                  "id": "iahlahsoc-c1",
                   "html": ".IAHLAHSOC",
                   "text": ".IAHLAHSOC"
                 },
                 {
-                  "id": "section-miscellaneous-chart-recall-9-t2-r2-c2",
+                  "id": "iahlahsoc-c2",
                   "html": "Houston Intercon LAHSO",
                   "text": "Houston Intercon LAHSO"
                 }
@@ -1890,23 +1890,23 @@
       ]
     },
     {
-      "id": "section-navaid-recall-10",
+      "id": "navaid-recall",
       "title": "Navaid Recall",
       "intro": [
         {
-          "id": "section-navaid-recall-10-intro-1",
+          "id": "navaid-recall-intro-1",
           "html": "Results are printed in the CRC chat window.",
           "text": "Results are printed in the CRC chat window."
         },
         {
-          "id": "section-navaid-recall-10-intro-2",
+          "id": "navaid-recall-intro-2",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.NAV</span> + three letter identifier --or--<br><span class=\"command\" style=\"font-size: larger;\">.NAV</span> + full Navaid name without spaces.",
           "text": ".NAV + three letter identifier --or-- .NAV + full Navaid name without spaces."
         }
       ],
       "tables": [
         {
-          "id": "section-navaid-recall-10-table-1",
+          "id": "navaid-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Entering",
@@ -1914,60 +1914,60 @@
           ],
           "entries": [
             {
-              "id": "section-navaid-recall-10-t1-r1",
+              "id": "navadk",
               "cells": [
                 {
-                  "id": "section-navaid-recall-10-t1-r1-c1",
+                  "id": "navadk-c1",
                   "html": ".NAVADK",
                   "text": ".NAVADK"
                 },
                 {
-                  "id": "section-navaid-recall-10-t1-r1-c2",
+                  "id": "navadk-c2",
                   "html": "ZHU_ISR *** ADK 530 MOUNT MOFFETT NDB/DME",
                   "text": "ZHU_ISR *** ADK 530 MOUNT MOFFETT NDB/DME"
                 }
               ]
             },
             {
-              "id": "section-navaid-recall-10-t1-r2",
+              "id": "navmountmoffett",
               "cells": [
                 {
-                  "id": "section-navaid-recall-10-t1-r2-c1",
+                  "id": "navmountmoffett-c1",
                   "html": ".NAVMOUNTMOFFETT",
                   "text": ".NAVMOUNTMOFFETT"
                 },
                 {
-                  "id": "section-navaid-recall-10-t1-r2-c2",
+                  "id": "navmountmoffett-c2",
                   "html": "ZHU_ISR *** ADK 530 MOUNT MOFFETT NDB/DME",
                   "text": "ZHU_ISR *** ADK 530 MOUNT MOFFETT NDB/DME"
                 }
               ]
             },
             {
-              "id": "section-navaid-recall-10-t1-r3",
+              "id": "navcwk",
               "cells": [
                 {
-                  "id": "section-navaid-recall-10-t1-r3-c1",
+                  "id": "navcwk-c1",
                   "html": ".NAVCWK",
                   "text": ".NAVCWK"
                 },
                 {
-                  "id": "section-navaid-recall-10-t1-r3-c2",
+                  "id": "navcwk-c2",
                   "html": "ZHU_ISR *** CWK 112.80 CENTEX VORTAC",
                   "text": "ZHU_ISR *** CWK 112.80 CENTEX VORTAC"
                 }
               ]
             },
             {
-              "id": "section-navaid-recall-10-t1-r4",
+              "id": "navcentex",
               "cells": [
                 {
-                  "id": "section-navaid-recall-10-t1-r4-c1",
+                  "id": "navcentex-c1",
                   "html": ".NAVCENTEX",
                   "text": ".NAVCENTEX"
                 },
                 {
-                  "id": "section-navaid-recall-10-t1-r4-c2",
+                  "id": "navcentex-c2",
                   "html": "ZHU_ISR *** CWK 112.80 CENTEX VORTAC",
                   "text": "ZHU_ISR *** CWK 112.80 CENTEX VORTAC"
                 }
@@ -1978,23 +1978,23 @@
       ]
     },
     {
-      "id": "section-airway-recall-eram-11",
+      "id": "airway-recall-eram",
       "title": "Airway Recall (ERAM)",
       "intro": [
         {
-          "id": "section-airway-recall-eram-11-intro-1",
+          "id": "airway-recall-eram-intro-1",
           "html": "Route points are highlighted on the scope. <img class=\"icon\" src=\"/alias-guide/images/warning.png\"><b>ERAM only.</b>",
           "text": "Route points are highlighted on the scope. ERAM only."
         },
         {
-          "id": "section-airway-recall-eram-11-intro-2",
+          "id": "airway-recall-eram-intro-2",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.[AIRWAY]F</span>",
           "text": ".[AIRWAY]F"
         }
       ],
       "tables": [
         {
-          "id": "section-airway-recall-eram-11-table-1",
+          "id": "airway-recall-eram-table-1",
           "title": "Table 1",
           "columns": [
             "Entering",
@@ -2002,30 +2002,30 @@
           ],
           "entries": [
             {
-              "id": "section-airway-recall-eram-11-t1-r1",
+              "id": "v222f",
               "cells": [
                 {
-                  "id": "section-airway-recall-eram-11-t1-r1-c1",
+                  "id": "v222f-c1",
                   "html": ".V222F",
                   "text": ".V222F"
                 },
                 {
-                  "id": "section-airway-recall-eram-11-t1-r1-c2",
+                  "id": "v222f-c2",
                   "html": ".FF ELP GIFEN RIOWE SFL HOBAN FST ...",
                   "text": ".FF ELP GIFEN RIOWE SFL HOBAN FST ..."
                 }
               ]
             },
             {
-              "id": "section-airway-recall-eram-11-t1-r2",
+              "id": "j2f",
               "cells": [
                 {
-                  "id": "section-airway-recall-eram-11-t1-r2-c1",
+                  "id": "j2f-c1",
                   "html": ".J2F",
                   "text": ".J2F"
                 },
                 {
-                  "id": "section-airway-recall-eram-11-t1-r2-c2",
+                  "id": "j2f-c2",
                   "html": ".FF MZB GWIRE IPL HEEDS BZA HOGGZ MOHAK ...",
                   "text": ".FF MZB GWIRE IPL HEEDS BZA HOGGZ MOHAK ..."
                 }
@@ -2036,23 +2036,23 @@
       ]
     },
     {
-      "id": "section-faa-airport-information-recall-12",
+      "id": "faa-airport-information-recall",
       "title": "FAA Airport Information Recall",
       "intro": [
         {
-          "id": "section-faa-airport-information-recall-12-intro-1",
+          "id": "faa-airport-information-recall-intro-1",
           "html": "Results are printed in the CRC chat window.",
           "text": "Results are printed in the CRC chat window."
         },
         {
-          "id": "section-faa-airport-information-recall-12-intro-2",
+          "id": "faa-airport-information-recall-intro-2",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.APT</span> + 3 or 4 letter identifier.",
           "text": ".APT + 3 or 4 letter identifier."
         }
       ],
       "tables": [
         {
-          "id": "section-faa-airport-information-recall-12-table-1",
+          "id": "faa-airport-information-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Entering",
@@ -2060,30 +2060,30 @@
           ],
           "entries": [
             {
-              "id": "section-faa-airport-information-recall-12-t1-r1",
+              "id": "aptiah",
               "cells": [
                 {
-                  "id": "section-faa-airport-information-recall-12-t1-r1-c1",
+                  "id": "aptiah-c1",
                   "html": ".APTIAH",
                   "text": ".APTIAH"
                 },
                 {
-                  "id": "section-faa-airport-information-recall-12-t1-r1-c2",
+                  "id": "aptiah-c2",
                   "html": "ZHU_ISR *** FAA-IAH : ICAO-KIAH - GEORGE BUSH INTCNTL/HOUSTON AIRPORT - 96'MSL - Towered - ZHU",
                   "text": "ZHU_ISR *** FAA-IAH : ICAO-KIAH - GEORGE BUSH INTCNTL/HOUSTON AIRPORT - 96'MSL - Towered - ZHU"
                 }
               ]
             },
             {
-              "id": "section-faa-airport-information-recall-12-t1-r2",
+              "id": "aptkiah",
               "cells": [
                 {
-                  "id": "section-faa-airport-information-recall-12-t1-r2-c1",
+                  "id": "aptkiah-c1",
                   "html": ".APTKIAH",
                   "text": ".APTKIAH"
                 },
                 {
-                  "id": "section-faa-airport-information-recall-12-t1-r2-c2",
+                  "id": "aptkiah-c2",
                   "html": "ZHU_ISR *** FAA-IAH : ICAO-KIAH - GEORGE BUSH INTCNTL/HOUSTON AIRPORT - 96'MSL - Towered - ZHU",
                   "text": "ZHU_ISR *** FAA-IAH : ICAO-KIAH - GEORGE BUSH INTCNTL/HOUSTON AIRPORT - 96'MSL - Towered - ZHU"
                 }
@@ -2094,23 +2094,23 @@
       ]
     },
     {
-      "id": "section-airline-telephony-recall-13",
+      "id": "airline-telephony-recall",
       "title": "Airline/Telephony Recall",
       "intro": [
         {
-          "id": "section-airline-telephony-recall-13-intro-1",
+          "id": "airline-telephony-recall-intro-1",
           "html": "Results are printed in the CRC chat window.",
           "text": "Results are printed in the CRC chat window."
         },
         {
-          "id": "section-airline-telephony-recall-13-intro-2",
+          "id": "airline-telephony-recall-intro-2",
           "html": "<span class=\"command\" style=\"font-size: larger;\">.id</span> + 3 letter company callsign.",
           "text": ".id + 3 letter company callsign."
         }
       ],
       "tables": [
         {
-          "id": "section-airline-telephony-recall-13-table-1",
+          "id": "airline-telephony-recall-table-1",
           "title": "Table 1",
           "columns": [
             "Entering",
@@ -2118,30 +2118,30 @@
           ],
           "entries": [
             {
-              "id": "section-airline-telephony-recall-13-t1-r1",
+              "id": "iddal",
               "cells": [
                 {
-                  "id": "section-airline-telephony-recall-13-t1-r1-c1",
+                  "id": "iddal-c1",
                   "html": ".idDAL",
                   "text": ".idDAL"
                 },
                 {
-                  "id": "section-airline-telephony-recall-13-t1-r1-c2",
+                  "id": "iddal-c2",
                   "html": "FAA_ISR *** 3LD: DAL - TELEPHONY: DELTA",
                   "text": "FAA_ISR *** 3LD: DAL - TELEPHONY: DELTA"
                 }
               ]
             },
             {
-              "id": "section-airline-telephony-recall-13-t1-r2",
+              "id": "idaay",
               "cells": [
                 {
-                  "id": "section-airline-telephony-recall-13-t1-r2-c1",
+                  "id": "idaay-c1",
                   "html": ".idAAY",
                   "text": ".idAAY"
                 },
                 {
-                  "id": "section-airline-telephony-recall-13-t1-r2-c2",
+                  "id": "idaay-c2",
                   "html": "FAA_ISR *** 3LD: AAY - TELEPHONY: ALLEGIANT",
                   "text": "FAA_ISR *** 3LD: AAY - TELEPHONY: ALLEGIANT"
                 }
@@ -2152,18 +2152,18 @@
       ]
     },
     {
-      "id": "section-clearance-delivery-14",
+      "id": "clearance-delivery",
       "title": "Clearance Delivery",
       "intro": [
         {
-          "id": "section-clearance-delivery-14-intro-1",
+          "id": "clearance-delivery-intro-1",
           "html": "Syntax: Type callsign and press aircraft select (default in CRC is <span class=\"code\">Numpad Add</span>). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive.",
           "text": "Syntax: Type callsign and press aircraft select (default in CRC is Numpad Add). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive."
         }
       ],
       "tables": [
         {
-          "id": "section-clearance-delivery-14-table-1",
+          "id": "clearance-delivery-table-1",
           "title": "Table 1",
           "columns": [
             "Command",
@@ -2172,300 +2172,300 @@
           ],
           "entries": [
             {
-              "id": "section-clearance-delivery-14-t1-r1",
+              "id": "clr",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r1-c1",
+                  "id": "clr-c1",
                   "html": ".clr $1",
                   "text": ".clr $1"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r1-c2",
+                  "id": "clr-c2",
                   "html": ".clr 6",
                   "text": ".clr 6"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r1-c3",
+                  "id": "clr-c3",
                   "html": "\"Clearance on request number 6.�",
                   "text": "\"Clearance on request number 6.�"
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r2",
+              "id": "clravail",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r2-c1",
+                  "id": "clravail-c1",
                   "html": ".clravail",
                   "text": ".clravail"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r2-c2",
+                  "id": "clravail-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r2-c3",
+                  "id": "clravail-c3",
                   "html": "\"Clearance available, advise when ready to copy.�",
                   "text": "\"Clearance available, advise when ready to copy.�"
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r3",
+              "id": "amend",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r3-c1",
+                  "id": "amend-c1",
                   "html": ".amend",
                   "text": ".amend"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r3-c2",
+                  "id": "amend-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r3-c3",
+                  "id": "amend-c3",
                   "html": "\"I have an amendment to your flight plan, advise ready to copy.�",
                   "text": "\"I have an amendment to your flight plan, advise ready to copy.�"
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r4",
+              "id": "fullam",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r4-c1",
+                  "id": "fullam-c1",
                   "html": ".fullam",
                   "text": ".fullam"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r4-c2",
+                  "id": "fullam-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r4-c3",
+                  "id": "fullam-c3",
                   "html": "\"I have a full re-route clearance for your flight plan, advise ready to copy.�",
                   "text": "\"I have a full re-route clearance for your flight plan, advise ready to copy.�"
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r5",
+              "id": "faroute",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r5-c1",
+                  "id": "faroute-c1",
                   "html": ".faroute",
                   "text": ".faroute"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r5-c2",
+                  "id": "faroute-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r5-c3",
+                  "id": "faroute-c3",
                   "html": "Opens Flight Aware IFR route analyzer with selected aircraft�s origin and destination prefilled.",
                   "text": "Opens Flight Aware IFR route analyzer with selected aircraft�s origin and destination prefilled."
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r6",
+              "id": "ifrv",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r6-c1",
+                  "id": "ifrv-c1",
                   "html": ".ifrv DEPID",
                   "text": ".ifrv DEPID"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r6-c2",
+                  "id": "ifrv-c2",
                   "html": ".ifrv 1W",
                   "text": ".ifrv 1W"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r6-c3",
+                  "id": "ifrv-c3",
                   "html": "Sends full IFR clearance to the selected aircraft: <b>climb via SID and departure frequency</b>.",
                   "text": "Sends full IFR clearance to the selected aircraft: climb via SID and departure frequency."
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r7",
+              "id": "ifrvx",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r7-c1",
+                  "id": "ifrvx-c1",
                   "html": ".ifrvx $1 DEPID",
                   "text": ".ifrvx $1 DEPID"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r7-c2",
+                  "id": "ifrvx-c2",
                   "html": ".ifrvx 4000 1W",
                   "text": ".ifrvx 4000 1W"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r7-c3",
+                  "id": "ifrvx-c3",
                   "html": "Sends full IFR clearance to the selected aircraft: <b>climb via SID except maintain and departure frequency</b>.",
                   "text": "Sends full IFR clearance to the selected aircraft: climb via SID except maintain and departure frequency."
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r8",
+              "id": "ifr",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r8-c1",
+                  "id": "ifr-c1",
                   "html": ".ifr $1 DEPID",
                   "text": ".ifr $1 DEPID"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r8-c2",
+                  "id": "ifr-c2",
                   "html": ".ifr 4000 1W",
                   "text": ".ifr 4000 1W"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r8-c3",
+                  "id": "ifr-c3",
                   "html": "Sends full IFR clearance to the selected aircraft: <b>altitude to maintain and departure frequency</b>.",
                   "text": "Sends full IFR clearance to the selected aircraft: altitude to maintain and departure frequency."
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r9",
+              "id": "ifrvu",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r9-c1",
+                  "id": "ifrvu-c1",
                   "html": ".ifrvu",
                   "text": ".ifrvu"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r9-c2",
+                  "id": "ifrvu-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r9-c3",
+                  "id": "ifrvu-c3",
                   "html": "Sends full IFR clearance to the selected aircraft: <b>climb via SID and departure OFFLINE</b>.",
                   "text": "Sends full IFR clearance to the selected aircraft: climb via SID and departure OFFLINE."
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r10",
+              "id": "ifrvxu",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r10-c1",
+                  "id": "ifrvxu-c1",
                   "html": ".ifrvxu $1",
                   "text": ".ifrvxu $1"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r10-c2",
+                  "id": "ifrvxu-c2",
                   "html": ".ifrvxu 4000",
                   "text": ".ifrvxu 4000"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r10-c3",
+                  "id": "ifrvxu-c3",
                   "html": "Sends full IFR clearance to the selected aircraft: <b>climb via SID except maintain and departure OFFLINE</b>.",
                   "text": "Sends full IFR clearance to the selected aircraft: climb via SID except maintain and departure OFFLINE."
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r11",
+              "id": "ifru",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r11-c1",
+                  "id": "ifru-c1",
                   "html": ".ifru $1",
                   "text": ".ifru $1"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r11-c2",
+                  "id": "ifru-c2",
                   "html": ".ifru 4000",
                   "text": ".ifru 4000"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r11-c3",
+                  "id": "ifru-c3",
                   "html": "Sends full IFR clearance to the selected aircraft: <b>altitude to maintain and departure OFFLINE</b>.",
                   "text": "Sends full IFR clearance to the selected aircraft: altitude to maintain and departure OFFLINE."
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r12",
+              "id": "rcor",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r12-c1",
+                  "id": "rcor-c1",
                   "html": ".rcor NEXTID",
                   "text": ".rcor NEXTID"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r12-c2",
+                  "id": "rcor-c2",
                   "html": ".rcor 1D",
                   "text": ".rcor 1D"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r12-c3",
+                  "id": "rcor-c3",
                   "html": "\"Readback correct, push and start at pilot's discretion, contact <span class=\"code\">1D freq</span> for taxi.�",
                   "text": "\"Readback correct, push and start at pilot's discretion, contact 1D freq for taxi.�"
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r13",
+              "id": "rcorg",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r13-c1",
+                  "id": "rcorg-c1",
                   "html": ".rcorg $1",
                   "text": ".rcorg $1"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r13-c2",
+                  "id": "rcorg-c2",
                   "html": ".rcorg 15L",
                   "text": ".rcorg 15L"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r13-c3",
+                  "id": "rcorg-c3",
                   "html": "\"Readback correct, push and start at pilot's discretion, call ready for taxi, expect runway <span class=\"code\">15L</span> for departure.�",
                   "text": "\"Readback correct, push and start at pilot's discretion, call ready for taxi, expect runway 15L for departure.�"
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r14",
+              "id": "h4rel",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r14-c1",
+                  "id": "h4rel-c1",
                   "html": ".h4rel",
                   "text": ".h4rel"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r14-c2",
+                  "id": "h4rel-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r14-c3",
+                  "id": "h4rel-c3",
                   "html": "\"Readback correct, hold for release. Advise this frequency when number 1 for the runway. Frequency change approved.�",
                   "text": "\"Readback correct, hold for release. Advise this frequency when number 1 for the runway. Frequency change approved.�"
                 }
               ]
             },
             {
-              "id": "section-clearance-delivery-14-t1-r15",
+              "id": "faroute-2",
               "cells": [
                 {
-                  "id": "section-clearance-delivery-14-t1-r15-c1",
+                  "id": "faroute-2-c1",
                   "html": ".faroute",
                   "text": ".faroute"
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r15-c2",
+                  "id": "faroute-2-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-clearance-delivery-14-t1-r15-c3",
+                  "id": "faroute-2-c3",
                   "html": "With an aircraft selected, opens FlightAware IFR route analyzer with the aircraft's departure and destination pre-filled.",
                   "text": "With an aircraft selected, opens FlightAware IFR route analyzer with the aircraft's departure and destination pre-filled."
                 }
@@ -2476,18 +2476,18 @@
       ]
     },
     {
-      "id": "section-ground-15",
+      "id": "ground",
       "title": "Ground",
       "intro": [
         {
-          "id": "section-ground-15-intro-1",
+          "id": "ground-intro-1",
           "html": "Syntax: Type callsign and press aircraft select (default in CRC is <span class=\"code\">Numpad Add</span>). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive.",
           "text": "Syntax: Type callsign and press aircraft select (default in CRC is Numpad Add). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive."
         }
       ],
       "tables": [
         {
-          "id": "section-ground-15-table-1",
+          "id": "ground-table-1",
           "title": "Table 1",
           "columns": [
             "Command",
@@ -2496,160 +2496,160 @@
           ],
           "entries": [
             {
-              "id": "section-ground-15-t1-r1",
+              "id": "td",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r1-c1",
+                  "id": "td-c1",
                   "html": ".td $1 $2...",
                   "text": ".td $1 $2..."
                 },
                 {
-                  "id": "section-ground-15-t1-r1-c2",
+                  "id": "td-c2",
                   "html": ".td 18L G2 G B",
                   "text": ".td 18L G2 G B"
                 },
                 {
-                  "id": "section-ground-15-t1-r1-c3",
+                  "id": "td-c3",
                   "html": "Departure taxi: \"Runway 18L, taxi via G2 G B�",
                   "text": "Departure taxi: \"Runway 18L, taxi via G2 G B�"
                 }
               ]
             },
             {
-              "id": "section-ground-15-t1-r2",
+              "id": "ta",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r2-c1",
+                  "id": "ta-c1",
                   "html": ".ta $1 $2...",
                   "text": ".ta $1 $2..."
                 },
                 {
-                  "id": "section-ground-15-t1-r2-c2",
+                  "id": "ta-c2",
                   "html": ".ta L A H G3",
                   "text": ".ta L A H G3"
                 },
                 {
-                  "id": "section-ground-15-t1-r2-c3",
+                  "id": "ta-c3",
                   "html": "Arrival taxi: \"Taxi to the ramp via L A H G3�",
                   "text": "Arrival taxi: \"Taxi to the ramp via L A H G3�"
                 }
               ]
             },
             {
-              "id": "section-ground-15-t1-r3",
+              "id": "tapd",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r3-c1",
+                  "id": "tapd-c1",
                   "html": ".tapd",
                   "text": ".tapd"
                 },
                 {
-                  "id": "section-ground-15-t1-r3-c2",
+                  "id": "tapd-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-ground-15-t1-r3-c3",
+                  "id": "tapd-c3",
                   "html": "\"Taxi to the ramp at pilot's discretion, cross all runways.�",
                   "text": "\"Taxi to the ramp at pilot's discretion, cross all runways.�"
                 }
               ]
             },
             {
-              "id": "section-ground-15-t1-r4",
+              "id": "hs",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r4-c1",
+                  "id": "hs-c1",
                   "html": ".hs $1",
                   "text": ".hs $1"
                 },
                 {
-                  "id": "section-ground-15-t1-r4-c2",
+                  "id": "hs-c2",
                   "html": ".hs H",
                   "text": ".hs H"
                 },
                 {
-                  "id": "section-ground-15-t1-r4-c3",
+                  "id": "hs-c3",
                   "html": "\"Hold short H.�",
                   "text": "\"Hold short H.�"
                 }
               ]
             },
             {
-              "id": "section-ground-15-t1-r5",
+              "id": "hp",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r5-c1",
+                  "id": "hp-c1",
                   "html": ".hp",
                   "text": ".hp"
                 },
                 {
-                  "id": "section-ground-15-t1-r5-c2",
+                  "id": "hp-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-ground-15-t1-r5-c3",
+                  "id": "hp-c3",
                   "html": "\"Hold position.�",
                   "text": "\"Hold position.�"
                 }
               ]
             },
             {
-              "id": "section-ground-15-t1-r6",
+              "id": "ct",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r6-c1",
+                  "id": "ct-c1",
                   "html": ".ct",
                   "text": ".ct"
                 },
                 {
-                  "id": "section-ground-15-t1-r6-c2",
+                  "id": "ct-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-ground-15-t1-r6-c3",
+                  "id": "ct-c3",
                   "html": "\"Continue taxi.�",
                   "text": "\"Continue taxi.�"
                 }
               ]
             },
             {
-              "id": "section-ground-15-t1-r7",
+              "id": "gwt",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r7-c1",
+                  "id": "gwt-c1",
                   "html": ".gwt $1...",
                   "text": ".gwt $1..."
                 },
                 {
-                  "id": "section-ground-15-t1-r7-c2",
+                  "id": "gwt-c2",
                   "html": ".gwt the A320 on G<br>.gwt the Cessna crossing right to left",
                   "text": ".gwt the A320 on G .gwt the Cessna crossing right to left"
                 },
                 {
-                  "id": "section-ground-15-t1-r7-c3",
+                  "id": "gwt-c3",
                   "html": "\"Give way to the A320 on G�<br>\"Give way to the Cessna crossing left to right�",
                   "text": "\"Give way to the A320 on G� \"Give way to the Cessna crossing left to right�"
                 }
               ]
             },
             {
-              "id": "section-ground-15-t1-r8",
+              "id": "crs",
               "cells": [
                 {
-                  "id": "section-ground-15-t1-r8-c1",
+                  "id": "crs-c1",
                   "html": ".crs $1...",
                   "text": ".crs $1..."
                 },
                 {
-                  "id": "section-ground-15-t1-r8-c2",
+                  "id": "crs-c2",
                   "html": ".crs 15L",
                   "text": ".crs 15L"
                 },
                 {
-                  "id": "section-ground-15-t1-r8-c3",
+                  "id": "crs-c3",
                   "html": "\"Cross runway 15L�",
                   "text": "\"Cross runway 15L�"
                 }
@@ -2660,18 +2660,18 @@
       ]
     },
     {
-      "id": "section-local-16",
+      "id": "local",
       "title": "Local",
       "intro": [
         {
-          "id": "section-local-16-intro-1",
+          "id": "local-intro-1",
           "html": "Syntax: Type callsign and press aircraft select (default in CRC is <span class=\"code\">Numpad Add</span>). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive.",
           "text": "Syntax: Type callsign and press aircraft select (default in CRC is Numpad Add). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive."
         }
       ],
       "tables": [
         {
-          "id": "section-local-16-table-1",
+          "id": "local-table-1",
           "title": "Table 1",
           "columns": [
             "Command",
@@ -2680,400 +2680,400 @@
           ],
           "entries": [
             {
-              "id": "section-local-16-t1-r1",
+              "id": "ctl",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r1-c1",
+                  "id": "ctl-c1",
                   "html": ".ctl $1",
                   "text": ".ctl $1"
                 },
                 {
-                  "id": "section-local-16-t1-r1-c2",
+                  "id": "ctl-c2",
                   "html": ".ctl 26R",
                   "text": ".ctl 26R"
                 },
                 {
-                  "id": "section-local-16-t1-r1-c3",
+                  "id": "ctl-c3",
                   "html": "\"Runway 26R, cleared to land. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Runway 26R, cleared to land. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r2",
+              "id": "cto",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r2-c1",
+                  "id": "cto-c1",
                   "html": ".cto $1",
                   "text": ".cto $1"
                 },
                 {
-                  "id": "section-local-16-t1-r2-c2",
+                  "id": "cto-c2",
                   "html": ".cto 22",
                   "text": ".cto 22"
                 },
                 {
-                  "id": "section-local-16-t1-r2-c3",
+                  "id": "cto-c3",
                   "html": "\"Runway 22, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Runway 22, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r3",
+              "id": "ctorh",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r3-c1",
+                  "id": "ctorh-c1",
                   "html": ".ctorh $1",
                   "text": ".ctorh $1"
                 },
                 {
-                  "id": "section-local-16-t1-r3-c2",
+                  "id": "ctorh-c2",
                   "html": ".ctorh 4",
                   "text": ".ctorh 4"
                 },
                 {
-                  "id": "section-local-16-t1-r3-c3",
+                  "id": "ctorh-c3",
                   "html": "\"Fly runway heading, runway 4, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Fly runway heading, runway 4, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r4",
+              "id": "ctohdg",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r4-c1",
+                  "id": "ctohdg-c1",
                   "html": ".ctohdg $1 $2",
                   "text": ".ctohdg $1 $2"
                 },
                 {
-                  "id": "section-local-16-t1-r4-c2",
+                  "id": "ctohdg-c2",
                   "html": ".ctohdg 36R 030",
                   "text": ".ctohdg 36R 030"
                 },
                 {
-                  "id": "section-local-16-t1-r4-c3",
+                  "id": "ctohdg-c3",
                   "html": "\"Fly heading 030, runway 36R, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Fly heading 030, runway 36R, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r5",
+              "id": "ctotl",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r5-c1",
+                  "id": "ctotl-c1",
                   "html": ".ctotl $1 $2",
                   "text": ".ctotl $1 $2"
                 },
                 {
-                  "id": "section-local-16-t1-r5-c2",
+                  "id": "ctotl-c2",
                   "html": ".ctotl 18L 150",
                   "text": ".ctotl 18L 150"
                 },
                 {
-                  "id": "section-local-16-t1-r5-c3",
+                  "id": "ctotl-c3",
                   "html": "\"Turn left heading 150, runway 18R, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Turn left heading 150, runway 18R, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r6",
+              "id": "ctotr",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r6-c1",
+                  "id": "ctotr-c1",
                   "html": ".ctotr $1 $2",
                   "text": ".ctotr $1 $2"
                 },
                 {
-                  "id": "section-local-16-t1-r6-c2",
+                  "id": "ctotr-c2",
                   "html": ".ctotr 15R 300",
                   "text": ".ctotr 15R 300"
                 },
                 {
-                  "id": "section-local-16-t1-r6-c3",
+                  "id": "ctotr-c3",
                   "html": "\"Turn right heading 300, runway 15R, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Turn right heading 300, runway 15R, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r7",
+              "id": "ctor",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r7-c1",
+                  "id": "ctor-c1",
                   "html": ".ctor $1 $2",
                   "text": ".ctor $1 $2"
                 },
                 {
-                  "id": "section-local-16-t1-r7-c2",
+                  "id": "ctor-c2",
                   "html": ".ctor 15L SCAMM",
                   "text": ".ctor 15L SCAMM"
                 },
                 {
-                  "id": "section-local-16-t1-r7-c3",
+                  "id": "ctor-c3",
                   "html": "\"RNAV to SCAMM, runway 15L, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"RNAV to SCAMM, runway 15L, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r8",
+              "id": "ctomrt",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r8-c1",
+                  "id": "ctomrt-c1",
                   "html": ".ctomrt $1",
                   "text": ".ctomrt $1"
                 },
                 {
-                  "id": "section-local-16-t1-r8-c2",
+                  "id": "ctomrt-c2",
                   "html": ".ctomrt 11",
                   "text": ".ctomrt 11"
                 },
                 {
-                  "id": "section-local-16-t1-r8-c3",
+                  "id": "ctomrt-c3",
                   "html": "\"Make right traffic, runway 11, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Make right traffic, runway 11, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r9",
+              "id": "ctomlt",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r9-c1",
+                  "id": "ctomlt-c1",
                   "html": ".ctomlt $1",
                   "text": ".ctomlt $1"
                 },
                 {
-                  "id": "section-local-16-t1-r9-c2",
+                  "id": "ctomlt-c2",
                   "html": ".ctolt 29",
                   "text": ".ctolt 29"
                 },
                 {
-                  "id": "section-local-16-t1-r9-c3",
+                  "id": "ctomlt-c3",
                   "html": "\"Make left traffic, runway 29, cleared for takeoff. Wind <span class=\"code\">current wind</span>.�",
                   "text": "\"Make left traffic, runway 29, cleared for takeoff. Wind current wind.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r10",
+              "id": "ctoc",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r10-c1",
+                  "id": "ctoc-c1",
                   "html": ".ctoc",
                   "text": ".ctoc"
                 },
                 {
-                  "id": "section-local-16-t1-r10-c2",
+                  "id": "ctoc-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-local-16-t1-r10-c3",
+                  "id": "ctoc-c3",
                   "html": "\"Cancel takeoff clearance.�",
                   "text": "\"Cancel takeoff clearance.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r11",
+              "id": "gafpm",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r11-c1",
+                  "id": "gafpm-c1",
                   "html": ".gafpm",
                   "text": ".gafpm"
                 },
                 {
-                  "id": "section-local-16-t1-r11-c2",
+                  "id": "gafpm-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-local-16-t1-r11-c3",
+                  "id": "gafpm-c3",
                   "html": "\"Go around, fly the published missed approach.�",
                   "text": "\"Go around, fly the published missed approach.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r12",
+              "id": "gavec",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r12-c1",
+                  "id": "gavec-c1",
                   "html": ".gavec $1 $2 NEXTID",
                   "text": ".gavec $1 $2 NEXTID"
                 },
                 {
-                  "id": "section-local-16-t1-r12-c2",
+                  "id": "gavec-c2",
                   "html": ".gavec 180 3000 1W",
                   "text": ".gavec 180 3000 1W"
                 },
                 {
-                  "id": "section-local-16-t1-r12-c3",
+                  "id": "gavec-c3",
                   "html": "\"Go around. Fly heading 180, maintain 3000, contact <span class=\"code\">1W freq</span>.�",
                   "text": "\"Go around. Fly heading 180, maintain 3000, contact 1W freq.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r13",
+              "id": "luaw",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r13-c1",
+                  "id": "luaw-c1",
                   "html": ".luaw $1",
                   "text": ".luaw $1"
                 },
                 {
-                  "id": "section-local-16-t1-r13-c2",
+                  "id": "luaw-c2",
                   "html": ".luaw 13R",
                   "text": ".luaw 13R"
                 },
                 {
-                  "id": "section-local-16-t1-r13-c3",
+                  "id": "luaw-c3",
                   "html": "\"Runway 13R, line up and wait.�",
                   "text": "\"Runway 13R, line up and wait.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r14",
+              "id": "wel",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r14-c1",
+                  "id": "wel-c1",
                   "html": ".wel $1 $2",
                   "text": ".wel $1 $2"
                 },
                 {
-                  "id": "section-local-16-t1-r14-c2",
+                  "id": "wel-c2",
                   "html": ".wel Austin L<br>.wel AUS right",
                   "text": ".wel Austin L .wel AUS right"
                 },
                 {
-                  "id": "section-local-16-t1-r14-c3",
+                  "id": "wel-c3",
                   "html": "\"Welcome to Austin, exit L when able.�<br>\"Welcome to AUS, exit right when able.�",
                   "text": "\"Welcome to Austin, exit L when able.� \"Welcome to AUS, exit right when able.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r15",
+              "id": "xrhs",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r15-c1",
+                  "id": "xrhs-c1",
                   "html": ".xrhs $1 $2 $3",
                   "text": ".xrhs $1 $2 $3"
                 },
                 {
-                  "id": "section-local-16-t1-r15-c2",
+                  "id": "xrhs-c2",
                   "html": ".xrhs 8R NA ground",
                   "text": ".xrhs 8R NA ground"
                 },
                 {
-                  "id": "section-local-16-t1-r15-c3",
+                  "id": "xrhs-c3",
                   "html": "\"Cross runway 8R, hold short NA, contact ground on the other side.�",
                   "text": "\"Cross runway 8R, hold short NA, contact ground on the other side.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r16",
+              "id": "xr",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r16-c1",
+                  "id": "xr-c1",
                   "html": ".xr $1 $2",
                   "text": ".xr $1 $2"
                 },
                 {
-                  "id": "section-local-16-t1-r16-c2",
+                  "id": "xr-c2",
                   "html": ".xr 26L ramp",
                   "text": ".xr 26L ramp"
                 },
                 {
-                  "id": "section-local-16-t1-r16-c3",
+                  "id": "xr-c3",
                   "html": "\"Cross runway 26L, contact ramp on the other side.�",
                   "text": "\"Cross runway 26L, contact ramp on the other side.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r17",
+              "id": "elb",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r17-c1",
+                  "id": "elb-c1",
                   "html": ".elb $1",
                   "text": ".elb $1"
                 },
                 {
-                  "id": "section-local-16-t1-r17-c2",
+                  "id": "elb-c2",
                   "html": ".elb 18L",
                   "text": ".elb 18L"
                 },
                 {
-                  "id": "section-local-16-t1-r17-c3",
+                  "id": "elb-c3",
                   "html": "\"Enter left base runway 18L.�",
                   "text": "\"Enter left base runway 18L.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r18",
+              "id": "erb",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r18-c1",
+                  "id": "erb-c1",
                   "html": ".erb $1",
                   "text": ".erb $1"
                 },
                 {
-                  "id": "section-local-16-t1-r18-c2",
+                  "id": "erb-c2",
                   "html": ".erb 18R",
                   "text": ".erb 18R"
                 },
                 {
-                  "id": "section-local-16-t1-r18-c3",
+                  "id": "erb-c3",
                   "html": "\"Enter right base runway 18R.�",
                   "text": "\"Enter right base runway 18R.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r19",
+              "id": "erd",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r19-c1",
+                  "id": "erd-c1",
                   "html": ".erd $1",
                   "text": ".erd $1"
                 },
                 {
-                  "id": "section-local-16-t1-r19-c2",
+                  "id": "erd-c2",
                   "html": ".erd 22",
                   "text": ".erd 22"
                 },
                 {
-                  "id": "section-local-16-t1-r19-c3",
+                  "id": "erd-c3",
                   "html": "\"Enter right downwind runway 22.�",
                   "text": "\"Enter right downwind runway 22.�"
                 }
               ]
             },
             {
-              "id": "section-local-16-t1-r20",
+              "id": "eld",
               "cells": [
                 {
-                  "id": "section-local-16-t1-r20-c1",
+                  "id": "eld-c1",
                   "html": ".eld $1",
                   "text": ".eld $1"
                 },
                 {
-                  "id": "section-local-16-t1-r20-c2",
+                  "id": "eld-c2",
                   "html": ".eld 4",
                   "text": ".eld 4"
                 },
                 {
-                  "id": "section-local-16-t1-r20-c3",
+                  "id": "eld-c3",
                   "html": "\"Enter left downwind runway 4.�",
                   "text": "\"Enter left downwind runway 4.�"
                 }
@@ -3084,18 +3084,18 @@
       ]
     },
     {
-      "id": "section-tracon-17",
+      "id": "tracon",
       "title": "TRACON",
       "intro": [
         {
-          "id": "section-tracon-17-intro-1",
+          "id": "tracon-intro-1",
           "html": "Syntax: Type callsign and press aircraft select (default in CRC is <span class=\"code\">Numpad Add</span>). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive.",
           "text": "Syntax: Type callsign and press aircraft select (default in CRC is Numpad Add). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive."
         }
       ],
       "tables": [
         {
-          "id": "section-tracon-17-table-1",
+          "id": "tracon-table-1",
           "title": "Table 1",
           "columns": [
             "Command",
@@ -3104,660 +3104,660 @@
           ],
           "entries": [
             {
-              "id": "section-tracon-17-t1-r1",
+              "id": "rel4dep",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r1-c1",
+                  "id": "rel4dep-c1",
                   "html": ".rel4dep $1 $2",
                   "text": ".rel4dep $1 $2"
                 },
                 {
-                  "id": "section-tracon-17-t1-r1-c2",
+                  "id": "rel4dep-c2",
                   "html": ".rel4dep 0 10",
                   "text": ".rel4dep 0 10"
                 },
                 {
-                  "id": "section-tracon-17-t1-r1-c3",
+                  "id": "rel4dep-c3",
                   "html": "\"Released for departure at <span class=\"code\">time + 0 mins</span>, clearance void if not off by <span class=\"code\">time + 10 mins</span>, time now <span class=\"code\">time</span>. Frequency change approved.�",
                   "text": "\"Released for departure at time + 0 mins, clearance void if not off by time + 10 mins, time now time. Frequency change approved.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r2",
+              "id": "rc",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r2-c1",
+                  "id": "rc-c1",
                   "html": ".rc",
                   "text": ".rc"
                 },
                 {
-                  "id": "section-tracon-17-t1-r2-c2",
+                  "id": "rc-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-tracon-17-t1-r2-c3",
+                  "id": "rc-c3",
                   "html": "\"Radar contact.�",
                   "text": "\"Radar contact.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r3",
+              "id": "rcsalt",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r3-c1",
+                  "id": "rcsalt-c1",
                   "html": ".rcsalt",
                   "text": ".rcsalt"
                 },
                 {
-                  "id": "section-tracon-17-t1-r3-c2",
+                  "id": "rcsalt-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-tracon-17-t1-r3-c3",
+                  "id": "rcsalt-c3",
                   "html": "\"Radar contact, say altitude leaving.�",
                   "text": "\"Radar contact, say altitude leaving.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r4",
+              "id": "rcv",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r4-c1",
+                  "id": "rcv-c1",
                   "html": ".rcv $1",
                   "text": ".rcv $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r4-c2",
+                  "id": "rcv-c2",
                   "html": ".rcv CWK",
                   "text": ".rcv CWK"
                 },
                 {
-                  "id": "section-tracon-17-t1-r4-c3",
+                  "id": "rcv-c3",
                   "html": "\"Radar contact <span class=\"code\">distance and bearing</span> of CWK, altitude <span class=\"code\">altitude</span>.�",
                   "text": "\"Radar contact distance and bearing of CWK, altitude altitude.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r5",
+              "id": "rcl",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r5-c1",
+                  "id": "rcl-c1",
                   "html": ".rcl",
                   "text": ".rcl"
                 },
                 {
-                  "id": "section-tracon-17-t1-r5-c2",
+                  "id": "rcl-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-tracon-17-t1-r5-c3",
+                  "id": "rcl-c3",
                   "html": "\"Radar contact lost.�",
                   "text": "\"Radar contact lost.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r6",
+              "id": "cils",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r6-c1",
+                  "id": "cils-c1",
                   "html": ".cils $1 $2 $3 $4",
                   "text": ".cils $1 $2 $3 $4"
                 },
                 {
-                  "id": "section-tracon-17-t1-r6-c2",
+                  "id": "cils-c2",
                   "html": ".cils RRTOO 220 2500 18L",
                   "text": ".cils RRTOO 220 2500 18L"
                 },
                 {
-                  "id": "section-tracon-17-t1-r6-c3",
+                  "id": "cils-c3",
                   "html": "Standard ILS PTAC clearance: \"<span class=\"code\">Distance</span> from RRTOO, fly heading 220, maintain 2500 until established, cleared ILS runway 18L approach.�",
                   "text": "Standard ILS PTAC clearance: \"Distance from RRTOO, fly heading 220, maintain 2500 until established, cleared ILS runway 18L approach.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r7",
+              "id": "rnvptac",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r7-c1",
+                  "id": "rnvptac-c1",
                   "html": ".rnvptac $1 $2 $3 $4",
                   "text": ".rnvptac $1 $2 $3 $4"
                 },
                 {
-                  "id": "section-tracon-17-t1-r7-c2",
+                  "id": "rnvptac-c2",
                   "html": ".rnvptac RRTOO 2500 RNAVZ 18L",
                   "text": ".rnvptac RRTOO 2500 RNAVZ 18L"
                 },
                 {
-                  "id": "section-tracon-17-t1-r7-c3",
+                  "id": "rnvptac-c3",
                   "html": "Standard RNAV PTAC clearance: \"Cleared direct RRTOO, cross RRTOO at or above 2500, cleared RNAV-Z runway 18L approach.�",
                   "text": "Standard RNAV PTAC clearance: \"Cleared direct RRTOO, cross RRTOO at or above 2500, cleared RNAV-Z runway 18L approach.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r8",
+              "id": "apat",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r8-c1",
+                  "id": "apat-c1",
                   "html": ".apat",
                   "text": ".apat"
                 },
                 {
-                  "id": "section-tracon-17-t1-r8-c2",
+                  "id": "apat-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-tracon-17-t1-r8-c3",
+                  "id": "apat-c3",
                   "html": "\"<span class=\"code\">Arrival</span> airport is at <span class=\"code\">clock position and distance</span>, report in sight.�",
                   "text": "\"Arrival airport is at clock position and distance, report in sight.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r9",
+              "id": "cvis",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r9-c1",
+                  "id": "cvis-c1",
                   "html": ".cvis $1",
                   "text": ".cvis $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r9-c2",
+                  "id": "cvis-c2",
                   "html": ".cvis 22",
                   "text": ".cvis 22"
                 },
                 {
-                  "id": "section-tracon-17-t1-r9-c3",
+                  "id": "cvis-c3",
                   "html": "\"Cleared visual approach runway 22.�",
                   "text": "\"Cleared visual approach runway 22.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r10",
+              "id": "notwrifr",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r10-c1",
+                  "id": "notwrifr-c1",
                   "html": ".notwrifr",
                   "text": ".notwrifr"
                 },
                 {
-                  "id": "section-tracon-17-t1-r10-c2",
+                  "id": "notwrifr-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-tracon-17-t1-r10-c3",
+                  "id": "notwrifr-c3",
                   "html": "\"No visible traffic between you and the field, report IFR cancellation in the air or on the ground this frequency. Frequency change approved.�",
                   "text": "\"No visible traffic between you and the field, report IFR cancellation in the air or on the ground this frequency. Frequency change approved.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r11",
+              "id": "dept",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r11-c1",
+                  "id": "dept-c1",
                   "html": ".dept $1 $2",
                   "text": ".dept $1 $2"
                 },
                 {
-                  "id": "section-tracon-17-t1-r11-c2",
+                  "id": "dept-c2",
                   "html": ".dept BEESO 270",
                   "text": ".dept BEESO 270"
                 },
                 {
-                  "id": "section-tracon-17-t1-r11-c3",
+                  "id": "dept-c3",
                   "html": "\"Depart BEESO heading 270.�",
                   "text": "\"Depart BEESO heading 270.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r12",
+              "id": "vr",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r12-c1",
+                  "id": "vr-c1",
                   "html": ".vr $1",
                   "text": ".vr $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r12-c2",
+                  "id": "vr-c2",
                   "html": ".vr sequence<br>.vr spacing",
                   "text": ".vr sequence .vr spacing"
                 },
                 {
-                  "id": "section-tracon-17-t1-r12-c3",
+                  "id": "vr-c3",
                   "html": "\"Vectors for sequence.�<br>\"Vectors for spacing.�",
                   "text": "\"Vectors for sequence.� \"Vectors for spacing.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r13",
+              "id": "xapp",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r13-c1",
+                  "id": "xapp-c1",
                   "html": ".xapp $1 $2",
                   "text": ".xapp $1 $2"
                 },
                 {
-                  "id": "section-tracon-17-t1-r13-c2",
+                  "id": "xapp-c2",
                   "html": ".xapp ILS 18L",
                   "text": ".xapp ILS 18L"
                 },
                 {
-                  "id": "section-tracon-17-t1-r13-c3",
+                  "id": "xapp-c3",
                   "html": "\"Expect ILS runway 18L, <span class=\"code\">arrival</span> altimeter <span class=\"code\">altimeter</span>.�",
                   "text": "\"Expect ILS runway 18L, arrival altimeter altimeter.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r14",
+              "id": "xils",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r14-c1",
+                  "id": "xils-c1",
                   "html": ".xils $1",
                   "text": ".xils $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r14-c2",
+                  "id": "xils-c2",
                   "html": ".xils 11",
                   "text": ".xils 11"
                 },
                 {
-                  "id": "section-tracon-17-t1-r14-c3",
+                  "id": "xils-c3",
                   "html": "\"Expect ILS runway 11.�",
                   "text": "\"Expect ILS runway 11.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r15",
+              "id": "xvis",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r15-c1",
+                  "id": "xvis-c1",
                   "html": ".xvis $1",
                   "text": ".xvis $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r15-c2",
+                  "id": "xvis-c2",
                   "html": ".xvis 29",
                   "text": ".xvis 29"
                 },
                 {
-                  "id": "section-tracon-17-t1-r15-c3",
+                  "id": "xvis-c3",
                   "html": "\"Expect visual approach runway 29.�",
                   "text": "\"Expect visual approach runway 29.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r16",
+              "id": "tra",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r16-c1",
+                  "id": "tra-c1",
                   "html": ".tra $1 $2 $3 ...",
                   "text": ".tra $1 $2 $3 ..."
                 },
                 {
-                  "id": "section-tracon-17-t1-r16-c2",
+                  "id": "tra-c2",
                   "html": ".tra 3 2 turn right",
                   "text": ".tra 3 2 turn right"
                 },
                 {
-                  "id": "section-tracon-17-t1-r16-c3",
+                  "id": "tra-c3",
                   "html": "\"Traffic alert, 3 o'clock 2 miles, advise you turn right immediately.�",
                   "text": "\"Traffic alert, 3 o'clock 2 miles, advise you turn right immediately.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r17",
+              "id": "laa",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r17-c1",
+                  "id": "laa-c1",
                   "html": ".laa $1",
                   "text": ".laa $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r17-c2",
+                  "id": "laa-c2",
                   "html": ".laa 1500",
                   "text": ".laa 1500"
                 },
                 {
-                  "id": "section-tracon-17-t1-r17-c3",
+                  "id": "laa-c3",
                   "html": "\"Low altitude alert. Check your altitude immediately. The MVA in your area is 1500.�",
                   "text": "\"Low altitude alert. Check your altitude immediately. The MVA in your area is 1500.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r18",
+              "id": "veratis",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r18-c1",
+                  "id": "veratis-c1",
                   "html": ".veratis $1",
                   "text": ".veratis $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r18-c2",
+                  "id": "veratis-c2",
                   "html": ".veratis K",
                   "text": ".veratis K"
                 },
                 {
-                  "id": "section-tracon-17-t1-r18-c3",
+                  "id": "veratis-c3",
                   "html": "\"Verify you have information K.�",
                   "text": "\"Verify you have information K.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r19",
+              "id": "tr",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r19-c1",
+                  "id": "tr-c1",
                   "html": ".tr $1",
                   "text": ".tr $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r19-c2",
+                  "id": "tr-c2",
                   "html": ".tr 350",
                   "text": ".tr 350"
                 },
                 {
-                  "id": "section-tracon-17-t1-r19-c3",
+                  "id": "tr-c3",
                   "html": "\"Turn right heading 350.�",
                   "text": "\"Turn right heading 350.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r20",
+              "id": "tl",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r20-c1",
+                  "id": "tl-c1",
                   "html": ".tl $1",
                   "text": ".tl $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r20-c2",
+                  "id": "tl-c2",
                   "html": ".tl 140",
                   "text": ".tl 140"
                 },
                 {
-                  "id": "section-tracon-17-t1-r20-c3",
+                  "id": "tl-c3",
                   "html": "\"Turn left heading 140.�",
                   "text": "\"Turn left heading 140.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r21",
+              "id": "prd",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r21-c1",
+                  "id": "prd-c1",
                   "html": ".prd $1",
                   "text": ".prd $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r21-c2",
+                  "id": "prd-c2",
                   "html": ".prd MPORT",
                   "text": ".prd MPORT"
                 },
                 {
-                  "id": "section-tracon-17-t1-r21-c3",
+                  "id": "prd-c3",
                   "html": "\"Proceed direct MPORT.�",
                   "text": "\"Proceed direct MPORT.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r22",
+              "id": "cd",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r22-c1",
+                  "id": "cd-c1",
                   "html": ".cd $1",
                   "text": ".cd $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r22-c2",
+                  "id": "cd-c2",
                   "html": ".cd CWK",
                   "text": ".cd CWK"
                 },
                 {
-                  "id": "section-tracon-17-t1-r22-c3",
+                  "id": "cd-c3",
                   "html": "\"Cleared direct CWK.�",
                   "text": "\"Cleared direct CWK.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r23",
+              "id": "fh",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r23-c1",
+                  "id": "fh-c1",
                   "html": ".fh $1",
                   "text": ".fh $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r23-c2",
+                  "id": "fh-c2",
                   "html": ".fh 180",
                   "text": ".fh 180"
                 },
                 {
-                  "id": "section-tracon-17-t1-r23-c3",
+                  "id": "fh-c3",
                   "html": "\"Fly heading 180.�",
                   "text": "\"Fly heading 180.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r24",
+              "id": "fhjr",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r24-c1",
+                  "id": "fhjr-c1",
                   "html": ".fhjr $1 $2 $3 $4",
                   "text": ".fhjr $1 $2 $3 $4"
                 },
                 {
-                  "id": "section-tracon-17-t1-r24-c2",
+                  "id": "fhjr-c2",
                   "html": ".fhjr 270 IDU 259 outbound",
                   "text": ".fhjr 270 IDU 259 outbound"
                 },
                 {
-                  "id": "section-tracon-17-t1-r24-c3",
+                  "id": "fhjr-c3",
                   "html": "\"Fly heading 270, join the IDU 259 radial outbound.�",
                   "text": "\"Fly heading 270, join the IDU 259 radial outbound.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r25",
+              "id": "cm",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r25-c1",
+                  "id": "cm-c1",
                   "html": ".cm $1",
                   "text": ".cm $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r25-c2",
+                  "id": "cm-c2",
                   "html": ".cm 4000<br>.cm 15000",
                   "text": ".cm 4000 .cm 15000"
                 },
                 {
-                  "id": "section-tracon-17-t1-r25-c3",
+                  "id": "cm-c3",
                   "html": "\"Climb and maintain 4000.\"<br>\"Climb and maintain 15000.\"",
                   "text": "\"Climb and maintain 4000.\" \"Climb and maintain 15000.\""
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r26",
+              "id": "cma",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r26-c1",
+                  "id": "cma-c1",
                   "html": ".cma $1",
                   "text": ".cma $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r26-c2",
+                  "id": "cma-c2",
                   "html": ".cma 4<br>.cma 11",
                   "text": ".cma 4 .cma 11"
                 },
                 {
-                  "id": "section-tracon-17-t1-r26-c3",
+                  "id": "cma-c3",
                   "html": "\"Climb and maintain 4,000.�<br>\"Climb and maintain 11,000.�",
                   "text": "\"Climb and maintain 4,000.� \"Climb and maintain 11,000.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r27",
+              "id": "dm",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r27-c1",
+                  "id": "dm-c1",
                   "html": ".dm $1",
                   "text": ".dm $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r27-c2",
+                  "id": "dm-c2",
                   "html": ".dm 4<br>.dm 11",
                   "text": ".dm 4 .dm 11"
                 },
                 {
-                  "id": "section-tracon-17-t1-r27-c3",
+                  "id": "dm-c3",
                   "html": "\"Descend and maintain 4000.�<br>\"Descend and maintain 11,000.\"",
                   "text": "\"Descend and maintain 4000.� \"Descend and maintain 11,000.\""
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r28",
+              "id": "dma",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r28-c1",
+                  "id": "dma-c1",
                   "html": ".dma $1",
                   "text": ".dma $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r28-c2",
+                  "id": "dma-c2",
                   "html": ".dma 4<br>.dma 11",
                   "text": ".dma 4 .dma 11"
                 },
                 {
-                  "id": "section-tracon-17-t1-r28-c3",
+                  "id": "dma-c3",
                   "html": "\"Descend and maintain 4,000.�<br>\"Descend and maintain 11,000.�",
                   "text": "\"Descend and maintain 4,000.� \"Descend and maintain 11,000.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r29",
+              "id": "dmpd",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r29-c1",
+                  "id": "dmpd-c1",
                   "html": ".dmpd $1",
                   "text": ".dmpd $1"
                 },
                 {
-                  "id": "section-tracon-17-t1-r29-c2",
+                  "id": "dmpd-c2",
                   "html": ".dmpf 4",
                   "text": ".dmpf 4"
                 },
                 {
-                  "id": "section-tracon-17-t1-r29-c3",
+                  "id": "dmpd-c3",
                   "html": "\"Descend at pilot's discretion, maintain 4000.�",
                   "text": "\"Descend at pilot's discretion, maintain 4000.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r30",
+              "id": "vfrcan",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r30-c1",
+                  "id": "vfrcan-c1",
                   "html": ".vfrcan",
                   "text": ".vfrcan"
                 },
                 {
-                  "id": "section-tracon-17-t1-r30-c2",
+                  "id": "vfrcan-c2",
                   "html": "",
                   "text": ""
                 },
                 {
-                  "id": "section-tracon-17-t1-r30-c3",
+                  "id": "vfrcan-c3",
                   "html": "\"Radar service terminated, squawk and maintain VFR, frequency change approved.�",
                   "text": "\"Radar service terminated, squawk and maintain VFR, frequency change approved.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r31",
+              "id": "tll",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r31-c1",
+                  "id": "tll-c1",
                   "html": ".tll $1 $2",
                   "text": ".tll $1 $2"
                 },
                 {
-                  "id": "section-tracon-17-t1-r31-c2",
+                  "id": "tll-c2",
                   "html": ".tll 200 18L",
                   "text": ".tll 200 18L"
                 },
                 {
-                  "id": "section-tracon-17-t1-r31-c3",
+                  "id": "tll-c3",
                   "html": "\"Turn left heading 200, intercept Runway 18L localizer.�",
                   "text": "\"Turn left heading 200, intercept Runway 18L localizer.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r32",
+              "id": "trl",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r32-c1",
+                  "id": "trl-c1",
                   "html": ".trl $1 $2",
                   "text": ".trl $1 $2"
                 },
                 {
-                  "id": "section-tracon-17-t1-r32-c2",
+                  "id": "trl-c2",
                   "html": ".trl 160 18R",
                   "text": ".trl 160 18R"
                 },
                 {
-                  "id": "section-tracon-17-t1-r32-c3",
+                  "id": "trl-c3",
                   "html": "\"Turn right heading 160, intercept Runway 18R localizer.�",
                   "text": "\"Turn right heading 160, intercept Runway 18R localizer.�"
                 }
               ]
             },
             {
-              "id": "section-tracon-17-t1-r33",
+              "id": "fhl",
               "cells": [
                 {
-                  "id": "section-tracon-17-t1-r33-c1",
+                  "id": "fhl-c1",
                   "html": ".fhl $1 $2",
                   "text": ".fhl $1 $2"
                 },
                 {
-                  "id": "section-tracon-17-t1-r33-c2",
+                  "id": "fhl-c2",
                   "html": ".fhl 010 4",
                   "text": ".fhl 010 4"
                 },
                 {
-                  "id": "section-tracon-17-t1-r33-c3",
+                  "id": "fhl-c3",
                   "html": "\"Fly heading 010, intercept Runway 4 localizer.�",
                   "text": "\"Fly heading 010, intercept Runway 4 localizer.�"
                 }
@@ -3768,10 +3768,1032 @@
       ]
     },
     {
-      "id": "section-enroute-18",
+      "id": "enroute",
       "title": "Enroute",
-      "intro": [],
-      "tables": []
+      "intro": [
+        {
+          "id": "enroute-intro-1",
+          "html": "Syntax: Type callsign and press aircraft select (default in CRC is <span class=\"code\">Numpad Add</span>). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive.",
+          "text": "Syntax: Type callsign and press aircraft select (default in CRC is Numpad Add). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive."
+        }
+      ],
+      "tables": [
+        {
+          "id": "enroute-table-1",
+          "title": "",
+          "columns": [
+            "Command",
+            "Example",
+            "Result"
+          ],
+          "entries": [
+            {
+              "id": "zhufix",
+              "cells": [
+                {
+                  "id": "zhufix-c1",
+                  "html": ".zhufix",
+                  "text": ".zhufix"
+                },
+                {
+                  "id": "zhufix-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "zhufix-c3",
+                  "html": "Displays selected list of ZHU fixes in ERAM scope. (ERAM ONLY)",
+                  "text": "Displays selected list of ZHU fixes in ERAM scope. (ERAM ONLY)"
+                }
+              ]
+            },
+            {
+              "id": "ocnfix",
+              "cells": [
+                {
+                  "id": "ocnfix-c1",
+                  "html": ".ocnfix",
+                  "text": ".ocnfix"
+                },
+                {
+                  "id": "ocnfix-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "ocnfix-c3",
+                  "html": "Displays selected list of Oceanic fixes in ERAM scope. (ERAM ONLY)",
+                  "text": "Displays selected list of Oceanic fixes in ERAM scope. (ERAM ONLY)"
+                }
+              ]
+            },
+            {
+              "id": "i90",
+              "cells": [
+                {
+                  "id": "i90-c1",
+                  "html": ".i90",
+                  "text": ".i90"
+                },
+                {
+                  "id": "i90-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "i90-c3",
+                  "html": "Displays selected list of I90 fixes in ERAM scope. (ERAM ONLY)",
+                  "text": "Displays selected list of I90 fixes in ERAM scope. (ERAM ONLY)"
+                }
+              ]
+            },
+            {
+              "id": "x",
+              "cells": [
+                {
+                  "id": "x-c1",
+                  "html": ".x $1 $2 ...",
+                  "text": ".x $1 $2 ..."
+                },
+                {
+                  "id": "x-c2",
+                  "html": ".x CVE FL180",
+                  "text": ".x CVE FL180"
+                },
+                {
+                  "id": "x-c3",
+                  "html": "\"Cross CVE at and maintain FL180.\"",
+                  "text": "\"Cross CVE at and maintain FL180.\""
+                }
+              ]
+            },
+            {
+              "id": "xaoa",
+              "cells": [
+                {
+                  "id": "xaoa-c1",
+                  "html": ".xaoa $1 $2 ...",
+                  "text": ".xaoa $1 $2 ..."
+                },
+                {
+                  "id": "xaoa-c2",
+                  "html": ".xaoa CEW FL190",
+                  "text": ".xaoa CEW FL190"
+                },
+                {
+                  "id": "xaoa-c3",
+                  "html": "\"Cross CEW at or above FL190.\"",
+                  "text": "\"Cross CEW at or above FL190.\""
+                }
+              ]
+            },
+            {
+              "id": "xspd",
+              "cells": [
+                {
+                  "id": "xspd-c1",
+                  "html": ".xspd $1 $2 $3",
+                  "text": ".xspd $1 $2 $3"
+                },
+                {
+                  "id": "xspd-c2",
+                  "html": ".xspd AEX FL200 280",
+                  "text": ".xspd AEX FL200 280"
+                },
+                {
+                  "id": "xspd-c3",
+                  "html": "\"Cross AEX at and maintain FL200 at 280 KTS.\"",
+                  "text": "\"Cross AEX at and maintain FL200 at 280 KTS.\""
+                }
+              ]
+            },
+            {
+              "id": "xdme",
+              "cells": [
+                {
+                  "id": "xdme-c1",
+                  "html": ".xdme $1 $2 $3",
+                  "text": ".xdme $1 $2 $3"
+                },
+                {
+                  "id": "xdme-c2",
+                  "html": ".xdme 10 AEX FL300",
+                  "text": ".xdme 10 AEX FL300"
+                },
+                {
+                  "id": "xdme-c3",
+                  "html": "\"Cross 10 DME of AEX at FL300.\"",
+                  "text": "\"Cross 10 DME of AEX at FL300.\""
+                }
+              ]
+            },
+            {
+              "id": "dvia",
+              "cells": [
+                {
+                  "id": "dvia-c1",
+                  "html": ".dvia $1",
+                  "text": ".dvia $1"
+                },
+                {
+                  "id": "dvia-c2",
+                  "html": ".dvia DOOBI2",
+                  "text": ".dvia DOOBI2"
+                },
+                {
+                  "id": "dvia-c3",
+                  "html": "\"Descend via the DOOBI2 arrival.\"",
+                  "text": "\"Descend via the DOOBI2 arrival.\""
+                }
+              ]
+            },
+            {
+              "id": "dviax",
+              "cells": [
+                {
+                  "id": "dviax-c1",
+                  "html": ".dviax $1 $2",
+                  "text": ".dviax $1 $2"
+                },
+                {
+                  "id": "dviax-c2",
+                  "html": ".dviax DOOBI2 maintain FL240 and 250kts",
+                  "text": ".dviax DOOBI2 maintain FL240 and 250kts"
+                },
+                {
+                  "id": "dviax-c3",
+                  "html": "\"Descend via the DOOBI2 arrival except maintain FL240 and 250kts.\"",
+                  "text": "\"Descend via the DOOBI2 arrival except maintain FL240 and 250kts.\""
+                }
+              ]
+            },
+            {
+              "id": "cmf",
+              "cells": [
+                {
+                  "id": "cmf-c1",
+                  "html": ".cmf $1",
+                  "text": ".cmf $1"
+                },
+                {
+                  "id": "cmf-c2",
+                  "html": ".cmf 340",
+                  "text": ".cmf 340"
+                },
+                {
+                  "id": "cmf-c3",
+                  "html": "\"Climb and maintain FL340.\"",
+                  "text": "\"Climb and maintain FL340.\""
+                }
+              ]
+            },
+            {
+              "id": "dmf",
+              "cells": [
+                {
+                  "id": "dmf-c1",
+                  "html": ".dmf $1",
+                  "text": ".dmf $1"
+                },
+                {
+                  "id": "dmf-c2",
+                  "html": ".dmf 180",
+                  "text": ".dmf 180"
+                },
+                {
+                  "id": "dmf-c3",
+                  "html": "\"Descend and maintain FL180.\"",
+                  "text": "\"Descend and maintain FL180.\""
+                }
+              ]
+            },
+            {
+              "id": "dvia-atis",
+              "cells": [
+                {
+                  "id": "dvia-atis-c1",
+                  "html": ".dvia $1",
+                  "text": ".dvia $1"
+                },
+                {
+                  "id": "dvia-atis-c2",
+                  "html": ".dvia DOOBI2",
+                  "text": ".dvia DOOBI2"
+                },
+                {
+                  "id": "dvia-atis-c3",
+                  "html": "\"Descend via the DOOBI2 arrival, <arrival airport> altimeter <airport altimeter>.\"",
+                  "text": "\"Descend via the DOOBI2 arrival,  altimeter .\""
+                }
+              ]
+            },
+            {
+              "id": "homex",
+              "cells": [
+                {
+                  "id": "homex-c1",
+                  "html": ".homex $1 $2",
+                  "text": ".homex $1 $2"
+                },
+                {
+                  "id": "homex-c2",
+                  "html": ".homex Z01 HRL",
+                  "text": ".homex Z01 HRL"
+                },
+                {
+                  "id": "homex-c3",
+                  "html": "Sends handoff message to specified controller with range and bearing from specified fix with current altitude.",
+                  "text": "Sends handoff message to specified controller with range and bearing from specified fix with current altitude."
+                }
+              ]
+            },
+            {
+              "id": "ocnhomex",
+              "cells": [
+                {
+                  "id": "ocnhomex-c1",
+                  "html": ".ocnhomex $1 $2 $3",
+                  "text": ".ocnhomex $1 $2 $3"
+                },
+                {
+                  "id": "ocnhomex-c2",
+                  "html": ".ocnhomex Z01 DUTNA 1325Z",
+                  "text": ".ocnhomex Z01 DUTNA 1325Z"
+                },
+                {
+                  "id": "ocnhomex-c3",
+                  "html": "Sends handoff message to specified controller with time over specified fix and current altitude.",
+                  "text": "Sends handoff message to specified controller with time over specified fix and current altitude."
+                }
+              ]
+            },
+            {
+              "id": "holdap",
+              "cells": [
+                {
+                  "id": "holdap-c1",
+                  "html": ".holdap $1 $2 $3",
+                  "text": ".holdap $1 $2 $3"
+                },
+                {
+                  "id": "holdap-c2",
+                  "html": ".holdap JERNY north 2130",
+                  "text": ".holdap JERNY north 2130"
+                },
+                {
+                  "id": "holdap-c3",
+                  "html": "\"Cleared to JERNY, hold north of JERNY as published. Expect further clearance at 2130Z.\"",
+                  "text": "\"Cleared to JERNY, hold north of JERNY as published. Expect further clearance at 2130Z.\""
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "miscellaneous",
+      "title": "Miscellaneous",
+      "intro": [
+        {
+          "id": "misc-intro-1",
+          "html": "Syntax: Type callsign and press aircraft select (default in CRC is <span class=\"code\">Numpad Add</span>). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive.",
+          "text": "Syntax: Type callsign and press aircraft select (default in CRC is Numpad Add). Type alias command with any needed variables and press Enter. Alias commands are not case-sensitive."
+        }
+      ],
+      "tables": [
+        {
+          "id": "misc-table-1",
+          "title": "",
+          "columns": [
+            "Command",
+            "Example",
+            "Result"
+          ],
+          "entries": [
+            {
+              "id": "ho",
+              "cells": [
+                {
+                  "id": "ho-c1",
+                  "html": ".ho NEXTID",
+                  "text": ".ho NEXTID"
+                },
+                {
+                  "id": "ho-c2",
+                  "html": ".ho 81",
+                  "text": ".ho 81"
+                },
+                {
+                  "id": "ho-c3",
+                  "html": "\"Contact HOU_81_CTR on 134.425, have a good flight!\"",
+                  "text": "\"Contact HOU_81_CTR on 134.425, have a good flight!\""
+                }
+              ]
+            },
+            {
+              "id": "hodep",
+              "cells": [
+                {
+                  "id": "hodep-c1",
+                  "html": ".hodep DEPID",
+                  "text": ".hodep DEPID"
+                },
+                {
+                  "id": "hodep-c2",
+                  "html": ".hodep 1D",
+                  "text": ".hodep 1D"
+                },
+                {
+                  "id": "hodep-c3",
+                  "html": "\"Contact Departure 120.05. Cya!\"",
+                  "text": "\"Contact Departure 120.05. Cya!\""
+                }
+              ]
+            },
+            {
+              "id": "depoff",
+              "cells": [
+                {
+                  "id": "depoff-c1",
+                  "html": ".depoff",
+                  "text": ".depoff"
+                },
+                {
+                  "id": "depoff-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "depoff-c3",
+                  "html": "No departure control available, monitor unicom 122.8, Thanks for flying!",
+                  "text": "No departure control available, monitor unicom 122.8, Thanks for flying!"
+                }
+              ]
+            },
+            {
+              "id": "rts",
+              "cells": [
+                {
+                  "id": "rts-c1",
+                  "html": ".rts",
+                  "text": ".rts"
+                },
+                {
+                  "id": "rts-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "rts-c3",
+                  "html": "Reset transponder, <span class=\"code\">assigned beacon</span>.\"",
+                  "text": "Reset transponder, assigned beacon.\""
+                }
+              ]
+            },
+            {
+              "id": "lmas",
+              "cells": [
+                {
+                  "id": "lmas-c1",
+                  "html": ".lmas",
+                  "text": ".lmas"
+                },
+                {
+                  "id": "lmas-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "lmas-c3",
+                  "html": "Leaving my airspace, no further ATC available, radar service terminated, frequency change approved, thanks for flying!",
+                  "text": "Leaving my airspace, no further ATC available, radar service terminated, frequency change approved, thanks for flying!"
+                }
+              ]
+            },
+            {
+              "id": "ecb",
+              "cells": [
+                {
+                  "id": "ecb-c1",
+                  "html": ".ecb",
+                  "text": ".ecb"
+                },
+                {
+                  "id": "ecb-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "ecb-c3",
+                  "html": "You're exiting Class B airspace, radar service is terminated, squawk VFR, frequency change approved, thanks for flying!",
+                  "text": "You're exiting Class B airspace, radar service is terminated, squawk VFR, frequency change approved, thanks for flying!"
+                }
+              ]
+            },
+            {
+              "id": "ecc",
+              "cells": [
+                {
+                  "id": "ecc-c1",
+                  "html": ".ecc",
+                  "text": ".ecc"
+                },
+                {
+                  "id": "ecc-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "ecc-c3",
+                  "html": "You're exiting Class C airspace, radar service is terminated, squawk VFR, frequency change approved, thanks for flying!",
+                  "text": "You're exiting Class C airspace, radar service is terminated, squawk VFR, frequency change approved, thanks for flying!"
+                }
+              ]
+            },
+            {
+              "id": "close",
+              "cells": [
+                {
+                  "id": "close-c1",
+                  "html": ".close $1",
+                  "text": ".close $1"
+                },
+                {
+                  "id": "close-c2",
+                  "html": ".close 15",
+                  "text": ".close 15"
+                },
+                {
+                  "id": "close-c3",
+                  "html": "\"**NOTAM** Will be closing in 15 minutes.\"",
+                  "text": "\"**NOTAM** Will be closing in 15 minutes.\""
+                }
+              ]
+            },
+            {
+              "id": "closing",
+              "cells": [
+                {
+                  "id": "closing-c1",
+                  "html": ".closing $1",
+                  "text": ".closing $1"
+                },
+                {
+                  "id": "closing-c2",
+                  "html": ".closing 0300Z",
+                  "text": ".closing 0300Z"
+                },
+                {
+                  "id": "closing-c3",
+                  "html": "\"**NOTAM** Closing at 0300Z.\"",
+                  "text": "\"**NOTAM** Closing at 0300Z.\""
+                }
+              ]
+            },
+            {
+              "id": "closed",
+              "cells": [
+                {
+                  "id": "closed-c1",
+                  "html": ".closed",
+                  "text": ".closed"
+                },
+                {
+                  "id": "closed-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "closed-c3",
+                  "html": "\"**NOTAM** Closed. Have a good day.\"",
+                  "text": "\"**NOTAM** Closed. Have a good day.\""
+                }
+              ]
+            },
+            {
+              "id": "shift",
+              "cells": [
+                {
+                  "id": "shift-c1",
+                  "html": ".shift",
+                  "text": ".shift"
+                },
+                {
+                  "id": "shift-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "shift-c3",
+                  "html": "\"**NOTAM** Shift change in progress. All aircraft please stand by.\"",
+                  "text": "\"**NOTAM** Shift change in progress. All aircraft please stand by.\""
+                }
+              ]
+            },
+            {
+              "id": "rst",
+              "cells": [
+                {
+                  "id": "rst-c1",
+                  "html": ".rst",
+                  "text": ".rst"
+                },
+                {
+                  "id": "rst-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "rst-c3",
+                  "html": "\"Radar service is terminated, squawk VFR, frequency change approved.\"",
+                  "text": "\"Radar service is terminated, squawk VFR, frequency change approved.\""
+                }
+              ]
+            },
+            {
+              "id": "spa",
+              "cells": [
+                {
+                  "id": "spa-c1",
+                  "html": ".spa",
+                  "text": ".spa"
+                },
+                {
+                  "id": "spa-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "spa-c3",
+                  "html": "\"Say position and altitude.\"",
+                  "text": "\"Say position and altitude.\""
+                }
+              ]
+            },
+            {
+              "id": "sas",
+              "cells": [
+                {
+                  "id": "sas-c1",
+                  "html": ".sas",
+                  "text": ".sas"
+                },
+                {
+                  "id": "sas-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "sas-c3",
+                  "html": "\"Say indicated air speed.\"",
+                  "text": "\"Say indicated air speed.\""
+                }
+              ]
+            },
+            {
+              "id": "sms",
+              "cells": [
+                {
+                  "id": "sms-c1",
+                  "html": ".sms",
+                  "text": ".sms"
+                },
+                {
+                  "id": "sms-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "sms-c3",
+                  "html": "\"Say mach.\"",
+                  "text": "\"Say mach.\""
+                }
+              ]
+            },
+            {
+              "id": "spo",
+              "cells": [
+                {
+                  "id": "spo-c1",
+                  "html": ".spo",
+                  "text": ".spo"
+                },
+                {
+                  "id": "spo-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "spo-c3",
+                  "html": "\"Say position.\"",
+                  "text": "\"Say position.\""
+                }
+              ]
+            },
+            {
+              "id": "smc",
+              "cells": [
+                {
+                  "id": "smc-c1",
+                  "html": ".smc",
+                  "text": ".smc"
+                },
+                {
+                  "id": "smc-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "smc-c3",
+                  "html": "\"Squawk mode C.\"",
+                  "text": "\"Squawk mode C.\""
+                }
+              ]
+            },
+            {
+              "id": "ss",
+              "cells": [
+                {
+                  "id": "ss-c1",
+                  "html": ".ss",
+                  "text": ".ss"
+                },
+                {
+                  "id": "ss-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "ss-c3",
+                  "html": "\"Squawk standby.\"",
+                  "text": "\"Squawk standby.\""
+                }
+              ]
+            },
+            {
+              "id": "si",
+              "cells": [
+                {
+                  "id": "si-c1",
+                  "html": ".si",
+                  "text": ".si"
+                },
+                {
+                  "id": "si-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "si-c3",
+                  "html": "\"Squawk ident.\"",
+                  "text": "\"Squawk ident.\""
+                }
+              ]
+            },
+            {
+              "id": "sqi",
+              "cells": [
+                {
+                  "id": "sqi-c1",
+                  "html": ".sqi",
+                  "text": ".sqi"
+                },
+                {
+                  "id": "sqi-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "sqi-c3",
+                  "html": "\"Squawk <span class=\"code\">assigned beacon</span> and Ident.\"",
+                  "text": "\"Squawk assigned beacon and Ident.\""
+                }
+              ]
+            },
+            {
+              "id": "sq",
+              "cells": [
+                {
+                  "id": "sq-c1",
+                  "html": ".sq",
+                  "text": ".sq"
+                },
+                {
+                  "id": "sq-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "sq-c3",
+                  "html": "\"Squawk <span class=\"code\">assigned beacon</span>.\"",
+                  "text": "\"Squawk assigned beacon.\""
+                }
+              ]
+            },
+            {
+              "id": "rtc",
+              "cells": [
+                {
+                  "id": "rtc-c1",
+                  "html": ".rtc",
+                  "text": ".rtc"
+                },
+                {
+                  "id": "rtc-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "rtc-c3",
+                  "html": "\"Reset transponder, squawk <span class=\"code\">assigned beacon</span>.\"",
+                  "text": "\"Reset transponder, squawk assigned beacon.\""
+                }
+              ]
+            },
+            {
+              "id": "rpt",
+              "cells": [
+                {
+                  "id": "rpt-c1",
+                  "html": ".rpt $1",
+                  "text": ".rpt $1"
+                },
+                {
+                  "id": "rpt-c2",
+                  "html": ".rpt CWK",
+                  "text": ".rpt CWK"
+                },
+                {
+                  "id": "rpt-c3",
+                  "html": "\"Report over CWK.\"",
+                  "text": "\"Report over CWK.\""
+                }
+              ]
+            },
+            {
+              "id": "rptabm",
+              "cells": [
+                {
+                  "id": "rptabm-c1",
+                  "html": ".rptabm $1",
+                  "text": ".rptabm $1"
+                },
+                {
+                  "id": "rptabm-c2",
+                  "html": ".rptabm 18L",
+                  "text": ".rptabm 18L"
+                },
+                {
+                  "id": "rptabm-c3",
+                  "html": "\"Report abeam 18L.\"",
+                  "text": "\"Report abeam 18L.\""
+                }
+              ]
+            },
+            {
+              "id": "ifrcangnd",
+              "cells": [
+                {
+                  "id": "ifrcangnd-c1",
+                  "html": ".ifrcangnd",
+                  "text": ".ifrcangnd"
+                },
+                {
+                  "id": "ifrcangnd-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "ifrcangnd-c3",
+                  "html": "\"IFR cancellation received, thanks for flying.\"",
+                  "text": "\"IFR cancellation received, thanks for flying.\""
+                }
+              ]
+            },
+            {
+              "id": "icanair",
+              "cells": [
+                {
+                  "id": "icanair-c1",
+                  "html": ".icanair",
+                  "text": ".icanair"
+                },
+                {
+                  "id": "icanair-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "icanair-c3",
+                  "html": "\"IFR cancellation received. Radar service terminated, squawk and maintain VFR, frequency change approved, good day.\"",
+                  "text": "\"IFR cancellation received. Radar service terminated, squawk and maintain VFR, frequency change approved, good day.\""
+                }
+              ]
+            },
+            {
+              "id": "dist",
+              "cells": [
+                {
+                  "id": "dist-c1",
+                  "html": ".dist $1",
+                  "text": ".dist $1"
+                },
+                {
+                  "id": "dist-c2",
+                  "html": ".dist AEX",
+                  "text": ".dist AEX"
+                },
+                {
+                  "id": "dist-c3",
+                  "html": "\"You are <span class=\"code\">distance</span>nm from AEX.\"",
+                  "text": "\"You are distancenm from AEX.\""
+                }
+              ]
+            },
+            {
+              "id": "bear",
+              "cells": [
+                {
+                  "id": "bear-c1",
+                  "html": ".bear $1",
+                  "text": ".bear $1"
+                },
+                {
+                  "id": "bear-c2",
+                  "html": ".bear KAUS",
+                  "text": ".bear KAUS"
+                },
+                {
+                  "id": "bear-c3",
+                  "html": "\"You are <span class=\"code\">bearing</span> from KAUS.\"",
+                  "text": "\"You are bearing from KAUS.\""
+                }
+              ]
+            },
+            {
+              "id": "clock",
+              "cells": [
+                {
+                  "id": "clock-c1",
+                  "html": ".clock $1",
+                  "text": ".clock $1"
+                },
+                {
+                  "id": "clock-c2",
+                  "html": ".oclock KIAH",
+                  "text": ".oclock KIAH"
+                },
+                {
+                  "id": "clock-c3",
+                  "html": "\"KIAH is at your <span class=\"code\">clock position</span>.\"",
+                  "text": "\"KIAH is at your clock position.\""
+                }
+              ]
+            },
+            {
+              "id": "route",
+              "cells": [
+                {
+                  "id": "route-c1",
+                  "html": ".route",
+                  "text": ".route"
+                },
+                {
+                  "id": "route-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "route-c3",
+                  "html": "Prints selected aircraft route.",
+                  "text": "Prints selected aircraft route."
+                }
+              ]
+            },
+            {
+              "id": "newatis",
+              "cells": [
+                {
+                  "id": "newatis-c1",
+                  "html": ".newatis",
+                  "text": ".newatis"
+                },
+                {
+                  "id": "newatis-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "newatis-c3",
+                  "html": "\"ATIS information <span class=\"code\">letter</span> is current. Wind <span class=\"code\">wind</span>, <span class=\"code\">altimeter</span>.\"",
+                  "text": "\"ATIS information letter is current. Wind wind, altimeter.\""
+                }
+              ]
+            },
+            {
+              "id": "ratis",
+              "cells": [
+                {
+                  "id": "ratis-c1",
+                  "html": ".ratis $1",
+                  "text": ".ratis $1"
+                },
+                {
+                  "id": "ratis-c2",
+                  "html": ".ratis K",
+                  "text": ".ratis K"
+                },
+                {
+                  "id": "ratis-c3",
+                  "html": "\"Report receiving ATIS K.\"",
+                  "text": "\"Report receiving ATIS K.\""
+                }
+              ]
+            },
+            {
+              "id": "rmatis",
+              "cells": [
+                {
+                  "id": "rmatis-c1",
+                  "html": ".rmatis",
+                  "text": ".rmatis"
+                },
+                {
+                  "id": "rmatis-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "rmatis-c3",
+                  "html": "\"Report receiving ATIS <span class=\"code\">letter</span>.\"",
+                  "text": "\"Report receiving ATIS letter.\""
+                }
+              ]
+            },
+            {
+              "id": "cyrv",
+              "cells": [
+                {
+                  "id": "cyrv-c1",
+                  "html": ".cyrv",
+                  "text": ".cyrv"
+                },
+                {
+                  "id": "cyrv-c2",
+                  "html": "",
+                  "text": ""
+                },
+                {
+                  "id": "cyrv-c3",
+                  "html": "\"Can you receive voice?\"",
+                  "text": "\"Can you receive voice?\""
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -32,3 +32,11 @@
   vertical-align: middle;
   width: 1.1rem;
 }
+
+.alias-anchor-hit {
+  background: #fef9c3;
+}
+
+:root[data-theme="dark"] .alias-anchor-hit {
+  background: rgba(250, 204, 21, 0.2);
+}

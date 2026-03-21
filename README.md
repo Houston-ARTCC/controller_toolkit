@@ -57,20 +57,27 @@ If you update legacy source HTML in `data/alias-guide-markup.html`, regenerate J
 npm run alias:convert
 ```
 
+To normalize long generated IDs into readable slug-based IDs:
+
+```bash
+node scripts/normalize-alias-ids.mjs
+```
+
 ### Alias Module Notes
 
 - In `data/alias-guide.json`, most content fields store both:
   - `html`: rendered UI content (supports formatting tags)
   - `text`: plain-text content used for search/filter
 - Keep `html` and `text` semantically aligned when editing content.
-- Current section layout behavior:
-  - `CRC/ZHU Basics`: explorer layout (accordion groups + sticky detail panel + share links)
-  - `Pilot Help Messages`: explorer layout (accordion groups + sticky detail panel + share links)
-  - `Autotrack`: informational table layout
-  - `Standard Routes`: informational table layout
-- Explorer permalink links use URL query param:
-  - `/tools/alias-guide?alias=<entry-id>#<section-id>`
-  - currently enabled for `CRC/ZHU Basics` and `Pilot Help Messages`
+- Alias sections now use one shared layout:
+  - section header + intro (optional)
+  - standardized reference tables
+  - row-level `Link` button to copy direct hash links
+- Section-specific table label mapping lives in:
+  - `components/alias-guide-page.js` -> `SECTION_TABLE_CONFIG`
+- Hash permalink format:
+  - `/tools/alias-guide#<entry-id>`
+  - example: `/tools/alias-guide#alias`
 
 ## Validate
 

@@ -1,0 +1,77 @@
+﻿.route-validator-table th,
+.route-validator-table td {
+  border-bottom: 1px solid var(--surface-border);
+  padding: 0.62rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.route-validator-table th {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.route-validator-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.rv-chip {
+  border: 1px solid var(--surface-border);
+  border-radius: 9999px;
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.22rem 0.48rem;
+  text-transform: uppercase;
+}
+
+.rv-chip-good {
+  background: color-mix(in srgb, #16a34a 18%, transparent);
+  border-color: color-mix(in srgb, #16a34a 45%, transparent);
+  color: #166534;
+}
+
+.rv-chip-warn {
+  background: color-mix(in srgb, #f59e0b 20%, transparent);
+  border-color: color-mix(in srgb, #f59e0b 45%, transparent);
+  color: #92400e;
+}
+
+.rv-chip-bad {
+  background: color-mix(in srgb, #ef4444 15%, transparent);
+  border-color: color-mix(in srgb, #ef4444 40%, transparent);
+  color: #991b1b;
+}
+
+.rv-chip-neutral {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: var(--surface-border);
+  color: var(--muted);
+}
+
+.rv-chip-revision {
+  background: color-mix(in srgb, #facc15 24%, transparent);
+  border-color: color-mix(in srgb, #eab308 52%, transparent);
+  color: #854d0e;
+}
+
+:root[data-theme="dark"] .rv-chip-good {
+  color: #86efac;
+}
+
+:root[data-theme="dark"] .rv-chip-warn {
+  color: #fcd34d;
+}
+
+:root[data-theme="dark"] .rv-chip-bad {
+  color: #fca5a5;
+}
+
+:root[data-theme="dark"] .rv-chip-revision {
+  color: #fde68a;
+}
+

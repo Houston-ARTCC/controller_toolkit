@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "alias:convert": "node scripts/convert-alias-markup.mjs"
+    "alias:convert": "node scripts/convert-alias-markup.mjs",
+    "adar:convert": "node scripts/convert-adar-xml.mjs",
+    "routing:convert": "node scripts/convert-zhu-routing-aliases.mjs"
   },
   "dependencies": {
     "next": "16.1.6",

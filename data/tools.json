@@ -22,6 +22,28 @@
     "tags": ["Alias", "CRC", "Reference", "Training"]
   },
   {
+    "id": "adar-routes",
+    "name": "ADAR Routes",
+    "description": "Search adapted departure and arrival route strings between airport pairs.",
+    "url": "https://github.com/Houston-ARTCC/controller_toolkit",
+    "liveUrl": "/tools/adar-routes",
+    "category": "Reference",
+    "status": "Prototype",
+    "icon": "map",
+    "tags": ["ERAM", "ADAR", "Routes", "Airports"]
+  },
+  {
+    "id": "route-validator",
+    "name": "Route Validator",
+    "description": "Validate live VATSIM departures against ZHU preferred routing aliases by airport pair.",
+    "url": "https://github.com/Houston-ARTCC/controller_toolkit",
+    "liveUrl": "/tools/route-validator",
+    "category": "Traffic",
+    "status": "Prototype",
+    "icon": "radar",
+    "tags": ["VATSIM", "Validation", "Routing", "Aliases"]
+  },
+  {
     "id": "split-map",
     "name": "Split Map",
     "description": "Generate and visualize ZHU enroute split configurations.",
