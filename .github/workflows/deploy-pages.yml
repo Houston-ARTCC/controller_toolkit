@@ -35,6 +35,8 @@ jobs:
         run: npm ci
 
       - name: Build Static Site
+        env:
+          SITE_BASE_PATH: /controller_toolkit
         run: npm run build
 
       - name: Upload Pages Artifact
