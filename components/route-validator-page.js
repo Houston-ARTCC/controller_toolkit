@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import ThemeSwitcher from "@/components/theme-switcher";
 
 const ATIS_URLS = {
   KIAH: "https://atis.info/api/KIAH",
@@ -1307,19 +1308,24 @@ export default function RouteValidatorPage({ routeData }) {
       <div className="route-validator-bg" />
       <div className="mx-auto max-w-7xl space-y-6">
         <header className="panel">
-            <div className="flex items-start justify-between gap-3">
-              <p className="text-accent text-sm font-semibold uppercase tracking-[0.24em]">Traffic</p>
-              <Link className="button-secondary text-sm" href="/">
-                Back to Toolkit
-              </Link>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-accent text-sm font-semibold uppercase tracking-[0.24em]">Traffic</p>
+                <h1 className="font-heading text-main mt-1 text-4xl font-bold tracking-wide md:text-5xl">
+                  Route Validator
+                </h1>
+                <p className="text-muted mt-2 max-w-4xl">
+                  Checks VATSIM filed routes for departures at your field against ZHU preferred routes from
+                  the alias ROUTING section.
+                </p>
+              </div>
+              <div className="flex flex-col items-end gap-2">
+                <ThemeSwitcher />
+                <Link className="button-secondary text-sm" href="/">
+                  Back to Toolkit
+                </Link>
+              </div>
             </div>
-            <h1 className="font-heading text-main mt-1 text-4xl font-bold tracking-wide md:text-5xl">
-              Route Validator
-            </h1>
-            <p className="text-muted mt-2 max-w-4xl">
-              Checks VATSIM filed routes for departures at your field against ZHU preferred routes from
-              the alias ROUTING section.
-            </p>
 
             <div className="mt-5 flex flex-wrap items-end gap-3">
               <AirportInput

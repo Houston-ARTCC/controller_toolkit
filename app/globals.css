@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --surface: #ffffff;
-  --surface-soft: #f1f5f9;
-  --surface-border: #cbd5e1;
-  --muted: #475569;
-  --accent: #0369a1;
-  --accent-strong: #075985;
+  --background: #eff4fa;
+  --foreground: #152335;
+  --surface: #f8fbff;
+  --surface-soft: #eaf0f7;
+  --surface-border: #bfcbdb;
+  --muted: #4b5f78;
+  --accent: #0b6da8;
+  --accent-strong: #0a5f93;
   --on-accent: #ffffff;
   --card-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
 }
@@ -45,8 +45,8 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 10% -6%, rgba(14, 165, 233, 0.06), transparent 42%),
-    radial-gradient(circle at 90% -10%, rgba(56, 189, 248, 0.05), transparent 40%);
+    radial-gradient(circle at 10% -6%, rgba(14, 165, 233, 0.045), transparent 42%),
+    radial-gradient(circle at 90% -10%, rgba(56, 189, 248, 0.04), transparent 40%);
 }
 
 :root[data-theme="dark"] .ambient-bg {
@@ -66,36 +66,36 @@ body {
 }
 
 .theme-switcher {
-  position: fixed;
-  top: 0.9rem;
-  right: 0.9rem;
-  z-index: 60;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  border: 1px solid var(--surface-border);
-  border-radius: 0.7rem;
-  padding: 0.35rem 0.45rem;
-  box-shadow: var(--card-shadow);
+  gap: 0.2rem;
+  border-radius: 0.65rem;
+  padding: 0.1rem;
 }
 
-.theme-label {
+.theme-mode-button {
+  border: 1px solid var(--surface-border);
+  border-radius: 0.55rem;
+  background: transparent;
+  color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
+  letter-spacing: 0.06em;
+  line-height: 1;
+  padding: 0.33rem 0.6rem;
+  transition: background-color 130ms ease, border-color 130ms ease, color 130ms ease;
 }
 
-.theme-select {
-  border: 1px solid var(--surface-border);
-  border-radius: 0.5rem;
-  background: var(--surface);
+.theme-mode-button:hover {
   color: var(--foreground);
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 0.2rem 0.35rem;
+  background: var(--surface-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.theme-mode-button-active {
+  color: var(--foreground);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 .hero-panel {
@@ -122,6 +122,26 @@ body {
   background: var(--surface);
   box-shadow: var(--card-shadow);
   padding: 1rem;
+}
+
+.tool-launcher-card {
+  transition:
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease;
+}
+
+.tool-launcher-card:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--surface-border));
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--accent) 38%, transparent);
+  background: color-mix(in srgb, var(--surface) 92%, var(--surface-soft));
+}
+
+.tool-launcher-card .button-primary:hover,
+.tool-launcher-card .button-secondary:hover {
+  transform: none;
+  filter: none;
 }
 
 .badge {
@@ -342,6 +362,10 @@ body {
   animation: feed-pulse 2.8s ease-in-out infinite;
 }
 
+.feed-indicator-static {
+  animation: none;
+}
+
 .feed-indicator-green {
   background: #22c55e;
   color: #22c55e;
@@ -355,6 +379,18 @@ body {
 .feed-indicator-red {
   background: #ef4444;
   color: #ef4444;
+}
+
+.feed-indicator-gray {
+  background: #94a3b8;
+  color: #94a3b8;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.35);
+}
+
+:root[data-theme="light"] .feed-indicator-gray {
+  background: #475569;
+  color: #475569;
+  box-shadow: 0 0 0 1px rgba(100, 116, 139, 0.45);
 }
 
 @keyframes feed-pulse {

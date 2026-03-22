@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import ThemeSwitcher from "@/components/theme-switcher";
 
 function normalizeAirport(value) {
   return value.trim().toUpperCase();
@@ -61,19 +62,24 @@ export default function AdarRoutesPage({ data }) {
       <div className="ambient-bg" />
       <div className="mx-auto max-w-7xl space-y-6">
         <header className="panel">
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-accent text-sm font-semibold uppercase tracking-[0.24em]">Reference</p>
-            <Link className="button-secondary text-sm" href="/">
-              Back to Toolkit
-            </Link>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-accent text-sm font-semibold uppercase tracking-[0.24em]">Reference</p>
+              <h1 className="font-heading text-main mt-1 text-4xl font-bold tracking-wide md:text-5xl">
+                ADAR Route Lookup
+              </h1>
+              <p className="text-muted mt-2 max-w-4xl">
+                Search adapted departure/arrival routes by airport pair. This view uses parsed ERAM ADAR
+                adaptation data.
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <ThemeSwitcher />
+              <Link className="button-secondary text-sm" href="/">
+                Back to Toolkit
+              </Link>
+            </div>
           </div>
-          <h1 className="font-heading text-main mt-1 text-4xl font-bold tracking-wide md:text-5xl">
-            ADAR Route Lookup
-          </h1>
-          <p className="text-muted mt-2 max-w-4xl">
-            Search adapted departure/arrival routes by airport pair. This view uses parsed ERAM ADAR
-            adaptation data.
-          </p>
 
           <div className="mt-5 grid gap-3 lg:grid-cols-[1fr_auto_1fr_1fr]">
             <label className="space-y-1">

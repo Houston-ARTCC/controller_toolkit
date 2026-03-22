@@ -1,12 +1,12 @@
 [
   {
     "id": "tfms",
-    "name": "TFMS Viewer",
+    "name": "TFMS",
     "description": "Live ZHU traffic flow summaries with specialty and split projections.",
     "url": "https://github.com/Houston-ARTCC/tfms",
-    "liveUrl": "https://tfms.houston.center/",
+    "liveUrl": "/tools/tfms",
     "category": "Traffic",
-    "status": "Live",
+    "status": "Migrated",
     "icon": "radar",
     "tags": ["TFMS", "Traffic", "Splits", "VATSIM"]
   },

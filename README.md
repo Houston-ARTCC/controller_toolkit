@@ -2,8 +2,8 @@
 
 Unified front-end shell for Houston ARTCC controller utilities.
 
-Current tools are registered in a single data file and rendered as searchable cards:
-- TFMS Viewer
+Current tools are registered in a single data file and rendered as launch cards:
+- TFMS
 - Alias Guide (migrated internal route)
 - ADAR Routes
 - Route Validator
@@ -24,7 +24,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 - `data/tools.json`: tool registry (add/edit tools here)
 - `app/page.js`: homepage entry
-- `components/toolkit-home.js`: searchable tool grid UI
+- `components/toolkit-home.js`: tool launcher grid UI
 - `app/tools/[id]/page.js`: per-tool detail pages
 - `app/tools/alias-guide/page.js`: migrated Alias Guide tool
 - `components/alias-guide-page.js`: refactored Alias UI (sidebar nav, search, cards)
@@ -111,6 +111,13 @@ Route Validator renders from `data/zhu-routing-rules.json` and compares filed ro
 - If live traffic fetch fails, static samples are used automatically.
 - D-ATIS remains live unless that feed fails.
 
+## TFMS Notes
+
+- TFMS currently shows:
+  - Specialty Summary
+  - Online Positions (enroute + TRACON status)
+- Split Summary is intentionally hidden for now and can be re-enabled later.
+
 ### Route Validator Statuses
 
 Current status labels:
@@ -159,7 +166,7 @@ npm run build
 
 ## Theme Modes
 
-The app now supports `Light`, `Dark`, and `System` mode via a global top-right selector.
+The app supports `Light`, `Dark`, and `System` mode via `Auto / ☀ / ☾` controls placed in tool/page headers.
 Preference is saved in `localStorage` (`theme-mode`).
 
 ## GitHub Pages Deployment

@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "alias:convert": "node scripts/convert-alias-markup.mjs",
     "adar:convert": "node scripts/convert-adar-xml.mjs",
     "routing:convert": "node scripts/convert-zhu-routing-aliases.mjs"
@@ -21,6 +23,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "node-html-parser": "^7.1.0",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "vitest": "^4.1.0"
   }
 }

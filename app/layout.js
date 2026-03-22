@@ -1,5 +1,4 @@
 import { Rajdhani, Source_Sans_3 } from "next/font/google";
-import ThemeSwitcher from "@/components/theme-switcher";
 import "./globals.css";
 
 const headingFont = Rajdhani({
@@ -35,7 +34,6 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={`${headingFont.variable} ${bodyFont.variable} antialiased`}>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <ThemeSwitcher />
         {children}
       </body>
     </html>

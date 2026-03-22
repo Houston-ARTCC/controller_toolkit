@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import ThemeSwitcher from "@/components/theme-switcher";
 
 const SECTION_TABLE_CONFIG = {
   Autotrack: {
@@ -342,19 +343,26 @@ export default function AliasGuidePage({ guideData }) {
       <div className="ambient-bg" />
       <div className="mx-auto max-w-[90rem] space-y-6">
         <header className="panel">
-          <div className="flex items-start justify-between gap-3">
-            <p className="text-accent text-sm font-semibold uppercase tracking-[0.24em]">Controllers</p>
-            <Link className="button-secondary text-sm" href="/">
-              Back to Toolkit
-            </Link>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-accent text-sm font-semibold uppercase tracking-[0.24em]">
+                Controllers
+              </p>
+              <h1 className="font-heading text-main mt-1 text-4xl font-bold tracking-wide md:text-5xl">
+                Alias Guide
+              </h1>
+              <p className="text-muted mt-2 max-w-4xl">
+                Structured reference view. Every section uses the same layout pattern for easier
+                editing and readability.
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-2">
+              <ThemeSwitcher />
+              <Link className="button-secondary text-sm" href="/">
+                Back to Toolkit
+              </Link>
+            </div>
           </div>
-          <h1 className="font-heading text-main mt-1 text-4xl font-bold tracking-wide md:text-5xl">
-            Alias Guide
-          </h1>
-          <p className="text-muted mt-2 max-w-4xl">
-            Structured reference view. Every section uses the same layout pattern for easier
-            editing and readability.
-          </p>
 
           <div className="mt-5 grid gap-3 md:grid-cols-[2fr_1fr]">
             <input

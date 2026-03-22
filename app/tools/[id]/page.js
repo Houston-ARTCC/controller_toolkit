@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ThemeSwitcher from "@/components/theme-switcher";
 import { getToolById, getTools } from "@/lib/tools";
 
 export function generateStaticParams() {
@@ -34,9 +35,17 @@ export default function ToolDetailsPage({ params }) {
       <div className="ambient-bg" />
       <div className="mx-auto max-w-4xl">
         <article className="panel">
-          <p className="text-accent mb-2 text-sm font-semibold uppercase tracking-[0.24em]">
-            {tool.category}
-          </p>
+          <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
+            <p className="text-accent text-sm font-semibold uppercase tracking-[0.24em]">
+              {tool.category}
+            </p>
+            <div className="flex flex-col items-end gap-2">
+              <ThemeSwitcher />
+              <Link className="button-secondary text-sm" href="/">
+                Back to Toolkit
+              </Link>
+            </div>
+          </div>
           <h1 className="font-heading text-main text-5xl font-bold tracking-wide md:text-6xl">
             {tool.name}
           </h1>
@@ -81,9 +90,6 @@ export default function ToolDetailsPage({ params }) {
             >
               View Source Repository
             </a>
-            <Link className="button-secondary" href="/">
-              Back to Toolkit
-            </Link>
           </div>
         </article>
       </div>
