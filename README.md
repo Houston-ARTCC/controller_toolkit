@@ -5,6 +5,8 @@ Unified front-end shell for Houston ARTCC controller utilities.
 Current tools are registered in a single data file and rendered as searchable cards:
 - TFMS Viewer
 - Alias Guide (migrated internal route)
+- ADAR Routes
+- Route Validator
 - Split Map
 - RVM Reference
 
@@ -29,8 +31,13 @@ Then open [http://localhost:3000](http://localhost:3000).
 - `data/alias-guide.json`: normalized Alias data model used by the app
 - `data/alias-guide-markup.html`: imported source markup from legacy Alias Guide
 - `scripts/convert-alias-markup.mjs`: converter from legacy markup to normalized JSON
+- `app/tools/route-validator/page.js`: Route Validator page entry
+- `components/route-validator-page.js`: Route Validator UI + matching/status logic
+- `app/tools/route-validator/styles.css`: Route Validator-specific styling
+- `data/zhu-routing-rules.json`: preferred route rules used by Route Validator
 - `lib/tools.js`: helpers for loading tool data
 - `app/globals.css`: shared theme tokens and utility classes
+- `reference/`: source/reference docs used during development (not runtime)
 
 ## Adding a Tool
 
@@ -78,6 +85,70 @@ node scripts/normalize-alias-ids.mjs
 - Hash permalink format:
   - `/tools/alias-guide#<entry-id>`
   - example: `/tools/alias-guide#alias`
+
+## Route Validator Workflow
+
+Route Validator renders from `data/zhu-routing-rules.json` and compares filed routes for departures against matching alias rules.
+
+### Runtime Data Sources
+
+- VATSIM traffic feed: `https://data.vatsim.net/v3/vatsim-data.json`
+- D-ATIS feeds:
+  - `https://atis.info/api/KIAH`
+  - `https://atis.info/api/KHOU`
+  - `https://atis.info/api/KDFW`
+  - `https://atis.info/api/KDAL`
+  - `https://atis.info/api/KATL`
+- Refresh intervals:
+  - traffic: every 60 seconds
+  - D-ATIS: every 30 minutes
+
+### Fallback/Test Data
+
+- Static sample pilots/prefiles are defined in `components/route-validator-page.js`:
+  - `STATIC_CONNECTED_PILOTS`
+  - `STATIC_PREFILES`
+- If live traffic fetch fails, static samples are used automatically.
+- D-ATIS remains live unless that feed fails.
+
+### Route Validator Statuses
+
+Current status labels:
+- `CHECK ROUTE`
+- `FLOW`
+- `ALTITUDE`
+- `REVISION`
+- `VALID`
+- `NO RULE`
+
+Default status sort priority:
+1. `CHECK ROUTE`
+2. `FLOW`
+3. `ALTITUDE`
+4. `REVISION`
+5. `VALID`
+6. `NO RULE`
+
+`COPY ROUTE` action appears only for:
+- `CHECK ROUTE`
+- `FLOW`
+- `REVISION`
+
+### Flow Logic Notes
+
+- Destination flow checks are parsed from D-ATIS for `KIAH`, `KHOU`, `KDFW`, `KDAL`, `KATL`.
+- KIAH no-rule SID flow checks currently include:
+  - `BNDTO#` => West
+  - `PITZZ#` => East
+  - `MMUGS#` => West
+  - `GUMBY#` => East
+
+### Reference Documents
+
+- Development references live under `reference/`.
+- FAA aircraft type designator source currently tracked:
+  - `reference/2024-04-29_FAA_Order_JO_7360.1J_Aircraft_Type_Designators--post.pdf`
+- See `reference/README.md` for usage notes.
 
 ## Validate
 

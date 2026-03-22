@@ -10,7 +10,7 @@
   --accent: #0369a1;
   --accent-strong: #075985;
   --on-accent: #ffffff;
-  --card-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --card-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
 }
 
 :root[data-theme="dark"] {
@@ -23,7 +23,7 @@
   --accent: #7dd3fc;
   --accent-strong: #38bdf8;
   --on-accent: #082f49;
-  --card-shadow: 0 10px 30px rgba(2, 6, 23, 0.45);
+  --card-shadow: 0 8px 22px rgba(2, 6, 23, 0.28);
 }
 
 @theme inline {
@@ -45,15 +45,15 @@ body {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 8% -10%, rgba(14, 165, 233, 0.12), transparent 26%),
-    radial-gradient(circle at 92% -20%, rgba(56, 189, 248, 0.12), transparent 22%);
+    radial-gradient(circle at 10% -6%, rgba(14, 165, 233, 0.06), transparent 42%),
+    radial-gradient(circle at 90% -10%, rgba(56, 189, 248, 0.05), transparent 40%);
 }
 
 :root[data-theme="dark"] .ambient-bg {
   background:
-    radial-gradient(circle at 8% -10%, rgba(14, 165, 233, 0.2), transparent 26%),
-    radial-gradient(circle at 92% -20%, rgba(56, 189, 248, 0.16), transparent 22%),
-    linear-gradient(180deg, rgba(2, 6, 23, 0), rgba(2, 6, 23, 0.5));
+    radial-gradient(circle at 10% -6%, rgba(14, 165, 233, 0.1), transparent 44%),
+    radial-gradient(circle at 90% -10%, rgba(56, 189, 248, 0.08), transparent 42%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0), rgba(2, 6, 23, 0.18));
 }
 
 .panel {
@@ -258,4 +258,117 @@ body {
   border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--surface-border));
   background: color-mix(in srgb, var(--accent) 18%, var(--surface));
   color: var(--foreground);
+}
+
+.route-validator-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% -8%, rgba(14, 165, 233, 0.045), transparent 52%),
+    radial-gradient(circle at 88% -12%, rgba(56, 189, 248, 0.04), transparent 50%);
+}
+
+:root[data-theme="dark"] .route-validator-bg {
+  background:
+    radial-gradient(circle at 14% -8%, rgba(14, 165, 233, 0.075), transparent 54%),
+    radial-gradient(circle at 88% -12%, rgba(56, 189, 248, 0.06), transparent 52%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0), rgba(2, 6, 23, 0.08));
+}
+
+.flow-chip-link:hover {
+  background: color-mix(in srgb, var(--surface-soft) 72%, white);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--surface-border));
+}
+
+:root[data-theme="dark"] .flow-chip-link:hover {
+  background: color-mix(in srgb, var(--surface-soft) 78%, white);
+}
+
+.toggle-chip {
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.toggle-chip:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--surface-border));
+  background: color-mix(in srgb, var(--surface-soft) 72%, white);
+}
+
+.toggle-chip-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--muted);
+  opacity: 0.7;
+  transition: background-color 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+.toggle-chip:has(.peer:checked) {
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--surface-border));
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-soft));
+  color: var(--foreground);
+}
+
+.toggle-chip:has(.peer:checked) .toggle-chip-dot {
+  background: var(--accent-strong);
+  opacity: 1;
+  transform: scale(1.1);
+  animation: toggle-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes toggle-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent-strong) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-strong) 28%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-chip:has(.peer:checked) .toggle-chip-dot {
+    animation: none;
+  }
+}
+
+.feed-indicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 9999px;
+  display: inline-block;
+  transform-origin: center;
+  animation: feed-pulse 2.8s ease-in-out infinite;
+}
+
+.feed-indicator-green {
+  background: #22c55e;
+  color: #22c55e;
+}
+
+.feed-indicator-yellow {
+  background: #eab308;
+  color: #eab308;
+}
+
+.feed-indicator-red {
+  background: #ef4444;
+  color: #ef4444;
+}
+
+@keyframes feed-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.26);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feed-indicator {
+    animation: none;
+  }
 }

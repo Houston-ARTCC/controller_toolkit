@@ -12,10 +12,16 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .route-validator-table tbody tr:last-child td {
   border-bottom: 0;
+}
+
+.rv-col-preferred,
+.rv-col-actions {
+  white-space: nowrap;
 }
 
 .rv-chip {
@@ -27,6 +33,7 @@
   letter-spacing: 0.12em;
   padding: 0.22rem 0.48rem;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .rv-chip-good {
@@ -54,9 +61,9 @@
 }
 
 .rv-chip-revision {
-  background: color-mix(in srgb, #facc15 24%, transparent);
-  border-color: color-mix(in srgb, #eab308 52%, transparent);
-  color: #854d0e;
+  background: color-mix(in srgb, #3b82f6 18%, transparent);
+  border-color: color-mix(in srgb, #3b82f6 45%, transparent);
+  color: #1d4ed8;
 }
 
 :root[data-theme="dark"] .rv-chip-good {
@@ -72,6 +79,6 @@
 }
 
 :root[data-theme="dark"] .rv-chip-revision {
-  color: #fde68a;
+  color: #93c5fd;
 }
 
