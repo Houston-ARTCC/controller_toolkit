@@ -2,7 +2,7 @@
   {
     "id": "tfms",
     "name": "TFMS",
-    "description": "Live ZHU traffic flow summaries with specialty and split projections.",
+    "description": "Live ZHU traffic flow summaries with specialty projections and staffing awareness.",
     "url": "https://github.com/Houston-ARTCC/tfms",
     "liveUrl": "/tools/tfms",
     "category": "Traffic",

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
 import sectorsGeoJson from "@/data/tfms-sectors.json";
+import airportQueueBoxes from "@/data/tfms-airport-queue-boxes.json";
 import {
   buildPilotMotionModel,
   buildTraconStaffing,
@@ -15,11 +16,14 @@ import {
 
 const VATSIM_API = "https://data.vatsim.net/v3/vatsim-data.json";
 const REFRESH_MS = 60_000;
-const TFMS_SNAPSHOT_STORAGE_KEY = "tfms-viewer-snapshot-v1";
+const TFMS_SNAPSHOT_STORAGE_KEY = "tfms-viewer-snapshot-v2";
 const SNAPSHOT_MAX_AGE_MS = 5 * 60_000;
 const SPECIALTY_THRESHOLD_MAX = 30;
 const SPECIALTY_BAND_STORAGE_KEY = "tfms-specialty-band-thresholds-by-specialty";
 const DEFAULT_SPECIALTY_BAND_THRESHOLDS = { greenMax: 10, yellowMax: 20 };
+const QUEUE_ALTITUDE_MAX_FT = 5_000;
+const QUEUE_GROUNDSPEED_MAX_KTS = 80;
+const QUEUE_TREND_THRESHOLD = 0.25;
 
 function normalizeSpecialtyKey(value) {
   return String(value || "").trim().toUpperCase();
@@ -67,12 +71,23 @@ function getBandClass(value, thresholds = DEFAULT_SPECIALTY_BAND_THRESHOLDS) {
   return "tfms-band-red";
 }
 
-function CountBadge({ value, thresholds }) {
-  return <span className={`tfms-count ${getBandClass(value, thresholds)}`}>{value}</span>;
+function CountBadge({ value, thresholds, tickerSignal }) {
+  const flashClass =
+    tickerSignal?.direction === "up"
+      ? "tfms-count-tick-down"
+      : tickerSignal?.direction === "down"
+        ? "tfms-count-tick-up"
+        : "";
+  return <span className={`tfms-count ${getBandClass(value, thresholds)} ${flashClass}`}>{value}</span>;
 }
 
 function getSpecialtyRowTone(row, thresholds) {
-  const values = [row?.now, row?.p5, row?.p10, row?.p20];
+  const values = [
+    row?.now,
+    row?.p10,
+    row?.p20,
+    row?.p30,
+  ];
   const hasRed = values.some((value) => Number(value) > thresholds.yellowMax);
   if (hasRed) {
     return "alert";
@@ -135,6 +150,45 @@ function areSummaryRowsEqual(previous, next, keys) {
   return true;
 }
 
+const SPECIALTY_PROJECTION_FIELDS = ["now", "p10", "p20", "p30"];
+
+function buildSpecialtyTickerSignals(previousRows, nextRows, startToken = 0) {
+  if (!Array.isArray(previousRows) || previousRows.length === 0 || !Array.isArray(nextRows)) {
+    return { nextToken: startToken, signals: {} };
+  }
+
+  const previousBySpecialty = new Map(
+    previousRows.map((row) => [String(row?.specialty || ""), row]),
+  );
+  const signals = {};
+  let nextToken = startToken;
+
+  for (const row of nextRows) {
+    const specialty = String(row?.specialty || "");
+    if (!specialty) {
+      continue;
+    }
+    const previousRow = previousBySpecialty.get(specialty);
+    if (!previousRow) {
+      continue;
+    }
+    for (const field of SPECIALTY_PROJECTION_FIELDS) {
+      const prevValue = Number(previousRow?.[field] ?? 0);
+      const nextValue = Number(row?.[field] ?? 0);
+      if (!Number.isFinite(prevValue) || !Number.isFinite(nextValue) || prevValue === nextValue) {
+        continue;
+      }
+      nextToken += 1;
+      signals[`${specialty}:${field}`] = {
+        direction: nextValue > prevValue ? "up" : "down",
+        token: nextToken,
+      };
+    }
+  }
+
+  return { nextToken, signals };
+}
+
 function areControllersEqual(previous, next) {
   if (previous === next) {
     return true;
@@ -191,6 +245,208 @@ function getOnlineDurationMs(logonTime) {
   }
   const deltaMs = Date.now() - timestampMs;
   return Number.isFinite(deltaMs) && deltaMs >= 0 ? deltaMs : -1;
+}
+
+function normalizeAirportCode(value) {
+  const text = String(value || "").trim().toUpperCase();
+  if (!text) {
+    return "";
+  }
+  if (/^[A-Z]{3}$/.test(text)) {
+    return `K${text}`;
+  }
+  if (/^[A-Z0-9]{4}$/.test(text)) {
+    return text;
+  }
+  return "";
+}
+
+function pointInRing(point, ring) {
+  const [x, y] = point;
+  let inside = false;
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+    const intersects =
+      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi + 1e-12) + xi;
+    if (intersects) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+function pointInPolygonCoordinates(point, coordinates) {
+  if (!Array.isArray(coordinates) || coordinates.length === 0) {
+    return false;
+  }
+  if (!pointInRing(point, coordinates[0])) {
+    return false;
+  }
+  for (let i = 1; i < coordinates.length; i += 1) {
+    if (pointInRing(point, coordinates[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isPointInGeometry(point, geometry) {
+  if (!geometry || typeof geometry !== "object") {
+    return false;
+  }
+  if (geometry.type === "Polygon") {
+    return pointInPolygonCoordinates(point, geometry.coordinates);
+  }
+  if (geometry.type === "MultiPolygon") {
+    return (geometry.coordinates || []).some((polygon) =>
+      pointInPolygonCoordinates(point, polygon),
+    );
+  }
+  return false;
+}
+
+function boundsToPolygonGeometry(bounds) {
+  if (!bounds) {
+    return null;
+  }
+  const minLat = Number(bounds.minLat);
+  const maxLat = Number(bounds.maxLat);
+  const minLon = Number(bounds.minLon);
+  const maxLon = Number(bounds.maxLon);
+  if (![minLat, maxLat, minLon, maxLon].every(Number.isFinite)) {
+    return null;
+  }
+  return {
+    type: "Polygon",
+    coordinates: [[
+      [minLon, minLat],
+      [maxLon, minLat],
+      [maxLon, maxLat],
+      [minLon, maxLat],
+      [minLon, minLat],
+    ]],
+  };
+}
+
+function extractGeometriesFromAny(value, target = []) {
+  if (!value) {
+    return target;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      extractGeometriesFromAny(item, target);
+    }
+    return target;
+  }
+  if (value.type === "FeatureCollection") {
+    extractGeometriesFromAny(value.features || [], target);
+    return target;
+  }
+  if (value.type === "Feature") {
+    extractGeometriesFromAny(value.geometry, target);
+    return target;
+  }
+  if (value.type === "Polygon" || value.type === "MultiPolygon") {
+    target.push(value);
+  }
+  return target;
+}
+
+function isPilotInsideBounds(pilot, boundsOrGeometries) {
+  const lat = Number(pilot?.latitude);
+  const lon = Number(pilot?.longitude);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || !boundsOrGeometries) {
+    return false;
+  }
+  if (Array.isArray(boundsOrGeometries)) {
+    return boundsOrGeometries.some((geometry) => isPointInGeometry([lon, lat], geometry));
+  }
+  return (
+    lat >= Number(boundsOrGeometries.minLat) &&
+    lat <= Number(boundsOrGeometries.maxLat) &&
+    lon >= Number(boundsOrGeometries.minLon) &&
+    lon <= Number(boundsOrGeometries.maxLon)
+  );
+}
+
+function formatQueueMinutes(totalMinutes) {
+  const rounded = Math.max(0, Math.round(Number(totalMinutes || 0)));
+  const hours = Math.floor(rounded / 60);
+  const minutes = rounded % 60;
+  if (hours <= 0) {
+    return `${minutes}m`;
+  }
+  return `${hours}h ${minutes}m`;
+}
+
+function getQueuePressureClass(avgMinutes) {
+  if (avgMinutes < 5) return "tfms-queue-green";
+  if (avgMinutes < 10) return "tfms-queue-yellow";
+  return "tfms-queue-red";
+}
+
+function buildAirportQueueSummary(pilots, boxes, previousTracker, previousRowsByIcao, nowMs) {
+  const tracker = {};
+  const rows = [];
+
+  for (const box of boxes) {
+    const durations = [];
+    const icao = String(box?.icao || "").toUpperCase();
+
+    for (const pilot of pilots || []) {
+      const departure = normalizeAirportCode(pilot?.flight_plan?.departure);
+      if (departure !== icao) {
+        continue;
+      }
+      const hasGeometry = Array.isArray(box?.geometries) && box.geometries.length > 0;
+      if (!isPilotInsideBounds(pilot, hasGeometry ? box.geometries : box?.bounds)) {
+        continue;
+      }
+      if (Number(pilot?.altitude || 0) > QUEUE_ALTITUDE_MAX_FT) {
+        continue;
+      }
+      if (Number(pilot?.groundspeed || 0) > QUEUE_GROUNDSPEED_MAX_KTS) {
+        continue;
+      }
+
+      const callsign = String(pilot?.callsign || "").trim().toUpperCase();
+      if (!callsign) {
+        continue;
+      }
+
+      const trackerKey = `${icao}:${callsign}`;
+      const previous = previousTracker?.[trackerKey];
+      const enteredAt =
+        Number.isFinite(previous?.enteredAt) && previous.enteredAt <= nowMs
+          ? previous.enteredAt
+          : nowMs;
+      tracker[trackerKey] = { enteredAt, lastSeenAt: nowMs };
+      durations.push((nowMs - enteredAt) / 60_000);
+    }
+
+    const count = durations.length;
+    const avgMinutes = count > 0 ? durations.reduce((sum, value) => sum + value, 0) / count : 0;
+    const maxMinutes = count > 0 ? Math.max(...durations) : 0;
+    const previousRow = previousRowsByIcao?.[icao];
+    const previousPressure = previousRow
+      ? Number(previousRow.avgMinutes || 0) + Number(previousRow.count || 0) * 0.75
+      : Number(avgMinutes) + count * 0.75;
+    const nextPressure = Number(avgMinutes) + count * 0.75;
+    const delta = nextPressure - previousPressure;
+    const trend = delta > QUEUE_TREND_THRESHOLD ? "up" : delta < -QUEUE_TREND_THRESHOLD ? "down" : "flat";
+
+    rows.push({
+      icao,
+      name: box?.name || icao,
+      count,
+      avgMinutes,
+      maxMinutes,
+      trend,
+    });
+  }
+
+  return { rows, tracker };
 }
 
 function areTraconStatusEqual(previous, next) {
@@ -261,30 +517,94 @@ export default function TfmsViewerPage() {
   const [controllers, setControllers] = useState([]);
   const [traconStaffing, setTraconStaffing] = useState([]);
   const [specialtySummary, setSpecialtySummary] = useState([]);
+  const [airportQueueSummary, setAirportQueueSummary] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingStatus, setProcessingStatus] = useState("Starting...");
   const [error, setError] = useState("");
   const [nextRefreshAt, setNextRefreshAt] = useState(Date.now() + REFRESH_MS);
   const [perfMetrics, setPerfMetrics] = useState(null);
   const [specialtyBandThresholdsBySpecialty, setSpecialtyBandThresholdsBySpecialty] = useState({});
+  const [specialtyTickerSignals, setSpecialtyTickerSignals] = useState({});
   const [selectedSpecialtyForThresholds, setSelectedSpecialtyForThresholds] = useState(null);
   const [specialtyModalPosition, setSpecialtyModalPosition] = useState({ x: 24, y: 24 });
   const [isToolInfoOpen, setIsToolInfoOpen] = useState(false);
+  const [isProjectionInfoOpen, setIsProjectionInfoOpen] = useState(false);
   const isFetchingRef = useRef(false);
   const nextRefreshAtRef = useRef(Date.now() + REFRESH_MS);
   const fetchAbortRef = useRef(null);
   const fetchRequestIdRef = useRef(0);
   const projectedFlightsRef = useRef([]);
   const pilotMotionByCallsignRef = useRef({});
+  const specialtyTickerTokenRef = useRef(0);
+  const airportQueueTrackerRef = useRef({});
+  const previousAirportQueueByIcaoRef = useRef({});
 
   const sectorIndex = useMemo(() => buildSectorIndex(sectorsGeoJson), []);
+  const queueBoxes = useMemo(() => {
+    const raw = Array.isArray(airportQueueBoxes?.airports) ? airportQueueBoxes.airports : [];
+    const grouped = new Map();
+
+    for (const row of raw) {
+      const icao = normalizeAirportCode(row?.icao);
+      if (!icao) {
+        continue;
+      }
+      const existing = grouped.get(icao) || {
+        icao,
+        name: row?.name || icao,
+        bounds: null,
+        geometries: [],
+      };
+      if (!existing.name && row?.name) {
+        existing.name = row.name;
+      }
+
+      if (row?.bounds) {
+        const legacyGeometry = boundsToPolygonGeometry(row.bounds);
+        if (legacyGeometry) {
+          existing.geometries.push(legacyGeometry);
+        } else if (!existing.bounds) {
+          existing.bounds = row.bounds;
+        }
+      }
+
+      if (Array.isArray(row?.areas)) {
+        extractGeometriesFromAny(row.areas, existing.geometries);
+      }
+      if (row?.geojson) {
+        extractGeometriesFromAny(row.geojson, existing.geometries);
+      }
+
+      grouped.set(icao, existing);
+    }
+
+    return [...grouped.values()].filter(
+      (row) => row?.icao && (row?.geometries?.length > 0 || row?.bounds),
+    );
+  }, []);
   const defaultSpecialtySummary = useMemo(
     () => buildSpecialtySummary([], sectorIndex.specialties),
     [sectorIndex.specialties],
   );
+  const defaultAirportQueueSummary = useMemo(
+    () =>
+      queueBoxes.map((box) => ({
+        icao: box.icao,
+        name: box.name || box.icao,
+        count: 0,
+        avgMinutes: 0,
+        maxMinutes: 0,
+        trend: "flat",
+      })),
+    [queueBoxes],
+  );
   const specialtyDisplay = useMemo(
     () => (specialtySummary.length > 0 ? specialtySummary : defaultSpecialtySummary),
     [defaultSpecialtySummary, specialtySummary],
+  );
+  const airportQueueDisplay = useMemo(
+    () => (airportQueueSummary.length > 0 ? airportQueueSummary : defaultAirportQueueSummary),
+    [airportQueueSummary, defaultAirportQueueSummary],
   );
   const baseTraconStaffing = useMemo(
     () => buildTraconStaffing({ controllers: [] }),
@@ -391,6 +711,17 @@ export default function TfmsViewerPage() {
       const projectDone = performance.now();
       projectedFlightsRef.current = projected;
       const nextSpecialty = buildSpecialtySummary(projected, sectorIndex.specialties);
+      const queueSummaryResult = buildAirportQueueSummary(
+        vatsim.pilots || [],
+        queueBoxes,
+        airportQueueTrackerRef.current,
+        previousAirportQueueByIcaoRef.current,
+        Date.now(),
+      );
+      airportQueueTrackerRef.current = queueSummaryResult.tracker;
+      previousAirportQueueByIcaoRef.current = Object.fromEntries(
+        queueSummaryResult.rows.map((row) => [row.icao, row]),
+      );
       const summaryDone = performance.now();
 
       setControllers((previous) => (areControllersEqual(previous, zhuControllers) ? previous : zhuControllers));
@@ -398,10 +729,29 @@ export default function TfmsViewerPage() {
         areTraconStatusEqual(previous, nextTraconStaffing) ? previous : nextTraconStaffing,
       );
       setSpecialtySummary((previous) => {
-        return areSummaryRowsEqual(previous, nextSpecialty, ["specialty", "now", "p5", "p10", "p20"])
-          ? previous
-          : nextSpecialty;
+        if (areSummaryRowsEqual(previous, nextSpecialty, ["specialty", "now", "p10", "p20", "p30"])) {
+          return previous;
+        }
+        const signalUpdate = buildSpecialtyTickerSignals(
+          previous,
+          nextSpecialty,
+          specialtyTickerTokenRef.current,
+        );
+        specialtyTickerTokenRef.current = signalUpdate.nextToken;
+        setSpecialtyTickerSignals(signalUpdate.signals);
+        return nextSpecialty;
       });
+      setAirportQueueSummary((previous) =>
+        areSummaryRowsEqual(previous, queueSummaryResult.rows, [
+          "icao",
+          "count",
+          "avgMinutes",
+          "maxMinutes",
+          "trend",
+        ])
+          ? previous
+          : queueSummaryResult.rows,
+      );
       const nextPerfMetrics = {
         fetchMs: Math.round(fetchDone - refreshStart),
         motionMs: Math.round(motionDone - fetchDone),
@@ -418,6 +768,7 @@ export default function TfmsViewerPage() {
         controllers: zhuControllers,
         traconStaffing: nextTraconStaffing,
         specialtySummary: nextSpecialty,
+        airportQueueSummary: queueSummaryResult.rows,
         perfMetrics: nextPerfMetrics,
       });
     } catch (fetchError) {
@@ -438,7 +789,7 @@ export default function TfmsViewerPage() {
         isFetchingRef.current = false;
       }
     }
-  }, [sectorIndex]);
+  }, [queueBoxes, sectorIndex]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -479,6 +830,12 @@ export default function TfmsViewerPage() {
     }
     if (Array.isArray(snapshot.specialtySummary)) {
       setSpecialtySummary(snapshot.specialtySummary);
+    }
+    if (Array.isArray(snapshot.airportQueueSummary)) {
+      setAirportQueueSummary(snapshot.airportQueueSummary);
+      previousAirportQueueByIcaoRef.current = Object.fromEntries(
+        snapshot.airportQueueSummary.map((row) => [row.icao, row]),
+      );
     }
     if (snapshot?.perfMetrics && typeof snapshot.perfMetrics === "object") {
       setPerfMetrics(snapshot.perfMetrics);
@@ -606,7 +963,7 @@ export default function TfmsViewerPage() {
                 TFMS
               </h1>
               <p className="text-muted mt-2 max-w-3xl">
-                Live ZHU traffic overview with specialty and split projections at +5, +10, and +20
+                Live ZHU traffic overview with specialty projections at +10, +20, and +30
                 minutes.
               </p>
             </div>
@@ -617,7 +974,10 @@ export default function TfmsViewerPage() {
               </Link>
               <button
                 className="button-secondary text-sm"
-                onClick={() => setIsToolInfoOpen(true)}
+                onClick={() => {
+                  setIsProjectionInfoOpen(false);
+                  setIsToolInfoOpen(true);
+                }}
                 type="button"
               >
                 Tool Info
@@ -636,9 +996,9 @@ export default function TfmsViewerPage() {
                   <tr>
                     <th>Specialty</th>
                     <th>Now</th>
-                    <th>+5</th>
                     <th>+10</th>
                     <th>+20</th>
+                    <th>+30</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -671,16 +1031,36 @@ export default function TfmsViewerPage() {
                         </button>
                       </td>
                       <td>
-                        <CountBadge thresholds={thresholds} value={row.now} />
+                        <CountBadge
+                          key={`${row.specialty}-now-${specialtyTickerSignals[`${row.specialty}:now`]?.token || 0}`}
+                          thresholds={thresholds}
+                          tickerSignal={specialtyTickerSignals[`${row.specialty}:now`]}
+                          value={row.now}
+                        />
                       </td>
                       <td>
-                        <CountBadge thresholds={thresholds} value={row.p5} />
+                        <CountBadge
+                          key={`${row.specialty}-p10-${specialtyTickerSignals[`${row.specialty}:p10`]?.token || 0}`}
+                          thresholds={thresholds}
+                          tickerSignal={specialtyTickerSignals[`${row.specialty}:p10`]}
+                          value={row.p10 ?? 0}
+                        />
                       </td>
                       <td>
-                        <CountBadge thresholds={thresholds} value={row.p10} />
+                        <CountBadge
+                          key={`${row.specialty}-p20-${specialtyTickerSignals[`${row.specialty}:p20`]?.token || 0}`}
+                          thresholds={thresholds}
+                          tickerSignal={specialtyTickerSignals[`${row.specialty}:p20`]}
+                          value={row.p20 ?? 0}
+                        />
                       </td>
                       <td>
-                        <CountBadge thresholds={thresholds} value={row.p20} />
+                        <CountBadge
+                          key={`${row.specialty}-p30-${specialtyTickerSignals[`${row.specialty}:p30`]?.token || 0}`}
+                          thresholds={thresholds}
+                          tickerSignal={specialtyTickerSignals[`${row.specialty}:p30`]}
+                          value={row.p30 ?? row.p10 ?? 0}
+                        />
                       </td>
                     </tr>
                   )})}
@@ -780,7 +1160,40 @@ export default function TfmsViewerPage() {
           </article>
         </section>
 
-        {/* Split Summary intentionally hidden for now; wiring will be restored later. */}
+        <section>
+          <article className="panel tfms-compact-card">
+            <h2 className="font-heading text-main text-2xl">Departure Queue</h2>
+            <div className="mt-3 tfms-queue-grid">
+              {airportQueueDisplay.map((row) => (
+                <div className={`tfms-queue-card ${getQueuePressureClass(row.avgMinutes)}`} key={row.icao}>
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-main text-base font-bold tracking-[0.08em]">{row.icao}</p>
+                    <span
+                      className={`tfms-queue-trend tfms-queue-trend-${row.trend}`}
+                      title={row.trend === "up" ? "Queue pressure increasing" : row.trend === "down" ? "Queue pressure decreasing" : "No significant change"}
+                    >
+                      {row.trend === "up" ? "Increasing" : row.trend === "down" ? "Decreasing" : "Steady"}
+                    </span>
+                  </div>
+                  <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <p className="text-muted uppercase tracking-[0.08em]">Queue</p>
+                      <p className="text-main mt-1 text-base font-semibold">{row.count}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted uppercase tracking-[0.08em]">Avg</p>
+                      <p className="text-main mt-1 text-base font-semibold">{formatQueueMinutes(row.avgMinutes)}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted uppercase tracking-[0.08em]">Longest</p>
+                      <p className="text-main mt-1 text-base font-semibold">{formatQueueMinutes(row.maxMinutes)}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </article>
+        </section>
 
       </div>
 
@@ -872,7 +1285,10 @@ export default function TfmsViewerPage() {
       {isToolInfoOpen ? (
         <div
           className="bg-black/45 fixed inset-0 z-50 flex items-center justify-center p-4"
-          onClick={() => setIsToolInfoOpen(false)}
+          onClick={() => {
+            setIsProjectionInfoOpen(false);
+            setIsToolInfoOpen(false);
+          }}
         >
           <div
             className="panel w-full max-w-2xl"
@@ -886,19 +1302,22 @@ export default function TfmsViewerPage() {
               <div>
                 <p className="text-main text-xs font-semibold uppercase tracking-[0.12em]">Use</p>
                 <p className="mt-1">
-                  Use this page to monitor ZHU traffic load, see short-horizon projections (+5/+10/+20),
-                  track enroute staffing, and quickly see which TRACON facilities are online.
+                  Use this page to monitor ZHU traffic load, see short-horizon projections (+10/+20/+30),
+                  track enroute staffing, watch local departure queues, and quickly see which TRACON facilities are online.
                 </p>
               </div>
               <div>
                 <p className="text-main text-xs font-semibold uppercase tracking-[0.12em]">Features</p>
-                <p className="mt-1">
-                  Per-specialty traffic thresholds, specialty and split summaries, live controller data,
-                  online duration, and compact TRACON online/offline visibility.
-                </p>
                 <p className="mt-2">
                   To set Specialty Summary thresholds: click a specialty name in the table, adjust the
                   Green and Yellow slider handles in that specialty modal, then use <span className="text-main font-semibold">Apply {`<SPECIALTY>`}</span> for one specialty or <span className="text-main font-semibold">Apply All</span> for all specialties.
+                </p>
+                <p className="mt-2">
+                  Departure Queue cards track aircraft filed from each configured airport while they remain
+                  inside that airport&apos;s configured queue area(s). These queue areas are drawn around
+                  runway hold-short zones, not all aircraft on the airport surface. Cards show queue count,
+                  average time in queue, longest wait, and whether queue pressure is increasing, steady,
+                  or decreasing.
                 </p>
               </div>
               <div>
@@ -909,15 +1328,85 @@ export default function TfmsViewerPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-4 flex justify-end">
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                className="button-secondary px-3 py-1.5 text-xs"
+                onClick={() => setIsProjectionInfoOpen(true)}
+                type="button"
+              >
+                More About Projections
+              </button>
               <button
                 className="button-primary px-3 py-1.5 text-xs"
-                onClick={() => setIsToolInfoOpen(false)}
+                onClick={() => {
+                  setIsProjectionInfoOpen(false);
+                  setIsToolInfoOpen(false);
+                }}
                 type="button"
               >
                 Close
               </button>
             </div>
+
+            {isProjectionInfoOpen ? (
+              <div
+                className="bg-black/45 absolute inset-0 z-10 flex items-center justify-center rounded-[inherit] p-4"
+                onClick={() => setIsProjectionInfoOpen(false)}
+              >
+                <div
+                  className="panel w-full max-w-xl"
+                  onClick={(event) => event.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
+                  aria-label="More About Projections"
+                >
+                  <h4 className="font-heading text-main text-xl">More About Projections</h4>
+                  <div className="text-muted mt-3 space-y-2 text-sm">
+                    <p>
+                      This page updates every minute using live VATSIM data.
+                    </p>
+                    <p>
+                      Aircraft are included when they are in Houston Center airspace now, close to entering it,
+                      or inbound to airports we track for Houston operations.
+                    </p>
+                    <p>
+                      The traffic numbers are shown for <span className="text-main font-semibold">Now, +10, +20, and +30 minutes</span> to give a short look-ahead for planning.
+                    </p>
+                    <p className="text-main text-xs font-semibold uppercase tracking-[0.12em] pt-1">
+                      What The Projection Does
+                    </p>
+                    <p>
+                      It takes recent position, heading, speed, and altitude data and estimates where each aircraft
+                      will be in the next few buckets. It then maps those estimated positions back into ZHU sector
+                      geometry to build workload-style counts.
+                    </p>
+                    <p className="text-main text-xs font-semibold uppercase tracking-[0.12em] pt-1">
+                      What It Does Not Do
+                    </p>
+                    <p>
+                      It does not perform full route-intent modeling. It does not predict exact turns, clearances,
+                      reroutes, or tactical vectoring. It uses a short recent motion snapshot to extrapolate.
+                    </p>
+                    <p>
+                      Overflights are included in traffic totals if they meet selection logic, but they are not
+                      currently isolated into a separate overflight-only view.
+                    </p>
+                    <p>
+                      Treat this as a trend and planning aid, not an exact future traffic picture.
+                    </p>
+                  </div>
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      className="button-primary px-3 py-1.5 text-xs"
+                      onClick={() => setIsProjectionInfoOpen(false)}
+                      type="button"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       ) : null}

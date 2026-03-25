@@ -35,6 +35,7 @@ Then open [http://localhost:3000](http://localhost:3000).
 - `components/route-validator-page.js`: Route Validator UI + matching/status logic
 - `app/tools/route-validator/styles.css`: Route Validator-specific styling
 - `data/zhu-routing-rules.json`: preferred route rules used by Route Validator
+- `data/tfms-airport-queue-boxes.json`: queue-watch airport bounding boxes for TFMS cards
 - `lib/tools.js`: helpers for loading tool data
 - `app/globals.css`: shared theme tokens and utility classes
 - `reference/`: source/reference docs used during development (not runtime)
@@ -116,7 +117,13 @@ Route Validator renders from `data/zhu-routing-rules.json` and compares filed ro
 - TFMS currently shows:
   - Specialty Summary
   - Online Positions (enroute + TRACON status)
-- Split Summary is intentionally hidden for now and can be re-enabled later.
+  - Departure Queue (KIAH/KHOU/KAUS/KSAT/KMSY)
+- Split Summary is currently disabled while this module is being redesigned.
+- Queue watch area config supports either:
+  - legacy `bounds` (`minLat/maxLat/minLon/maxLon`)
+  - GeoJSON via `geojson` (Feature, FeatureCollection, Polygon, MultiPolygon)
+  - GeoJSON array via `areas`
+  - multiple entries with the same ICAO are merged into one airport card
 
 ### Route Validator Statuses
 
