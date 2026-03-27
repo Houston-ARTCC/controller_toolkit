@@ -2,11 +2,11 @@
 
 Unified front-end shell for Houston ARTCC controller utilities.
 
-Current tools are registered in a single data file and rendered as launch cards:
+Current tool launchers:
 - TFMS
-- Alias Guide (migrated internal route)
-- ADAR Routes
+- Alias Guide
 - Route Validator
+- ADAR Routes
 - Split Map
 - RVM Reference
 
@@ -22,23 +22,37 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 ## Project Structure
 
-- `data/tools.json`: tool registry (add/edit tools here)
+- `data/tools.json`: tool registry used by the homepage launcher
 - `app/page.js`: homepage entry
 - `components/toolkit-home.js`: tool launcher grid UI
 - `app/tools/[id]/page.js`: per-tool detail pages
-- `app/tools/alias-guide/page.js`: migrated Alias Guide tool
-- `components/alias-guide-page.js`: refactored Alias UI (sidebar nav, search, cards)
-- `data/alias-guide.json`: normalized Alias data model used by the app
-- `data/alias-guide-markup.html`: imported source markup from legacy Alias Guide
-- `scripts/convert-alias-markup.mjs`: converter from legacy markup to normalized JSON
-- `app/tools/route-validator/page.js`: Route Validator page entry
-- `components/route-validator-page.js`: Route Validator UI + matching/status logic
-- `app/tools/route-validator/styles.css`: Route Validator-specific styling
-- `data/zhu-routing-rules.json`: preferred route rules used by Route Validator
-- `data/tfms-airport-queue-boxes.json`: queue-watch airport bounding boxes for TFMS cards
-- `lib/tools.js`: helpers for loading tool data
-- `app/globals.css`: shared theme tokens and utility classes
+- `app/globals.css`: shared theme + base UI styles
 - `reference/`: source/reference docs used during development (not runtime)
+
+### Alias Guide
+
+- `app/tools/alias-guide/page.js`
+- `components/alias-guide-page.js`
+- `data/alias-guide.json`
+- `scripts/convert-alias-markup.mjs`
+
+### Route Validator
+
+- `app/tools/route-validator/page.js`
+- `components/route-validator-page.js`
+- `app/tools/route-validator/styles.css`
+- `data/zhu-routing-rules.json`
+
+### TFMS
+
+- `app/tools/tfms/page.js`
+- `components/tfms-viewer-page.js`
+- `components/tfms-projection-map.js`
+- `app/tools/tfms/styles.css`
+- `lib/tfms/compute.js`
+- `data/tfms-sectors.json`
+- `data/tfms-airport-queue-boxes.json`
+- `data/tfms-event-splits.json` (currently hidden from UI, retained for future events)
 
 ## Adding a Tool
 
@@ -51,83 +65,36 @@ Add a new object to `data/tools.json` with:
 - `category`
 - `status`
 - `icon`
-- `tags`
+- `tags` (optional)
 
 The homepage and `/tools/[id]` route will automatically include it.
 
 ## Alias Data Workflow
 
-The Alias Guide now renders from `data/alias-guide.json`.
+Alias Guide renders from `data/alias-guide.json`.
 
-If you update legacy source HTML in `data/alias-guide-markup.html`, regenerate JSON with:
+If you update legacy markup, regenerate JSON:
 
 ```bash
 npm run alias:convert
 ```
 
-To normalize long generated IDs into readable slug-based IDs:
+Optional ID normalization pass:
 
 ```bash
 node scripts/normalize-alias-ids.mjs
 ```
 
-### Alias Module Notes
+## Route Validator Notes
 
-- In `data/alias-guide.json`, most content fields store both:
-  - `html`: rendered UI content (supports formatting tags)
-  - `text`: plain-text content used for search/filter
-- Keep `html` and `text` semantically aligned when editing content.
-- Alias sections now use one shared layout:
-  - section header + intro (optional)
-  - standardized reference tables
-  - row-level `Link` button to copy direct hash links
-- Section-specific table label mapping lives in:
-  - `components/alias-guide-page.js` -> `SECTION_TABLE_CONFIG`
-- Hash permalink format:
-  - `/tools/alias-guide#<entry-id>`
-  - example: `/tools/alias-guide#alias`
+Runtime data:
+- VATSIM feed: `https://data.vatsim.net/v3/vatsim-data.json` (60s refresh)
+- D-ATIS feeds (`KIAH`, `KHOU`, `KDFW`, `KDAL`, `KATL`) (30m refresh)
 
-## Route Validator Workflow
+Fallback:
+- Static traffic/prefile samples in `components/route-validator-page.js`
 
-Route Validator renders from `data/zhu-routing-rules.json` and compares filed routes for departures against matching alias rules.
-
-### Runtime Data Sources
-
-- VATSIM traffic feed: `https://data.vatsim.net/v3/vatsim-data.json`
-- D-ATIS feeds:
-  - `https://atis.info/api/KIAH`
-  - `https://atis.info/api/KHOU`
-  - `https://atis.info/api/KDFW`
-  - `https://atis.info/api/KDAL`
-  - `https://atis.info/api/KATL`
-- Refresh intervals:
-  - traffic: every 60 seconds
-  - D-ATIS: every 30 minutes
-
-### Fallback/Test Data
-
-- Static sample pilots/prefiles are defined in `components/route-validator-page.js`:
-  - `STATIC_CONNECTED_PILOTS`
-  - `STATIC_PREFILES`
-- If live traffic fetch fails, static samples are used automatically.
-- D-ATIS remains live unless that feed fails.
-
-## TFMS Notes
-
-- TFMS currently shows:
-  - Specialty Summary
-  - Online Positions (enroute + TRACON status)
-  - Departure Queue (KIAH/KHOU/KAUS/KSAT/KMSY)
-- Split Summary is currently disabled while this module is being redesigned.
-- Queue watch area config supports either:
-  - legacy `bounds` (`minLat/maxLat/minLon/maxLon`)
-  - GeoJSON via `geojson` (Feature, FeatureCollection, Polygon, MultiPolygon)
-  - GeoJSON array via `areas`
-  - multiple entries with the same ICAO are merged into one airport card
-
-### Route Validator Statuses
-
-Current status labels:
+Current statuses:
 - `CHECK ROUTE`
 - `FLOW`
 - `ALTITUDE`
@@ -135,7 +102,7 @@ Current status labels:
 - `VALID`
 - `NO RULE`
 
-Default status sort priority:
+Default sort priority:
 1. `CHECK ROUTE`
 2. `FLOW`
 3. `ALTITUDE`
@@ -143,58 +110,73 @@ Default status sort priority:
 5. `VALID`
 6. `NO RULE`
 
-`COPY ROUTE` action appears only for:
+`COPY ROUTE` appears only for:
 - `CHECK ROUTE`
 - `FLOW`
 - `REVISION`
 
-### Flow Logic Notes
+## TFMS Notes
 
-- Destination flow checks are parsed from D-ATIS for `KIAH`, `KHOU`, `KDFW`, `KDAL`, `KATL`.
-- KIAH no-rule SID flow checks currently include:
-  - `BNDTO#` => West
-  - `PITZZ#` => East
-  - `MMUGS#` => West
-  - `GUMBY#` => East
+Current cards/modules:
+- Specialty Summary (`Now`, `+10`, `+20`, `+30`)
+- Online Positions (ZHU enroute + TRACON)
+- Enhanced Projection Map
+- Departure Queue (`KIAH`, `KHOU`, `KAUS`, `KSAT`, `KMSY`)
 
-### Reference Documents
+Event split summary:
+- Logic/data retained
+- Currently hidden and compute-gated
 
-- Development references live under `reference/`.
-- FAA aircraft type designator source currently tracked:
-  - `reference/2024-04-29_FAA_Order_JO_7360.1J_Aircraft_Type_Designators--post.pdf`
-- See `reference/README.md` for usage notes.
+Queue boxes:
+- Config supports `bounds`, `geojson`, or `areas`
+- Multiple entries for the same ICAO are merged into one card
+
+Projection/summary inclusion logic:
+- Flight must pass ZHU relevance checks (in ZHU, near perimeter inbound, or inbound to tracked internal airports)
+- Baseline minimum groundspeed filter: `>= 20 kts`
+- Operational gate for summary counting: `groundspeed > 50 kts` **or** `altitude > 3000 ft`
+
+Map behavior (current):
+- Current aircraft icon
+- `+10` projection dot
+- Current-to-`+10` connector line
+- No `+20/+30` dots/lines
+- Toggleable sector overlays (`Low`, `High`)
+- Specialty zoom buttons with specialty-aware coloring
 
 ## Validate
 
 ```bash
 npm run lint
+npm run test -- --run
 npm run build
 ```
 
 ## Theme Modes
 
-The app supports `Light`, `Dark`, and `System` mode via `Auto / ☀ / ☾` controls placed in tool/page headers.
+The app supports `Light`, `Dark`, and `System` mode via `Auto / Sun / Moon` controls in tool/page headers.  
 Preference is saved in `localStorage` (`theme-mode`).
 
 ## GitHub Pages Deployment
 
-This project is configured for static export + GitHub Pages.
+Configured for static export + Pages.
 
 Important files:
 - `next.config.mjs` (`output: "export"`)
 - `public/CNAME` (`toolkit.houston.center`)
 - `.github/workflows/deploy-pages.yml`
 
-Required one-time GitHub settings:
-1. In your repo, go to `Settings > Pages`.
-2. Under `Source`, select `GitHub Actions`.
-3. In your DNS provider, set `toolkit.houston.center` to GitHub Pages (CNAME target per GitHub docs).
+Required one-time GitHub setup:
+1. Repo `Settings > Pages`
+2. Source: `GitHub Actions`
+3. DNS: `toolkit.houston.center` CNAME to GitHub Pages target
 
-After that, pushes to `main` will build and deploy automatically.
+Pushes to `main` then build/deploy automatically.
 
-## Notes for PowerShell
+## PowerShell Notes
 
-If your machine blocks `npm`/`npx` PowerShell scripts, use:
+If `npm`/`npx` PowerShell script execution is blocked, use:
 - `npm.cmd run dev`
 - `npm.cmd run lint`
+- `npm.cmd run test -- --run`
 - `npm.cmd run build`

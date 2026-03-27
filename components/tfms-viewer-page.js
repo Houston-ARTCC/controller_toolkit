@@ -1,18 +1,26 @@
 ﻿"use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
 import sectorsGeoJson from "@/data/tfms-sectors.json";
 import airportQueueBoxes from "@/data/tfms-airport-queue-boxes.json";
+import eventSplitsData from "@/data/tfms-event-splits.json";
 import {
   buildPilotMotionModel,
+  buildSplitSummary,
   buildTraconStaffing,
   buildSectorIndex,
   buildSpecialtySummary,
   computeProjectedFlights,
   getZhuEnrouteControllers,
 } from "@/lib/tfms/compute";
+import { getSpecialtyColors } from "@/lib/tfms/specialty-colors";
+
+const TfmsProjectionMap = dynamic(() => import("@/components/tfms-projection-map"), {
+  ssr: false,
+});
 
 const VATSIM_API = "https://data.vatsim.net/v3/vatsim-data.json";
 const REFRESH_MS = 60_000;
@@ -20,13 +28,41 @@ const TFMS_SNAPSHOT_STORAGE_KEY = "tfms-viewer-snapshot-v2";
 const SNAPSHOT_MAX_AGE_MS = 5 * 60_000;
 const SPECIALTY_THRESHOLD_MAX = 30;
 const SPECIALTY_BAND_STORAGE_KEY = "tfms-specialty-band-thresholds-by-specialty";
+const EVENT_SPLIT_BAND_STORAGE_KEY = "tfms-event-split-band-thresholds-by-name";
 const DEFAULT_SPECIALTY_BAND_THRESHOLDS = { greenMax: 10, yellowMax: 20 };
+const EVENT_SPLIT_DISPLAY_ORDER = ["96", "83", "46", "24", "50"];
+const SHOW_EVENT_SPLIT_SUMMARY = false;
+const MAP_ADDITIONAL_SECTOR_OUTLINES = new Set(["50", "98"]);
+const MAP_FORCE_HIGH_SECTOR_OUTLINES = new Set(["72"]);
+const MAP_INCLUDE_IN_BOTH_LAYER_OUTLINES = new Set(["24", "43", "72"]);
 const QUEUE_ALTITUDE_MAX_FT = 5_000;
 const QUEUE_GROUNDSPEED_MAX_KTS = 80;
 const QUEUE_TREND_THRESHOLD = 0.25;
 
 function normalizeSpecialtyKey(value) {
   return String(value || "").trim().toUpperCase();
+}
+
+function normalizeEventSplitConfig(raw) {
+  if (!raw || typeof raw !== "object") {
+    return {};
+  }
+  const splits = raw.splits && typeof raw.splits === "object" ? raw.splits : raw;
+  const normalized = {};
+  for (const [name, sectorValues] of Object.entries(splits)) {
+    const splitName = String(name || "").trim();
+    if (!splitName) {
+      continue;
+    }
+    const sectors = Array.isArray(sectorValues)
+      ? sectorValues.map((value) => String(value || "").trim()).filter(Boolean)
+      : [];
+    if (sectors.length === 0) {
+      continue;
+    }
+    normalized[splitName] = sectors;
+  }
+  return normalized;
 }
 
 function normalizeBandThresholds(thresholds) {
@@ -102,6 +138,15 @@ function getSpecialtyRowTone(row, thresholds) {
   return "normal";
 }
 
+function getSpecialtyChipStyle(specialty) {
+  const colors = getSpecialtyColors(specialty);
+  return {
+    backgroundColor: "transparent",
+    borderColor: colors.iconFill,
+    color: colors.iconFill,
+  };
+}
+
 function FeedFooter({ feedTone, processingStatus, error, nextRefreshAt, perfMetrics }) {
   const [now, setNow] = useState(nextRefreshAt);
 
@@ -151,6 +196,7 @@ function areSummaryRowsEqual(previous, next, keys) {
 }
 
 const SPECIALTY_PROJECTION_FIELDS = ["now", "p10", "p20", "p30"];
+const EVENT_SPLIT_PROJECTION_FIELDS = ["now", "p10", "p20", "p30"];
 
 function buildSpecialtyTickerSignals(previousRows, nextRows, startToken = 0) {
   if (!Array.isArray(previousRows) || previousRows.length === 0 || !Array.isArray(nextRows)) {
@@ -180,6 +226,43 @@ function buildSpecialtyTickerSignals(previousRows, nextRows, startToken = 0) {
       }
       nextToken += 1;
       signals[`${specialty}:${field}`] = {
+        direction: nextValue > prevValue ? "up" : "down",
+        token: nextToken,
+      };
+    }
+  }
+
+  return { nextToken, signals };
+}
+
+function buildRowTickerSignals(previousRows, nextRows, idField, fields, startToken = 0) {
+  if (!Array.isArray(previousRows) || previousRows.length === 0 || !Array.isArray(nextRows)) {
+    return { nextToken: startToken, signals: {} };
+  }
+
+  const previousById = new Map(
+    previousRows.map((row) => [String(row?.[idField] || ""), row]),
+  );
+  const signals = {};
+  let nextToken = startToken;
+
+  for (const row of nextRows) {
+    const id = String(row?.[idField] || "");
+    if (!id) {
+      continue;
+    }
+    const previousRow = previousById.get(id);
+    if (!previousRow) {
+      continue;
+    }
+    for (const field of fields || []) {
+      const prevValue = Number(previousRow?.[field] ?? 0);
+      const nextValue = Number(row?.[field] ?? 0);
+      if (!Number.isFinite(prevValue) || !Number.isFinite(nextValue) || prevValue === nextValue) {
+        continue;
+      }
+      nextToken += 1;
+      signals[`${id}:${field}`] = {
         direction: nextValue > prevValue ? "up" : "down",
         token: nextToken,
       };
@@ -517,16 +600,23 @@ export default function TfmsViewerPage() {
   const [controllers, setControllers] = useState([]);
   const [traconStaffing, setTraconStaffing] = useState([]);
   const [specialtySummary, setSpecialtySummary] = useState([]);
+  const [eventSplitSummary, setEventSplitSummary] = useState([]);
   const [airportQueueSummary, setAirportQueueSummary] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingStatus, setProcessingStatus] = useState("Starting...");
   const [error, setError] = useState("");
   const [nextRefreshAt, setNextRefreshAt] = useState(Date.now() + REFRESH_MS);
   const [perfMetrics, setPerfMetrics] = useState(null);
+  const [mapFlights, setMapFlights] = useState([]);
+  const [isMapVisible, setIsMapVisible] = useState(false);
   const [specialtyBandThresholdsBySpecialty, setSpecialtyBandThresholdsBySpecialty] = useState({});
+  const [eventSplitBandThresholdsByName, setEventSplitBandThresholdsByName] = useState({});
   const [specialtyTickerSignals, setSpecialtyTickerSignals] = useState({});
+  const [eventSplitTickerSignals, setEventSplitTickerSignals] = useState({});
   const [selectedSpecialtyForThresholds, setSelectedSpecialtyForThresholds] = useState(null);
   const [specialtyModalPosition, setSpecialtyModalPosition] = useState({ x: 24, y: 24 });
+  const [selectedEventSplitForThresholds, setSelectedEventSplitForThresholds] = useState(null);
+  const [eventSplitModalPosition, setEventSplitModalPosition] = useState({ x: 24, y: 24 });
   const [isToolInfoOpen, setIsToolInfoOpen] = useState(false);
   const [isProjectionInfoOpen, setIsProjectionInfoOpen] = useState(false);
   const isFetchingRef = useRef(false);
@@ -536,10 +626,12 @@ export default function TfmsViewerPage() {
   const projectedFlightsRef = useRef([]);
   const pilotMotionByCallsignRef = useRef({});
   const specialtyTickerTokenRef = useRef(0);
+  const eventSplitTickerTokenRef = useRef(0);
   const airportQueueTrackerRef = useRef({});
   const previousAirportQueueByIcaoRef = useRef({});
 
   const sectorIndex = useMemo(() => buildSectorIndex(sectorsGeoJson), []);
+  const eventSplits = useMemo(() => normalizeEventSplitConfig(eventSplitsData), []);
   const queueBoxes = useMemo(() => {
     const raw = Array.isArray(airportQueueBoxes?.airports) ? airportQueueBoxes.airports : [];
     const grouped = new Map();
@@ -586,6 +678,93 @@ export default function TfmsViewerPage() {
     () => buildSpecialtySummary([], sectorIndex.specialties),
     [sectorIndex.specialties],
   );
+  const sectorLayerOutlines = useMemo(() => {
+    const layers = { low: [], high: [] };
+    for (const feature of sectorsGeoJson.features || []) {
+      const props = feature?.properties || {};
+      const sectorRaw = String(props.sector || "");
+      const sector = sectorRaw.toLowerCase();
+      const specialty = String(props.specialty || "").toUpperCase();
+      if (!sector || sector === "zhu") {
+        continue;
+      }
+      const floor = Number(props.floor);
+      const ceiling = Number(props.ceiling);
+      const ring = feature?.geometry?.coordinates?.[0] || [];
+      const points = ring
+        .map((pair) => [Number(pair?.[1]), Number(pair?.[0])])
+        .filter((pair) => Number.isFinite(pair[0]) && Number.isFinite(pair[1]));
+      if (points.length < 3) {
+        continue;
+      }
+      let layer = "high";
+      if (MAP_FORCE_HIGH_SECTOR_OUTLINES.has(sectorRaw)) {
+        layer = "high";
+      } else if (MAP_ADDITIONAL_SECTOR_OUTLINES.has(sectorRaw)) {
+        layer = "low";
+      } else if (Number.isFinite(ceiling) && ceiling <= 23999) {
+        layer = "low";
+      }
+      if (MAP_INCLUDE_IN_BOTH_LAYER_OUTLINES.has(sectorRaw)) {
+        layers.low.push({ id: sectorRaw, specialty, points });
+        layers.high.push({ id: sectorRaw, specialty, points });
+      } else {
+        layers[layer].push({ id: sectorRaw, specialty, points });
+      }
+    }
+    return layers;
+  }, []);
+  const specialtyBounds = useMemo(() => {
+    const accumulator = {};
+    for (const feature of sectorsGeoJson.features || []) {
+      const props = feature?.properties || {};
+      const specialty = String(props.specialty || "").toUpperCase();
+      const sector = String(props.sector || "").toLowerCase();
+      if (!specialty || sector === "zhu") {
+        continue;
+      }
+      const ring = feature?.geometry?.coordinates?.[0] || [];
+      if (!accumulator[specialty]) {
+        accumulator[specialty] = {
+          minLat: Infinity,
+          maxLat: -Infinity,
+          minLon: Infinity,
+          maxLon: -Infinity,
+        };
+      }
+      for (const pair of ring) {
+        const lon = Number(pair?.[0]);
+        const lat = Number(pair?.[1]);
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+          continue;
+        }
+        accumulator[specialty].minLat = Math.min(accumulator[specialty].minLat, lat);
+        accumulator[specialty].maxLat = Math.max(accumulator[specialty].maxLat, lat);
+        accumulator[specialty].minLon = Math.min(accumulator[specialty].minLon, lon);
+        accumulator[specialty].maxLon = Math.max(accumulator[specialty].maxLon, lon);
+      }
+    }
+
+    const boundsBySpecialty = {};
+    for (const [specialty, bounds] of Object.entries(accumulator)) {
+      if (
+        Number.isFinite(bounds.minLat) &&
+        Number.isFinite(bounds.maxLat) &&
+        Number.isFinite(bounds.minLon) &&
+        Number.isFinite(bounds.maxLon)
+      ) {
+        boundsBySpecialty[specialty] = [
+          [bounds.minLat, bounds.minLon],
+          [bounds.maxLat, bounds.maxLon],
+        ];
+      }
+    }
+    return boundsBySpecialty;
+  }, []);
+  const defaultEventSplitSummary = useMemo(
+    () => (SHOW_EVENT_SPLIT_SUMMARY ? buildSplitSummary([], eventSplits) : []),
+    [eventSplits],
+  );
   const defaultAirportQueueSummary = useMemo(
     () =>
       queueBoxes.map((box) => ({
@@ -605,6 +784,23 @@ export default function TfmsViewerPage() {
   const airportQueueDisplay = useMemo(
     () => (airportQueueSummary.length > 0 ? airportQueueSummary : defaultAirportQueueSummary),
     [airportQueueSummary, defaultAirportQueueSummary],
+  );
+  const eventSplitDisplay = useMemo(
+    () => {
+      const rows = eventSplitSummary.length > 0 ? eventSplitSummary : defaultEventSplitSummary;
+      const priority = new Map(EVENT_SPLIT_DISPLAY_ORDER.map((name, index) => [name, index]));
+      return rows.slice().sort((a, b) => {
+        const aName = String(a?.name || "");
+        const bName = String(b?.name || "");
+        const aPriority = priority.has(aName) ? priority.get(aName) : Number.MAX_SAFE_INTEGER;
+        const bPriority = priority.has(bName) ? priority.get(bName) : Number.MAX_SAFE_INTEGER;
+        if (aPriority !== bPriority) {
+          return aPriority - bPriority;
+        }
+        return aName.localeCompare(bName);
+      });
+    },
+    [eventSplitSummary, defaultEventSplitSummary],
   );
   const baseTraconStaffing = useMemo(
     () => buildTraconStaffing({ controllers: [] }),
@@ -710,7 +906,11 @@ export default function TfmsViewerPage() {
       const projected = computeProjectedFlights(vatsim, sectorIndex, nextPilotMotion);
       const projectDone = performance.now();
       projectedFlightsRef.current = projected;
+      setMapFlights(projected);
       const nextSpecialty = buildSpecialtySummary(projected, sectorIndex.specialties);
+      const nextEventSplit = SHOW_EVENT_SPLIT_SUMMARY
+        ? buildSplitSummary(projected, eventSplits)
+        : [];
       const queueSummaryResult = buildAirportQueueSummary(
         vatsim.pilots || [],
         queueBoxes,
@@ -752,6 +952,23 @@ export default function TfmsViewerPage() {
           ? previous
           : queueSummaryResult.rows,
       );
+      if (SHOW_EVENT_SPLIT_SUMMARY) {
+        setEventSplitSummary((previous) => {
+          if (areSummaryRowsEqual(previous, nextEventSplit, ["name", "now", "p10", "p20", "p30"])) {
+            return previous;
+          }
+          const signalUpdate = buildRowTickerSignals(
+            previous,
+            nextEventSplit,
+            "name",
+            EVENT_SPLIT_PROJECTION_FIELDS,
+            eventSplitTickerTokenRef.current,
+          );
+          eventSplitTickerTokenRef.current = signalUpdate.nextToken;
+          setEventSplitTickerSignals(signalUpdate.signals);
+          return nextEventSplit;
+        });
+      }
       const nextPerfMetrics = {
         fetchMs: Math.round(fetchDone - refreshStart),
         motionMs: Math.round(motionDone - fetchDone),
@@ -768,6 +985,7 @@ export default function TfmsViewerPage() {
         controllers: zhuControllers,
         traconStaffing: nextTraconStaffing,
         specialtySummary: nextSpecialty,
+        ...(SHOW_EVENT_SPLIT_SUMMARY ? { eventSplitSummary: nextEventSplit } : {}),
         airportQueueSummary: queueSummaryResult.rows,
         perfMetrics: nextPerfMetrics,
       });
@@ -789,7 +1007,7 @@ export default function TfmsViewerPage() {
         isFetchingRef.current = false;
       }
     }
-  }, [queueBoxes, sectorIndex]);
+  }, [eventSplits, queueBoxes, sectorIndex]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -818,6 +1036,32 @@ export default function TfmsViewerPage() {
   }, [specialtyBandThresholdsBySpecialty]);
 
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const saved = window.localStorage.getItem(EVENT_SPLIT_BAND_STORAGE_KEY);
+    if (!saved) {
+      return;
+    }
+    try {
+      const parsed = JSON.parse(saved);
+      setEventSplitBandThresholdsByName(normalizeSpecialtyThresholdMap(parsed));
+    } catch {
+      // Ignore malformed localStorage values and keep defaults.
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    window.localStorage.setItem(
+      EVENT_SPLIT_BAND_STORAGE_KEY,
+      JSON.stringify(eventSplitBandThresholdsByName),
+    );
+  }, [eventSplitBandThresholdsByName]);
+
+  useEffect(() => {
     const snapshot = readTfmsSnapshot();
     if (!snapshot) {
       return;
@@ -830,6 +1074,9 @@ export default function TfmsViewerPage() {
     }
     if (Array.isArray(snapshot.specialtySummary)) {
       setSpecialtySummary(snapshot.specialtySummary);
+    }
+    if (SHOW_EVENT_SPLIT_SUMMARY && Array.isArray(snapshot.eventSplitSummary)) {
+      setEventSplitSummary(snapshot.eventSplitSummary);
     }
     if (Array.isArray(snapshot.airportQueueSummary)) {
       setAirportQueueSummary(snapshot.airportQueueSummary);
@@ -951,6 +1198,94 @@ export default function TfmsViewerPage() {
     color-mix(in srgb, #ef4444 62%, white) ${yellowPercent}%,
     color-mix(in srgb, #ef4444 62%, white) 100%)`;
 
+  const updateEventSplitBandThresholds = useCallback((splitName, nextPartial) => {
+    const splitKey = normalizeSpecialtyKey(splitName);
+    if (!splitKey) {
+      return;
+    }
+    setEventSplitBandThresholdsByName((previous) => {
+      const current = getThresholdsForSpecialty(previous, splitKey);
+      return {
+        ...previous,
+        [splitKey]: normalizeBandThresholds({
+          greenMax: nextPartial.greenMax ?? current.greenMax,
+          yellowMax: nextPartial.yellowMax ?? current.yellowMax,
+        }),
+      };
+    });
+  }, []);
+  const resetEventSplitBandThresholds = useCallback((splitName) => {
+    const splitKey = normalizeSpecialtyKey(splitName);
+    if (!splitKey) {
+      return;
+    }
+    setEventSplitBandThresholdsByName((previous) => ({
+      ...previous,
+      [splitKey]: { ...DEFAULT_SPECIALTY_BAND_THRESHOLDS },
+    }));
+  }, []);
+  const applySelectedThresholdsToAllEventSplits = useCallback(() => {
+    if (!selectedEventSplitForThresholds) {
+      return;
+    }
+    const selectedThresholds = getThresholdsForSpecialty(
+      eventSplitBandThresholdsByName,
+      selectedEventSplitForThresholds,
+    );
+    const next = {};
+    for (const splitName of Object.keys(eventSplits || {})) {
+      const splitKey = normalizeSpecialtyKey(splitName);
+      if (!splitKey) {
+        continue;
+      }
+      next[splitKey] = { ...selectedThresholds };
+    }
+    setEventSplitBandThresholdsByName(next);
+  }, [eventSplitBandThresholdsByName, eventSplits, selectedEventSplitForThresholds]);
+  const resetAllEventSplitBandThresholds = useCallback(() => {
+    setEventSplitBandThresholdsByName({});
+  }, []);
+  const applySelectedThresholdsToAllEventSplitsAndClose = useCallback(() => {
+    applySelectedThresholdsToAllEventSplits();
+    setSelectedEventSplitForThresholds(null);
+  }, [applySelectedThresholdsToAllEventSplits]);
+  const openEventSplitThresholdModal = useCallback((splitName, anchorRect) => {
+    const viewportWidth = typeof window !== "undefined" ? window.innerWidth : 1280;
+    const viewportHeight = typeof window !== "undefined" ? window.innerHeight : 800;
+    const modalWidthEstimate = 480;
+    const modalHeightEstimate = 320;
+    const margin = 12;
+    const anchorX = Number.isFinite(anchorRect?.left) ? anchorRect.left + 8 : 24;
+    const anchorY = Number.isFinite(anchorRect?.top) ? anchorRect.top + 8 : 24;
+    const x = Math.min(
+      Math.max(margin, anchorX),
+      Math.max(margin, viewportWidth - modalWidthEstimate - margin),
+    );
+    const y = Math.min(
+      Math.max(margin, anchorY),
+      Math.max(margin, viewportHeight - modalHeightEstimate - margin),
+    );
+    setEventSplitModalPosition({ x, y });
+    setSelectedEventSplitForThresholds(splitName);
+  }, []);
+  const selectedEventSplitThresholds = useMemo(
+    () => getThresholdsForSpecialty(eventSplitBandThresholdsByName, selectedEventSplitForThresholds),
+    [eventSplitBandThresholdsByName, selectedEventSplitForThresholds],
+  );
+  const splitGreenUpperExclusive = selectedEventSplitThresholds.greenMax + 1;
+  const splitYellowLowerBound = selectedEventSplitThresholds.greenMax + 1;
+  const splitYellowUpperBound = selectedEventSplitThresholds.yellowMax;
+  const splitRedLowerExclusive = selectedEventSplitThresholds.yellowMax;
+  const splitGreenPercent = (selectedEventSplitThresholds.greenMax / SPECIALTY_THRESHOLD_MAX) * 100;
+  const splitYellowPercent = (selectedEventSplitThresholds.yellowMax / SPECIALTY_THRESHOLD_MAX) * 100;
+  const splitThresholdTrackBackground = `linear-gradient(to right,
+    color-mix(in srgb, #22c55e 65%, white) 0%,
+    color-mix(in srgb, #22c55e 65%, white) ${splitGreenPercent}%,
+    color-mix(in srgb, #eab308 62%, white) ${splitGreenPercent}%,
+    color-mix(in srgb, #eab308 62%, white) ${splitYellowPercent}%,
+    color-mix(in srgb, #ef4444 62%, white) ${splitYellowPercent}%,
+    color-mix(in srgb, #ef4444 62%, white) 100%)`;
+
   return (
     <main className="relative min-h-screen overflow-hidden px-6 py-8 pb-28 md:px-10">
       <div className="route-validator-bg" />
@@ -1018,7 +1353,8 @@ export default function TfmsViewerPage() {
                     <tr className={rowClassName} key={row.specialty}>
                       <td>
                         <button
-                          className="text-main tfms-specialty-name-button"
+                          className="text-main tfms-specialty-name-button tfms-specialty-chip-button"
+                          style={getSpecialtyChipStyle(row.specialty)}
                           onClick={(event) =>
                             openSpecialtyThresholdModal(
                               row.specialty,
@@ -1160,6 +1496,120 @@ export default function TfmsViewerPage() {
           </article>
         </section>
 
+        {SHOW_EVENT_SPLIT_SUMMARY ? (
+          <section>
+            <article className="panel tfms-compact-card">
+              <h2 className="font-heading text-main text-2xl">Texas Triangle 3/27/26</h2>
+              <div className="mt-3 overflow-x-auto">
+                <table className="tfms-table tfms-specialty-table tfms-compact-table min-w-full">
+                  <thead>
+                    <tr>
+                      <th>Split</th>
+                      <th>Now</th>
+                      <th>+10</th>
+                      <th>+20</th>
+                      <th>+30</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {eventSplitDisplay.map((row) => {
+                      const thresholds = getThresholdsForSpecialty(
+                        eventSplitBandThresholdsByName,
+                        row.name,
+                      );
+                      const rowTone = getSpecialtyRowTone(row, thresholds);
+                      const rowClassName =
+                        rowTone === "alert"
+                          ? "tfms-row-alert"
+                          : rowTone === "warning"
+                            ? "tfms-row-warning"
+                            : "";
+                      return (
+                      <tr className={rowClassName} key={row.name}>
+                        <td>
+                          <button
+                            className="text-main tfms-specialty-name-button"
+                            onClick={(event) =>
+                              openEventSplitThresholdModal(
+                                row.name,
+                                event.currentTarget.getBoundingClientRect(),
+                              )
+                            }
+                            type="button"
+                          >
+                            {row.name}
+                          </button>
+                        </td>
+                        <td>
+                          <CountBadge
+                            key={`${row.name}-now-${eventSplitTickerSignals[`${row.name}:now`]?.token || 0}`}
+                            thresholds={thresholds}
+                            tickerSignal={eventSplitTickerSignals[`${row.name}:now`]}
+                            value={row.now}
+                          />
+                        </td>
+                        <td>
+                          <CountBadge
+                            key={`${row.name}-p10-${eventSplitTickerSignals[`${row.name}:p10`]?.token || 0}`}
+                            thresholds={thresholds}
+                            tickerSignal={eventSplitTickerSignals[`${row.name}:p10`]}
+                            value={row.p10 ?? 0}
+                          />
+                        </td>
+                        <td>
+                          <CountBadge
+                            key={`${row.name}-p20-${eventSplitTickerSignals[`${row.name}:p20`]?.token || 0}`}
+                            thresholds={thresholds}
+                            tickerSignal={eventSplitTickerSignals[`${row.name}:p20`]}
+                            value={row.p20 ?? 0}
+                          />
+                        </td>
+                        <td>
+                          <CountBadge
+                            key={`${row.name}-p30-${eventSplitTickerSignals[`${row.name}:p30`]?.token || 0}`}
+                            thresholds={thresholds}
+                            tickerSignal={eventSplitTickerSignals[`${row.name}:p30`]}
+                            value={row.p30 ?? 0}
+                          />
+                        </td>
+                      </tr>
+                    )})}
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+        ) : null}
+
+        <section>
+          <article className="panel tfms-compact-card">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="font-heading text-main text-2xl">Enhanced Projection Map</h2>
+              <button
+                className="button-secondary px-3 py-1.5 text-xs"
+                onClick={() => setIsMapVisible((value) => !value)}
+                type="button"
+              >
+                {isMapVisible ? "Hide Map" : "Show Map"}
+              </button>
+            </div>
+            {isMapVisible ? (
+              <div className="mt-3">
+                <TfmsProjectionMap
+                  flights={mapFlights}
+                  sectorLayerOutlines={sectorLayerOutlines}
+                  specialtyBounds={specialtyBounds}
+                  zhuPerimeter={sectorIndex.zhuPerimeter}
+                />
+              </div>
+            ) : (
+              <p className="text-muted mt-3 text-sm">
+                Map hidden. Click Show Map to display enhanced projection tracks.
+              </p>
+            )}
+          </article>
+        </section>
+
         <section>
           <article className="panel tfms-compact-card">
             <h2 className="font-heading text-main text-2xl">Departure Queue</h2>
@@ -1199,7 +1649,7 @@ export default function TfmsViewerPage() {
 
       {selectedSpecialtyForThresholds ? (
         <div
-          className="bg-black/45 fixed inset-0 z-50 p-4"
+          className="bg-black/45 fixed inset-0 z-[1200] p-4"
           onClick={() => setSelectedSpecialtyForThresholds(null)}
         >
           <div
@@ -1251,28 +1701,33 @@ export default function TfmsViewerPage() {
             </div>
             <div className="mt-4 flex items-center justify-end gap-2">
               <button
-                className="button-secondary px-3 py-1.5 text-xs"
-                onClick={resetAllSpecialtyBandThresholds}
+                className="button-destructive shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                onClick={() => {
+                  resetAllSpecialtyBandThresholds();
+                  setSelectedSpecialtyForThresholds(null);
+                }}
                 type="button"
               >
                 Reset All
               </button>
               <button
-                className="button-secondary px-3 py-1.5 text-xs"
-                onClick={() => resetSpecialtyBandThresholds(selectedSpecialtyForThresholds)}
+                className="button-destructive shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                onClick={() => {
+                  resetSpecialtyBandThresholds(selectedSpecialtyForThresholds);
+                }}
                 type="button"
               >
                 Reset {selectedSpecialtyForThresholds}
               </button>
               <button
-                className="button-primary px-3 py-1.5 text-xs"
+                className="button-primary shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
                 onClick={applySelectedThresholdsToAllSpecialtiesAndClose}
                 type="button"
               >
                 Apply All
               </button>
               <button
-                className="button-primary px-3 py-1.5 text-xs"
+                className="button-primary shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
                 onClick={() => setSelectedSpecialtyForThresholds(null)}
                 type="button"
               >
@@ -1282,9 +1737,99 @@ export default function TfmsViewerPage() {
           </div>
         </div>
       ) : null}
+      {SHOW_EVENT_SPLIT_SUMMARY && selectedEventSplitForThresholds ? (
+        <div
+          className="bg-black/45 fixed inset-0 z-[1200] p-4"
+          onClick={() => setSelectedEventSplitForThresholds(null)}
+        >
+          <div
+            className="panel absolute w-full max-w-md"
+            style={{ left: eventSplitModalPosition.x, top: eventSplitModalPosition.y }}
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${selectedEventSplitForThresholds} Traffic Thresholds`}
+          >
+            <h3 className="font-heading text-main text-2xl">
+              {selectedEventSplitForThresholds} Traffic Thresholds
+            </h3>
+            <div className="mt-3 tfms-threshold-control">
+              <div className="text-muted flex items-center justify-between text-xs uppercase tracking-[0.1em]">
+                <span>Green &lt; {splitGreenUpperExclusive}</span>
+                <span>
+                  Yellow {splitYellowLowerBound}-{splitYellowUpperBound}
+                </span>
+                <span>Red &gt; {splitRedLowerExclusive}</span>
+              </div>
+              <div className="tfms-threshold-slider">
+                <div className="tfms-threshold-track" style={{ background: splitThresholdTrackBackground }} />
+                <input
+                  className="tfms-threshold-input"
+                  max={SPECIALTY_THRESHOLD_MAX - 1}
+                  min={0}
+                  onChange={(event) =>
+                    updateEventSplitBandThresholds(selectedEventSplitForThresholds, {
+                      greenMax: Number(event.target.value || 0),
+                    })
+                  }
+                  type="range"
+                  value={selectedEventSplitThresholds.greenMax}
+                />
+                <input
+                  className="tfms-threshold-input"
+                  max={SPECIALTY_THRESHOLD_MAX}
+                  min={1}
+                  onChange={(event) =>
+                    updateEventSplitBandThresholds(selectedEventSplitForThresholds, {
+                      yellowMax: Number(event.target.value || 0),
+                    })
+                  }
+                  type="range"
+                  value={selectedEventSplitThresholds.yellowMax}
+                />
+              </div>
+            </div>
+            <div className="mt-4 flex items-center justify-end gap-2">
+              <button
+                className="button-destructive shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                onClick={() => {
+                  resetAllEventSplitBandThresholds();
+                  setSelectedEventSplitForThresholds(null);
+                }}
+                type="button"
+              >
+                Reset All
+              </button>
+              <button
+                className="button-destructive shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                onClick={() => {
+                  resetEventSplitBandThresholds(selectedEventSplitForThresholds);
+                }}
+                type="button"
+              >
+                Reset {selectedEventSplitForThresholds}
+              </button>
+              <button
+                className="button-primary shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                onClick={applySelectedThresholdsToAllEventSplitsAndClose}
+                type="button"
+              >
+                Apply All
+              </button>
+              <button
+                className="button-primary shrink-0 whitespace-nowrap px-3 py-1.5 text-xs"
+                onClick={() => setSelectedEventSplitForThresholds(null)}
+                type="button"
+              >
+                Apply {selectedEventSplitForThresholds}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       {isToolInfoOpen ? (
         <div
-          className="bg-black/45 fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="bg-black/45 fixed inset-0 z-[1200] flex items-center justify-center p-4"
           onClick={() => {
             setIsProjectionInfoOpen(false);
             setIsToolInfoOpen(false);

@@ -1,3 +1,4 @@
+@import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
 
 :root {
@@ -186,6 +187,22 @@ body {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
+.button-destructive {
+  border: 1px solid color-mix(in srgb, #ef4444 45%, var(--surface-border));
+  border-radius: 0.62rem;
+  color: color-mix(in srgb, #ef4444 78%, var(--foreground));
+  background: color-mix(in srgb, #ef4444 12%, var(--surface));
+  font-weight: 700;
+  padding: 0.62rem 0.95rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.button-destructive:hover {
+  background: color-mix(in srgb, #ef4444 18%, var(--surface));
+  border-color: color-mix(in srgb, #ef4444 60%, var(--surface-border));
+  color: color-mix(in srgb, #ef4444 88%, var(--foreground));
+}
+
 .search {
   border: 1px solid var(--surface-border);
   border-radius: 0.7rem;
@@ -258,6 +275,38 @@ body {
 
 .border-default {
   border-color: var(--surface-border);
+}
+
+.tfms-aircraft-icon-wrap {
+  background: transparent;
+  border: 0;
+}
+
+.tfms-aircraft-icon {
+  display: grid;
+  place-items: center;
+  transform-origin: 50% 50%;
+}
+
+.tfms-aircraft-icon img {
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.tfms-specialty-chip-button {
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  padding: 0.42rem 0.6rem;
+  text-transform: uppercase;
+}
+
+.tfms-specialty-chip-button:hover {
+  filter: brightness(0.98);
 }
 
 .bg-surface {
