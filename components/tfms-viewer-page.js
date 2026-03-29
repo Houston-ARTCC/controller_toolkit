@@ -7,6 +7,7 @@ import ThemeSwitcher from "@/components/theme-switcher";
 import sectorsGeoJson from "@/data/tfms-sectors.json";
 import airportQueueBoxes from "@/data/tfms-airport-queue-boxes.json";
 import eventSplitsData from "@/data/tfms-event-splits.json";
+import traconAirportsData from "@/data/tfms-tracon-airports.json";
 import {
   buildPilotMotionModel,
   buildSplitSummary,
@@ -15,8 +16,10 @@ import {
   buildSpecialtySummary,
   computeProjectedFlights,
   getZhuEnrouteControllers,
+  passesOperationalGate,
 } from "@/lib/tfms/compute";
 import { getSpecialtyColors } from "@/lib/tfms/specialty-colors";
+import { buildTraconVolumeIndex, isInTraconVolume } from "@/lib/tfms/tracon-volumes";
 
 const TfmsProjectionMap = dynamic(() => import("@/components/tfms-projection-map"), {
   ssr: false,
@@ -31,6 +34,12 @@ const SPECIALTY_BAND_STORAGE_KEY = "tfms-specialty-band-thresholds-by-specialty"
 const EVENT_SPLIT_BAND_STORAGE_KEY = "tfms-event-split-band-thresholds-by-name";
 const DEFAULT_SPECIALTY_BAND_THRESHOLDS = { greenMax: 10, yellowMax: 20 };
 const EVENT_SPLIT_DISPLAY_ORDER = ["96", "83", "46", "24", "50"];
+const CORE_TRACON_SUMMARY_ORDER = [
+  { id: "I90" },
+  { id: "AUS" },
+  { id: "SAT" },
+  { id: "MSY" },
+];
 const SHOW_EVENT_SPLIT_SUMMARY = false;
 const MAP_ADDITIONAL_SECTOR_OUTLINES = new Set(["50", "98"]);
 const MAP_FORCE_HIGH_SECTOR_OUTLINES = new Set(["72"]);
@@ -107,14 +116,18 @@ function getBandClass(value, thresholds = DEFAULT_SPECIALTY_BAND_THRESHOLDS) {
   return "tfms-band-red";
 }
 
-function CountBadge({ value, thresholds, tickerSignal }) {
+function CountBadge({ value, thresholds, tickerSignal, title }) {
   const flashClass =
     tickerSignal?.direction === "up"
       ? "tfms-count-tick-down"
       : tickerSignal?.direction === "down"
         ? "tfms-count-tick-up"
         : "";
-  return <span className={`tfms-count ${getBandClass(value, thresholds)} ${flashClass}`}>{value}</span>;
+  return (
+    <span className={`tfms-count ${getBandClass(value, thresholds)} ${flashClass}`} title={title || undefined}>
+      {value}
+    </span>
+  );
 }
 
 function getSpecialtyRowTone(row, thresholds) {
@@ -145,6 +158,58 @@ function getSpecialtyChipStyle(specialty) {
     borderColor: colors.iconFill,
     color: colors.iconFill,
   };
+}
+
+function applyTraconExclusionToProjections(projections, allTraconPolygons) {
+  if (!Array.isArray(projections) || projections.length === 0 || !Array.isArray(allTraconPolygons) || allTraconPolygons.length === 0) {
+    return projections || [];
+  }
+  return projections.map((flight) => {
+    const nowInside = isInTraconVolume(
+      Number(flight.latitude),
+      Number(flight.longitude),
+      allTraconPolygons,
+      Number(flight.altitude),
+    );
+    const p10Inside = isInTraconVolume(
+      Number(flight.proj10Latitude),
+      Number(flight.proj10Longitude),
+      allTraconPolygons,
+      Number(flight.proj10Altitude),
+    );
+    const p20Inside = isInTraconVolume(
+      Number(flight.proj20Latitude),
+      Number(flight.proj20Longitude),
+      allTraconPolygons,
+      Number(flight.proj20Altitude),
+    );
+    const p30Inside = isInTraconVolume(
+      Number(flight.proj30Latitude),
+      Number(flight.proj30Longitude),
+      allTraconPolygons,
+      Number(flight.proj30Altitude),
+    );
+    return {
+      ...flight,
+      specialty: nowInside ? null : flight.specialty,
+      proj10Specialty: p10Inside ? null : flight.proj10Specialty,
+      proj20Specialty: p20Inside ? null : flight.proj20Specialty,
+      proj30Specialty: p30Inside ? null : flight.proj30Specialty,
+    };
+  });
+}
+
+function buildSpecialtySummaryWithTraconToggle(
+  projections,
+  specialties,
+  excludeTraconVolumes,
+  allTraconPolygons,
+) {
+  if (!excludeTraconVolumes) {
+    return buildSpecialtySummary(projections, specialties);
+  }
+  const filtered = applyTraconExclusionToProjections(projections, allTraconPolygons);
+  return buildSpecialtySummary(filtered, specialties);
 }
 
 function FeedFooter({ feedTone, processingStatus, error, nextRefreshAt, perfMetrics }) {
@@ -463,10 +528,31 @@ function formatQueueMinutes(totalMinutes) {
   return `${hours}h ${minutes}m`;
 }
 
-function getQueuePressureClass(avgMinutes) {
-  if (avgMinutes < 5) return "tfms-queue-green";
-  if (avgMinutes < 10) return "tfms-queue-yellow";
-  return "tfms-queue-red";
+function TraconFlowIcon({ type }) {
+  const departurePath =
+    "M16.6 13.4H1.4a.4.4 0 0 0-.4.4v.8a.4.4 0 0 0 .4.4h15.2a.4.4 0 0 0 .4-.4v-.8a.4.4 0 0 0-.4-.4M3.014 10.732a.82.82 0 0 0 .608.268l3.263-.005c.258 0 .512-.061.741-.178L14.9 7.126c.669-.34 1.268-.824 1.676-1.458.457-.712.507-1.227.326-1.591-.18-.364-.618-.632-1.456-.686-.746-.049-1.488.148-2.157.487l-2.462 1.25-5.468-2.052a.45.45 0 0 0-.45-.028l-1.643.834a.457.457 0 0 0-.13.714l3.906 2.452-2.58 1.31-1.81-.912a.45.45 0 0 0-.4 0l-1.004.51a.457.457 0 0 0-.14.702z";
+  const arrivalPath =
+    "M16.6 13.8H1.4a.4.4 0 0 0-.4.4v.8a.4.4 0 0 0 .4.4h15.2a.4.4 0 0 0 .4-.4v-.8a.4.4 0 0 0-.4-.4M2.12 7.741l2.219 2c.182.165.4.284.636.349l7.19 1.959c.663.18 1.365.218 2.026.034.741-.207 1.085-.53 1.18-.893.096-.363-.043-.818-.584-1.374-.482-.496-1.108-.82-1.77-1l-2.438-.664L8.07 3.356a.42.42 0 0 0-.292-.298l-1.627-.443a.413.413 0 0 0-.518.41l1.199 4.106-2.555-.696-.69-1.697a.41.41 0 0 0-.276-.249l-.993-.27a.413.413 0 0 0-.518.397l.006 2.544c.004.223.15.434.314.581";
+  const overflightPath =
+    "M1.947 9.844a.83.83 0 0 1-.422-.514L.761 6.62a.457.457 0 0 1 .441-.564l1.126-.002a.45.45 0 0 1 .358.181l1.203 1.63 2.893-.004-2.378-3.95a.457.457 0 0 1 .437-.58l1.844-.002a.45.45 0 0 1 .389.228l3.953 4.299 2.761-.004c.75 0 1.5.16 2.145.54.723.426.993.863.99 1.269s-.28.844-1.01 1.272c-.65.382-1.404.544-2.153.545l-8.157.01a1.64 1.64 0 0 1-.742-.175z";
+  const glyph = type === "arrival" ? arrivalPath : type === "overflight" ? overflightPath : departurePath;
+  const angle = 0;
+  return (
+    <svg
+      viewBox="0 0 18 18"
+      width={16}
+      height={16}
+      fill="none"
+      aria-hidden="true"
+    >
+      <g transform={`rotate(${angle} 9 9)`}>
+        <path
+          fill="currentColor"
+          d={glyph}
+        />
+      </g>
+    </svg>
+  );
 }
 
 function buildAirportQueueSummary(pilots, boxes, previousTracker, previousRowsByIcao, nowMs) {
@@ -559,6 +645,46 @@ function areTraconStatusEqual(previous, next) {
   return true;
 }
 
+function buildTowerStaffingByAirport(vatsim) {
+  const next = {};
+  for (const controller of vatsim?.controllers || []) {
+    const callsign = String(controller?.callsign || "").trim().toUpperCase();
+    if (!callsign || !callsign.endsWith("_TWR")) {
+      continue;
+    }
+    const match = callsign.match(/^([A-Z0-9]{3,4})_(?:\d{1,3}_)?TWR$/);
+    if (!match) {
+      continue;
+    }
+    const airport = normalizeAirportCode(match[1]);
+    if (!airport) {
+      continue;
+    }
+    next[airport] = true;
+  }
+  return next;
+}
+
+function areTowerStaffingByAirportEqual(previous, next) {
+  if (previous === next) {
+    return true;
+  }
+  if (!previous || !next || typeof previous !== "object" || typeof next !== "object") {
+    return false;
+  }
+  const prevKeys = Object.keys(previous);
+  const nextKeys = Object.keys(next);
+  if (prevKeys.length !== nextKeys.length) {
+    return false;
+  }
+  for (const key of prevKeys) {
+    if (Boolean(previous[key]) !== Boolean(next[key])) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function readTfmsSnapshot() {
   if (typeof window === "undefined") {
     return null;
@@ -599,6 +725,7 @@ function writeTfmsSnapshot(snapshot) {
 export default function TfmsViewerPage() {
   const [controllers, setControllers] = useState([]);
   const [traconStaffing, setTraconStaffing] = useState([]);
+  const [towerStaffingByAirport, setTowerStaffingByAirport] = useState({});
   const [specialtySummary, setSpecialtySummary] = useState([]);
   const [eventSplitSummary, setEventSplitSummary] = useState([]);
   const [airportQueueSummary, setAirportQueueSummary] = useState([]);
@@ -619,6 +746,7 @@ export default function TfmsViewerPage() {
   const [eventSplitModalPosition, setEventSplitModalPosition] = useState({ x: 24, y: 24 });
   const [isToolInfoOpen, setIsToolInfoOpen] = useState(false);
   const [isProjectionInfoOpen, setIsProjectionInfoOpen] = useState(false);
+  const [excludeTraconVolumesInSummary, setExcludeTraconVolumesInSummary] = useState(true);
   const isFetchingRef = useRef(false);
   const nextRefreshAtRef = useRef(Date.now() + REFRESH_MS);
   const fetchAbortRef = useRef(null);
@@ -631,6 +759,11 @@ export default function TfmsViewerPage() {
   const previousAirportQueueByIcaoRef = useRef({});
 
   const sectorIndex = useMemo(() => buildSectorIndex(sectorsGeoJson), []);
+  const traconVolumeIndex = useMemo(() => buildTraconVolumeIndex(), []);
+  const allTraconVolumePolygons = useMemo(
+    () => Object.values(traconVolumeIndex.byId || {}).flat(),
+    [traconVolumeIndex],
+  );
   const eventSplits = useMemo(() => normalizeEventSplitConfig(eventSplitsData), []);
   const queueBoxes = useMemo(() => {
     const raw = Array.isArray(airportQueueBoxes?.airports) ? airportQueueBoxes.airports : [];
@@ -678,6 +811,64 @@ export default function TfmsViewerPage() {
     () => buildSpecialtySummary([], sectorIndex.specialties),
     [sectorIndex.specialties],
   );
+  const specialtySummaryFlights = useMemo(
+    () =>
+      excludeTraconVolumesInSummary
+        ? applyTraconExclusionToProjections(mapFlights, allTraconVolumePolygons)
+        : mapFlights,
+    [allTraconVolumePolygons, excludeTraconVolumesInSummary, mapFlights],
+  );
+  const specialtyCallsignsByBucket = useMemo(() => {
+    const buckets = {};
+    for (const specialty of sectorIndex.specialties || []) {
+      buckets[`${specialty}:now`] = [];
+      buckets[`${specialty}:p10`] = [];
+      buckets[`${specialty}:p20`] = [];
+      buckets[`${specialty}:p30`] = [];
+    }
+
+    for (const flight of specialtySummaryFlights || []) {
+      const callsign = String(flight.callsign || "").trim();
+      if (!callsign) {
+        continue;
+      }
+      const groundspeed = Number(flight.groundspeed || 0);
+      const nowAlt = Number(flight.altitude || 0);
+      const p10Alt = Number(flight.proj10Altitude ?? flight.altitude ?? 0);
+      const p20Alt = Number(flight.proj20Altitude ?? flight.altitude ?? 0);
+      const p30Alt = Number(flight.proj30Altitude ?? flight.altitude ?? 0);
+
+      if (flight.specialty && passesOperationalGate(nowAlt, groundspeed)) {
+        const key = `${flight.specialty}:now`;
+        if (Array.isArray(buckets[key])) {
+          buckets[key].push(callsign);
+        }
+      }
+      if (flight.proj10Specialty && passesOperationalGate(p10Alt, groundspeed)) {
+        const key = `${flight.proj10Specialty}:p10`;
+        if (Array.isArray(buckets[key])) {
+          buckets[key].push(callsign);
+        }
+      }
+      if (flight.proj20Specialty && passesOperationalGate(p20Alt, groundspeed)) {
+        const key = `${flight.proj20Specialty}:p20`;
+        if (Array.isArray(buckets[key])) {
+          buckets[key].push(callsign);
+        }
+      }
+      if (flight.proj30Specialty && passesOperationalGate(p30Alt, groundspeed)) {
+        const key = `${flight.proj30Specialty}:p30`;
+        if (Array.isArray(buckets[key])) {
+          buckets[key].push(callsign);
+        }
+      }
+    }
+
+    for (const [key, list] of Object.entries(buckets)) {
+      buckets[key] = [...new Set(list)].sort((a, b) => a.localeCompare(b));
+    }
+    return buckets;
+  }, [sectorIndex.specialties, specialtySummaryFlights]);
   const sectorLayerOutlines = useMemo(() => {
     const layers = { low: [], high: [] };
     for (const feature of sectorsGeoJson.features || []) {
@@ -810,50 +1001,144 @@ export default function TfmsViewerPage() {
     () => (traconStaffing.length > 0 ? traconStaffing : baseTraconStaffing),
     [baseTraconStaffing, traconStaffing],
   );
-  const traconDisplay = useMemo(
+  const traconStaffedById = useMemo(
     () =>
-      traconStaffingDisplay
-        .slice()
-        .sort((a, b) => {
-          if (a.staffed !== b.staffed) {
-            return a.staffed ? -1 : 1;
-          }
-          return a.id.localeCompare(b.id);
-        }),
+      Object.fromEntries(
+        traconStaffingDisplay.map((facility) => [String(facility.id || "").toUpperCase(), Boolean(facility.staffed)]),
+      ),
     [traconStaffingDisplay],
   );
-  const traconSortPriority = useCallback((id) => {
-    const priorityOrder = ["I90", "AUS", "SAT", "MSY"];
-    return priorityOrder.indexOf(id);
+  const traconAirportCodesById = useMemo(() => {
+    const source = traconAirportsData?.tracons && typeof traconAirportsData.tracons === "object"
+      ? traconAirportsData.tracons
+      : {};
+    const next = {};
+    for (const [traconIdRaw, codesRaw] of Object.entries(source)) {
+      const traconId = String(traconIdRaw || "").trim().toUpperCase();
+      if (!traconId) {
+        continue;
+      }
+      const codes = Array.isArray(codesRaw) ? codesRaw : [];
+      const set = new Set();
+      for (const codeValue of codes) {
+        const raw = String(codeValue || "").trim().toUpperCase();
+        const normalized = normalizeAirportCode(raw);
+        if (raw) {
+          set.add(raw);
+        }
+        if (normalized) {
+          set.add(normalized);
+        }
+      }
+      next[traconId] = set;
+    }
+    return next;
   }, []);
-  const traconOnlineDisplay = useMemo(
-    () =>
-      traconDisplay
-        .filter((facility) => facility.staffed)
-        .sort((a, b) => {
-          const aPriority = traconSortPriority(a.id);
-          const bPriority = traconSortPriority(b.id);
-          const aPinned = aPriority !== -1;
-          const bPinned = bPriority !== -1;
-          if (aPinned && bPinned) {
-            return aPriority - bPriority;
-          }
-          if (aPinned && !bPinned) {
-            return -1;
-          }
-          if (bPinned && !aPinned) {
-            return 1;
-          }
-          return a.id.localeCompare(b.id);
-        }),
-    [traconDisplay, traconSortPriority],
+  const traconKpiDisplay = useMemo(
+    () => {
+      const orderIndexById = new Map((traconVolumeIndex.ids || []).map((id, index) => [id, index]));
+      return (traconVolumeIndex.ids || []).map((id) => {
+        const polygons = traconVolumeIndex.byId?.[id] || [];
+        const flights = (mapFlights || [])
+          .filter((flight) =>
+            isInTraconVolume(
+              Number(flight.latitude),
+              Number(flight.longitude),
+              polygons,
+              Number(flight.altitude),
+            ),
+          );
+        const callsigns = flights
+          .map((flight) => String(flight.callsign || "").trim())
+          .filter(Boolean);
+        return {
+          id,
+          staffed: Boolean(traconStaffedById[String(id || "").toUpperCase()]),
+          aircraftCount: callsigns.length,
+          callsigns,
+          flights,
+        };
+      }).sort((a, b) => {
+        if (a.staffed !== b.staffed) {
+          return a.staffed ? -1 : 1;
+        }
+        return (orderIndexById.get(a.id) ?? Number.MAX_SAFE_INTEGER) - (orderIndexById.get(b.id) ?? Number.MAX_SAFE_INTEGER);
+      });
+    },
+    [mapFlights, traconStaffedById, traconVolumeIndex.byId, traconVolumeIndex.ids],
   );
-  const traconOfflineDisplay = useMemo(
-    () =>
-      traconDisplay
-        .filter((facility) => !facility.staffed)
-        .sort((a, b) => a.id.localeCompare(b.id)),
-    [traconDisplay],
+  const traconCoreCards = useMemo(() => {
+    const traconById = new Map(
+      traconKpiDisplay.map((facility) => [String(facility.id || "").toUpperCase(), facility]),
+    );
+    const queueByIcao = new Map(
+      airportQueueDisplay.map((row) => [String(row.icao || "").toUpperCase(), row]),
+    );
+    return CORE_TRACON_SUMMARY_ORDER.map(({ id }) => {
+      const tracon = traconById.get(id) || { id, staffed: false, aircraftCount: 0, callsigns: [], flights: [] };
+      const traconAirportCodes = traconAirportCodesById[id] || new Set();
+      const airportCodesForClassify = traconAirportCodes;
+      let departuresCount = 0;
+      let arrivalsCount = 0;
+      let overflightsCount = 0;
+      for (const flight of tracon.flights || []) {
+        const departure = String(flight?.departure || "").trim().toUpperCase();
+        const arrival = String(flight?.arrival || "").trim().toUpperCase();
+        const isDeparture = departure && airportCodesForClassify.has(departure);
+        const isArrival = arrival && airportCodesForClassify.has(arrival);
+        if (isDeparture) {
+          departuresCount += 1;
+        } else if (isArrival) {
+          arrivalsCount += 1;
+        } else {
+          overflightsCount += 1;
+        }
+      }
+      const queueAirports = [];
+      const seenQueueIcao = new Set();
+      for (const airportCode of traconAirportCodes) {
+        const normalizedIcao = normalizeAirportCode(airportCode);
+        if (!normalizedIcao || seenQueueIcao.has(normalizedIcao)) {
+          continue;
+        }
+        const row = queueByIcao.get(normalizedIcao);
+        if (!row) {
+          continue;
+        }
+        queueAirports.push({
+          icao: normalizedIcao,
+          label: normalizedIcao,
+          count: Number(row?.count || 0),
+          avgMinutes: Number(row?.avgMinutes || 0),
+          towerOnline: Boolean(towerStaffingByAirport[normalizedIcao]),
+        });
+        seenQueueIcao.add(normalizedIcao);
+      }
+      return {
+        id,
+        staffed: Boolean(tracon.staffed),
+        aircraftCount: Number(tracon.aircraftCount || 0),
+        callsigns: tracon.callsigns || [],
+        departuresCount,
+        arrivalsCount,
+        overflightsCount,
+        queueAirports,
+      };
+    });
+  }, [airportQueueDisplay, towerStaffingByAirport, traconAirportCodesById, traconKpiDisplay]);
+  const traconRemainingAirborne = useMemo(() => {
+    const coreIds = new Set(CORE_TRACON_SUMMARY_ORDER.map((item) => item.id));
+    return traconKpiDisplay.filter(
+      (facility) => !coreIds.has(String(facility.id || "").toUpperCase()),
+    );
+  }, [traconKpiDisplay]);
+  const traconRemainingOnlineAirborne = useMemo(
+    () => traconRemainingAirborne.filter((facility) => facility.staffed),
+    [traconRemainingAirborne],
+  );
+  const traconRemainingOfflineAirborne = useMemo(
+    () => traconRemainingAirborne.filter((facility) => !facility.staffed),
+    [traconRemainingAirborne],
   );
   const enrouteDisplay = useMemo(
     () =>
@@ -900,6 +1185,7 @@ export default function TfmsViewerPage() {
 
       const zhuControllers = getZhuEnrouteControllers(vatsim);
       const nextTraconStaffing = buildTraconStaffing(vatsim);
+      const nextTowerStaffingByAirport = buildTowerStaffingByAirport(vatsim);
       const nextPilotMotion = buildPilotMotionModel(vatsim, pilotMotionByCallsignRef.current, sectorIndex);
       const motionDone = performance.now();
       pilotMotionByCallsignRef.current = nextPilotMotion;
@@ -907,7 +1193,12 @@ export default function TfmsViewerPage() {
       const projectDone = performance.now();
       projectedFlightsRef.current = projected;
       setMapFlights(projected);
-      const nextSpecialty = buildSpecialtySummary(projected, sectorIndex.specialties);
+      const nextSpecialty = buildSpecialtySummaryWithTraconToggle(
+        projected,
+        sectorIndex.specialties,
+        excludeTraconVolumesInSummary,
+        allTraconVolumePolygons,
+      );
       const nextEventSplit = SHOW_EVENT_SPLIT_SUMMARY
         ? buildSplitSummary(projected, eventSplits)
         : [];
@@ -918,15 +1209,21 @@ export default function TfmsViewerPage() {
         previousAirportQueueByIcaoRef.current,
         Date.now(),
       );
+      const queueRows = queueSummaryResult.rows;
       airportQueueTrackerRef.current = queueSummaryResult.tracker;
       previousAirportQueueByIcaoRef.current = Object.fromEntries(
-        queueSummaryResult.rows.map((row) => [row.icao, row]),
+        queueRows.map((row) => [row.icao, row]),
       );
       const summaryDone = performance.now();
 
       setControllers((previous) => (areControllersEqual(previous, zhuControllers) ? previous : zhuControllers));
       setTraconStaffing((previous) =>
         areTraconStatusEqual(previous, nextTraconStaffing) ? previous : nextTraconStaffing,
+      );
+      setTowerStaffingByAirport((previous) =>
+        areTowerStaffingByAirportEqual(previous, nextTowerStaffingByAirport)
+          ? previous
+          : nextTowerStaffingByAirport,
       );
       setSpecialtySummary((previous) => {
         if (areSummaryRowsEqual(previous, nextSpecialty, ["specialty", "now", "p10", "p20", "p30"])) {
@@ -942,7 +1239,7 @@ export default function TfmsViewerPage() {
         return nextSpecialty;
       });
       setAirportQueueSummary((previous) =>
-        areSummaryRowsEqual(previous, queueSummaryResult.rows, [
+        areSummaryRowsEqual(previous, queueRows, [
           "icao",
           "count",
           "avgMinutes",
@@ -950,7 +1247,7 @@ export default function TfmsViewerPage() {
           "trend",
         ])
           ? previous
-          : queueSummaryResult.rows,
+          : queueRows,
       );
       if (SHOW_EVENT_SPLIT_SUMMARY) {
         setEventSplitSummary((previous) => {
@@ -984,9 +1281,10 @@ export default function TfmsViewerPage() {
       writeTfmsSnapshot({
         controllers: zhuControllers,
         traconStaffing: nextTraconStaffing,
+        towerStaffingByAirport: nextTowerStaffingByAirport,
         specialtySummary: nextSpecialty,
         ...(SHOW_EVENT_SPLIT_SUMMARY ? { eventSplitSummary: nextEventSplit } : {}),
-        airportQueueSummary: queueSummaryResult.rows,
+        airportQueueSummary: queueRows,
         perfMetrics: nextPerfMetrics,
       });
     } catch (fetchError) {
@@ -1007,7 +1305,24 @@ export default function TfmsViewerPage() {
         isFetchingRef.current = false;
       }
     }
-  }, [eventSplits, queueBoxes, sectorIndex]);
+  }, [allTraconVolumePolygons, eventSplits, excludeTraconVolumesInSummary, queueBoxes, sectorIndex]);
+
+  useEffect(() => {
+    const projected = projectedFlightsRef.current || [];
+    const nextSpecialty = buildSpecialtySummaryWithTraconToggle(
+      projected,
+      sectorIndex.specialties,
+      excludeTraconVolumesInSummary,
+      allTraconVolumePolygons,
+    );
+    specialtyTickerTokenRef.current = 0;
+    setSpecialtyTickerSignals({});
+    setSpecialtySummary((previous) =>
+      areSummaryRowsEqual(previous, nextSpecialty, ["specialty", "now", "p10", "p20", "p30"])
+        ? previous
+        : nextSpecialty,
+    );
+  }, [allTraconVolumePolygons, excludeTraconVolumesInSummary, sectorIndex.specialties]);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -1071,6 +1386,9 @@ export default function TfmsViewerPage() {
     }
     if (Array.isArray(snapshot.traconStaffing)) {
       setTraconStaffing(snapshot.traconStaffing);
+    }
+    if (snapshot?.towerStaffingByAirport && typeof snapshot.towerStaffingByAirport === "object") {
+      setTowerStaffingByAirport(snapshot.towerStaffingByAirport);
     }
     if (Array.isArray(snapshot.specialtySummary)) {
       setSpecialtySummary(snapshot.specialtySummary);
@@ -1324,7 +1642,19 @@ export default function TfmsViewerPage() {
 
         <section className="grid gap-4 lg:grid-cols-2">
           <article className="panel tfms-compact-card">
-            <h2 className="font-heading text-main text-2xl">Specialty Summary</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-heading text-main text-2xl">Specialty Summary</h2>
+              <label className="toggle-chip border-default bg-surface-soft text-muted inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs">
+                <input
+                  className="sr-only peer"
+                  checked={excludeTraconVolumesInSummary}
+                  onChange={(event) => setExcludeTraconVolumesInSummary(event.target.checked)}
+                  type="checkbox"
+                />
+                <span className="toggle-chip-dot" aria-hidden="true" />
+                <span>Exclude TRACON Volumes</span>
+              </label>
+            </div>
             <div className="mt-3 overflow-x-auto">
               <table className="tfms-table tfms-specialty-table tfms-compact-table min-w-full">
                 <thead>
@@ -1371,6 +1701,11 @@ export default function TfmsViewerPage() {
                           key={`${row.specialty}-now-${specialtyTickerSignals[`${row.specialty}:now`]?.token || 0}`}
                           thresholds={thresholds}
                           tickerSignal={specialtyTickerSignals[`${row.specialty}:now`]}
+                          title={
+                            specialtyCallsignsByBucket[`${row.specialty}:now`]?.length
+                              ? specialtyCallsignsByBucket[`${row.specialty}:now`].join(", ")
+                              : "No included aircraft."
+                          }
                           value={row.now}
                         />
                       </td>
@@ -1379,6 +1714,11 @@ export default function TfmsViewerPage() {
                           key={`${row.specialty}-p10-${specialtyTickerSignals[`${row.specialty}:p10`]?.token || 0}`}
                           thresholds={thresholds}
                           tickerSignal={specialtyTickerSignals[`${row.specialty}:p10`]}
+                          title={
+                            specialtyCallsignsByBucket[`${row.specialty}:p10`]?.length
+                              ? specialtyCallsignsByBucket[`${row.specialty}:p10`].join(", ")
+                              : "No included aircraft."
+                          }
                           value={row.p10 ?? 0}
                         />
                       </td>
@@ -1387,6 +1727,11 @@ export default function TfmsViewerPage() {
                           key={`${row.specialty}-p20-${specialtyTickerSignals[`${row.specialty}:p20`]?.token || 0}`}
                           thresholds={thresholds}
                           tickerSignal={specialtyTickerSignals[`${row.specialty}:p20`]}
+                          title={
+                            specialtyCallsignsByBucket[`${row.specialty}:p20`]?.length
+                              ? specialtyCallsignsByBucket[`${row.specialty}:p20`].join(", ")
+                              : "No included aircraft."
+                          }
                           value={row.p20 ?? 0}
                         />
                       </td>
@@ -1395,6 +1740,11 @@ export default function TfmsViewerPage() {
                           key={`${row.specialty}-p30-${specialtyTickerSignals[`${row.specialty}:p30`]?.token || 0}`}
                           thresholds={thresholds}
                           tickerSignal={specialtyTickerSignals[`${row.specialty}:p30`]}
+                          title={
+                            specialtyCallsignsByBucket[`${row.specialty}:p30`]?.length
+                              ? specialtyCallsignsByBucket[`${row.specialty}:p30`].join(", ")
+                              : "No included aircraft."
+                          }
                           value={row.p30 ?? row.p10 ?? 0}
                         />
                       </td>
@@ -1441,57 +1791,6 @@ export default function TfmsViewerPage() {
                   )}
                 </tbody>
               </table>
-            </div>
-            <div className="mt-3 flex flex-wrap gap-1.5 pt-3" aria-label="TRACON Staffing">
-              <p className="text-muted w-full text-[11px] font-semibold uppercase tracking-[0.12em]">
-                TRACON Online
-              </p>
-              {traconOnlineDisplay.length > 0 ? (
-                traconOnlineDisplay.map((facility) => (
-                  <span
-                    className="tfms-tracon-chip tfms-tracon-chip-compact tfms-tracon-chip-online"
-                    key={facility.id}
-                  >
-                    <span
-                      className="feed-indicator feed-indicator-static feed-indicator-green"
-                      aria-hidden="true"
-                    />
-                    <span className="font-semibold tracking-[0.08em]">{facility.id}</span>
-                  </span>
-                ))
-              ) : null}
-              {traconOfflineDisplay.length > 0 ? (
-                <div className="tfms-tracon-offline-group" tabIndex={0}>
-                  <span className="tfms-tracon-chip tfms-tracon-chip-compact tfms-tracon-chip-offline">
-                    <span
-                      className="feed-indicator feed-indicator-static feed-indicator-gray"
-                      aria-hidden="true"
-                    />
-                    <span className="font-semibold tracking-[0.08em]">
-                      Offline ({traconOfflineDisplay.length})
-                    </span>
-                  </span>
-                  <div className="tfms-tracon-offline-popover">
-                    <p className="text-muted text-[10px] font-semibold uppercase tracking-[0.1em]">
-                      Offline TRACONs
-                    </p>
-                    <div className="mt-1 flex flex-wrap gap-1">
-                      {traconOfflineDisplay.map((facility) => (
-                        <span
-                          className="tfms-tracon-chip tfms-tracon-chip-compact tfms-tracon-chip-offline"
-                          key={`offline-${facility.id}`}
-                        >
-                          <span
-                            className="feed-indicator feed-indicator-static feed-indicator-gray"
-                            aria-hidden="true"
-                          />
-                          <span className="font-semibold tracking-[0.08em]">{facility.id}</span>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              ) : null}
             </div>
           </article>
         </section>
@@ -1612,35 +1911,137 @@ export default function TfmsViewerPage() {
 
         <section>
           <article className="panel tfms-compact-card">
-            <h2 className="font-heading text-main text-2xl">Departure Queue</h2>
-            <div className="mt-3 tfms-queue-grid">
-              {airportQueueDisplay.map((row) => (
-                <div className={`tfms-queue-card ${getQueuePressureClass(row.avgMinutes)}`} key={row.icao}>
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-main text-base font-bold tracking-[0.08em]">{row.icao}</p>
-                    <span
-                      className={`tfms-queue-trend tfms-queue-trend-${row.trend}`}
-                      title={row.trend === "up" ? "Queue pressure increasing" : row.trend === "down" ? "Queue pressure decreasing" : "No significant change"}
-                    >
-                      {row.trend === "up" ? "Increasing" : row.trend === "down" ? "Decreasing" : "Steady"}
-                    </span>
-                  </div>
-                  <div className="mt-2 grid grid-cols-3 gap-2 text-xs">
-                    <div>
-                      <p className="text-muted uppercase tracking-[0.08em]">Queue</p>
-                      <p className="text-main mt-1 text-base font-semibold">{row.count}</p>
+            <h2 className="font-heading text-main text-2xl">TRACON Summary</h2>
+            <div className="mt-3 space-y-4">
+              <div>
+                <div className="tfms-tracon-core-grid" aria-label="TRACON core summary">
+                  {traconCoreCards.map((card) => (
+                    <div className="tfms-tracon-core-column" key={card.id}>
+                      <div
+                        className="tfms-tracon-core-card"
+                        title={
+                          card.callsigns?.length
+                            ? `Included aircraft: ${card.callsigns.join(", ")}`
+                            : "No aircraft currently counted in this TRACON volume."
+                        }
+                      >
+                        <div className="tfms-tracon-core-header">
+                          <div className="tfms-tracon-kpi-left">
+                            <p className="tfms-tracon-kpi-id text-main text-lg font-semibold tracking-[0.08em]">{card.id}</p>
+                          </div>
+                          <p className="tfms-tracon-core-airborne-header-value text-main text-lg font-semibold tracking-[0.08em]">
+                            {card.aircraftCount}
+                          </p>
+                          <span
+                            className={`tfms-core-status-pill ${
+                              card.staffed ? "tfms-core-status-pill-online" : "tfms-core-status-pill-offline"
+                            }`}
+                          >
+                            APP {card.staffed ? "Online" : "Offline"}
+                          </span>
+                        </div>
+                        <div className="tfms-tracon-core-stat-list text-main">
+                          <div className="tfms-tracon-core-metrics-inline" aria-label="Core traffic split">
+                            <div className="tfms-tracon-core-metric-cell" aria-label="Arrivals" title="Arrivals">
+                              <span className="tfms-tracon-core-metric-icon">
+                                <TraconFlowIcon type="arrival" />
+                              </span>
+                              <span>{card.arrivalsCount}</span>
+                            </div>
+                            <div className="tfms-tracon-core-metric-cell" aria-label="Departures" title="Departures">
+                              <span className="tfms-tracon-core-metric-icon">
+                                <TraconFlowIcon type="departure" />
+                              </span>
+                              <span>{card.departuresCount}</span>
+                            </div>
+                            <div className="tfms-tracon-core-metric-cell" aria-label="Overflights" title="Overflights">
+                              <span className="tfms-tracon-core-metric-icon">
+                                <TraconFlowIcon type="overflight" />
+                              </span>
+                              <span>{card.overflightsCount}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`tfms-tracon-airport-stack ${card.queueAirports.length > 1 ? "tfms-tracon-airport-stack-two" : ""}`}>
+                        {card.queueAirports.map((airport) => (
+                          <div className="tfms-tracon-airport-card" key={`${card.id}-${airport.icao}`}>
+                            <div className="tfms-tracon-airport-card-header">
+                              <p className="tfms-tracon-airport-card-title">{airport.label}</p>
+                              <span
+                                className={`tfms-core-status-pill ${
+                                  airport.towerOnline ? "tfms-core-status-pill-online" : "tfms-core-status-pill-offline"
+                                }`}
+                              >
+                                TWR {airport.towerOnline ? "Online" : "Offline"}
+                              </span>
+                            </div>
+                            <div className="tfms-tracon-core-stat-row">
+                              <span>Queue</span>
+                              <span>{airport.count}</span>
+                            </div>
+                            <div className="tfms-tracon-core-stat-row">
+                              <span>Avg</span>
+                              <span>{formatQueueMinutes(airport.avgMinutes)}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-muted uppercase tracking-[0.08em]">Avg</p>
-                      <p className="text-main mt-1 text-base font-semibold">{formatQueueMinutes(row.avgMinutes)}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted uppercase tracking-[0.08em]">Longest</p>
-                      <p className="text-main mt-1 text-base font-semibold">{formatQueueMinutes(row.maxMinutes)}</p>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
+              </div>
+              <div>
+                <div className="tfms-tracon-kpi-grid" aria-label="TRACON airborne secondary">
+                  {traconRemainingOnlineAirborne.map((facility) => (
+                    <div
+                      className="tfms-tracon-kpi-card tfms-tracon-kpi-inline tfms-tracon-kpi-offline"
+                      key={facility.id}
+                      title={
+                        facility.callsigns?.length
+                          ? `Included aircraft: ${facility.callsigns.join(", ")}`
+                          : "No aircraft currently counted in this TRACON volume."
+                      }
+                    >
+                      <div className="tfms-tracon-kpi-inline-row tfms-tracon-kpi-inline-row-airborne">
+                        <div className="tfms-tracon-kpi-left">
+                          <span
+                            className={`tfms-tracon-kpi-dot feed-indicator ${
+                              facility.staffed ? "feed-indicator-green" : "feed-indicator-gray feed-indicator-static"
+                            }`}
+                            title={facility.staffed ? "Online" : "Offline"}
+                            role="status"
+                            aria-label={facility.staffed ? "Online" : "Offline"}
+                          />
+                          <p className="tfms-tracon-kpi-id text-main text-sm font-semibold tracking-[0.08em]">{facility.id}</p>
+                        </div>
+                        <div className="tfms-tracon-kpi-count tfms-tracon-kpi-center text-main text-sm font-semibold tabular-nums">
+                          {facility.aircraftCount}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {traconRemainingOfflineAirborne.length > 0 ? (
+                    <div className="tfms-tracon-offline-group">
+                      <span className="tfms-tracon-kpi-card tfms-tracon-kpi-inline tfms-tracon-kpi-offline tfms-tracon-kpi-offline-summary">
+                        TRACONs Offline ({traconRemainingOfflineAirborne.length})
+                      </span>
+                      <div className="tfms-tracon-offline-popover">
+                        <div className="tfms-tracon-kpi-grid">
+                          {traconRemainingOfflineAirborne.map((facility) => (
+                            <span
+                              className="tfms-tracon-chip tfms-tracon-chip-compact tfms-tracon-chip-offline"
+                              key={facility.id}
+                            >
+                              {facility.id}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
             </div>
           </article>
         </section>
@@ -1848,7 +2249,7 @@ export default function TfmsViewerPage() {
                 <p className="text-main text-xs font-semibold uppercase tracking-[0.12em]">Use</p>
                 <p className="mt-1">
                   Use this page to monitor ZHU traffic load, see short-horizon projections (+10/+20/+30),
-                  track enroute staffing, watch local departure queues, and quickly see which TRACON facilities are online.
+                  track enroute staffing, and manage terminal traffic with the TRACON Summary cards.
                 </p>
               </div>
               <div>
@@ -1858,11 +2259,17 @@ export default function TfmsViewerPage() {
                   Green and Yellow slider handles in that specialty modal, then use <span className="text-main font-semibold">Apply {`<SPECIALTY>`}</span> for one specialty or <span className="text-main font-semibold">Apply All</span> for all specialties.
                 </p>
                 <p className="mt-2">
-                  Departure Queue cards track aircraft filed from each configured airport while they remain
-                  inside that airport&apos;s configured queue area(s). These queue areas are drawn around
-                  runway hold-short zones, not all aircraft on the airport surface. Cards show queue count,
-                  average time in queue, longest wait, and whether queue pressure is increasing, steady,
-                  or decreasing.
+                  TRACON Summary core cards (I90, AUS, SAT, MSY) show total airborne count plus
+                  arrivals, departures, and overflights for each TRACON volume. Airport subcards beneath
+                  each core card show queue count and average queue time, plus a TWR online/offline chip.
+                </p>
+                <p className="mt-2">
+                  Non-core TRACONs are shown as compact airborne cards when staffed. Offline facilities are
+                  consolidated behind the <span className="text-main font-semibold">TRACONs Offline (N)</span> chip.
+                </p>
+                <p className="mt-2">
+                  Queue counts only include aircraft filed from that airport while inside configured
+                  hold-short queue areas. They do not represent all aircraft on the airport surface.
                 </p>
               </div>
               <div>
@@ -1934,7 +2341,7 @@ export default function TfmsViewerPage() {
                     </p>
                     <p>
                       Overflights are included in traffic totals if they meet selection logic, but they are not
-                      currently isolated into a separate overflight-only view.
+                      currently broken out as a separate view in the projection/specialty summary tables.
                     </p>
                     <p>
                       Treat this as a trend and planning aid, not an exact future traffic picture.

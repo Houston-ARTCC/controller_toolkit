@@ -50,7 +50,10 @@ Then open [http://localhost:3000](http://localhost:3000).
 - `components/tfms-projection-map.js`
 - `app/tools/tfms/styles.css`
 - `lib/tfms/compute.js`
+- `lib/tfms/tracon-volumes.js`
 - `data/tfms-sectors.json`
+- `data/tfms-tracon-volumes.json`
+- `data/tfms-tracon-airports.json`
 - `data/tfms-airport-queue-boxes.json`
 - `data/tfms-event-splits.json` (currently hidden from UI, retained for future events)
 
@@ -119,9 +122,13 @@ Default sort priority:
 
 Current cards/modules:
 - Specialty Summary (`Now`, `+10`, `+20`, `+30`)
-- Online Positions (ZHU enroute + TRACON)
+- Online Positions (ZHU enroute controllers)
+- TRACON Summary
+  - Core cards: `I90`, `AUS`, `SAT`, `MSY`
+  - Core metrics: total airborne, arrivals, departures, overflights
+  - Airport subcards: queue count, average queue minutes, `TWR Online/Offline`
+  - Remaining TRACONs: online shown as compact cards; offline consolidated into `TRACONs Offline (N)` hover list
 - Enhanced Projection Map
-- Departure Queue (`KIAH`, `KHOU`, `KAUS`, `KSAT`, `KMSY`)
 
 Event split summary:
 - Logic/data retained
@@ -130,6 +137,10 @@ Event split summary:
 Queue boxes:
 - Config supports `bounds`, `geojson`, or `areas`
 - Multiple entries for the same ICAO are merged into one card
+
+TRACON airport mapping:
+- `data/tfms-tracon-airports.json` defines airport membership for TRACON-based arrival/departure/overflight classification
+- Codes are normalized against internal airport handling in `data/tfms-internal-airports.json`
 
 Projection/summary inclusion logic:
 - Flight must pass ZHU relevance checks (in ZHU, near perimeter inbound, or inbound to tracked internal airports)
