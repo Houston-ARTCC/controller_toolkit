@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/convert-alias-markup.mjs && node scripts/convert-adar-xml.mjs",
+    "prebuild": "node scripts/convert-alias-markup.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "leaflet": "^1.9.4",
-    "next": "16.1.6",
+    "next": "16.2.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-leaflet": "^5.0.0"
