@@ -1,0 +1,17 @@
+.split-map-label {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.62);
+  border: none;
+  border-radius: 0.25rem;
+  box-shadow: none;
+  color: #ffffff;
+  font-family: ui-monospace, monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  white-space: nowrap;
+}
+
+.split-map-label::before {
+  display: none;
+}

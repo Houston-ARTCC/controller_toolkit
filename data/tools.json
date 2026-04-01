@@ -68,9 +68,9 @@
     "name": "Split Map",
     "description": "Generate and visualize ZHU enroute split configurations.",
     "url": "https://github.com/Houston-ARTCC/split-map",
-    "liveUrl": "https://splits.houston.center/",
+    "liveUrl": "/tools/split-map",
     "category": "Planning",
-    "devStatus": "REDESIGN PLANNED",
+    "devStatus": "PROTOTYPE",
     "icon": "layers",
     "tags": [
       "Sectors",

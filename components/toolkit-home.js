@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
 
 const DEV_STATUS_STYLES = {
-  "LIVE":             "bg-sky-500/15 text-sky-400 ring-sky-500/25",
+  "LIVE":             "bg-emerald-500/15 text-emerald-400 ring-emerald-500/25",
   "PROTOTYPE":        "bg-violet-500/15 text-violet-400 ring-violet-500/25",
   "REDESIGN PLANNED": "bg-orange-500/15 text-orange-400 ring-orange-500/25",
 };
@@ -17,15 +17,15 @@ function ToolCard({ tool }) {
   return (
     <article className="card tool-launcher-card flex h-full flex-col justify-between p-3">
       <div>
-        <div className="mb-2">
-          <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ring-1 ${chipClass}`}>
+        <div className="mb-2 flex items-start justify-between gap-2">
+          <h3 className="font-heading text-main text-2xl font-semibold tracking-wide">
+            {tool.name}
+          </h3>
+          <span className={`mt-1 shrink-0 inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ring-1 ${chipClass}`}>
             {tool.devStatus}
           </span>
         </div>
-        <h3 className="font-heading text-main text-2xl font-semibold tracking-wide">
-          {tool.name}
-        </h3>
-        <p className="text-muted mt-1.5 text-sm leading-relaxed">
+        <p className="text-muted text-sm leading-relaxed">
           {tool.description}
         </p>
       </div>
