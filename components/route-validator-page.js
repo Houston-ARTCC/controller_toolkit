@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
+import NavDropdown from "@/components/nav-dropdown";
 
 const ATIS_URLS = {
   KIAH: "https://atis.info/api/KIAH",
@@ -1118,9 +1119,7 @@ export default function RouteValidatorPage({ routeData }) {
               </div>
               <div className="flex flex-col items-end gap-2">
                 <ThemeSwitcher />
-                <Link className="button-secondary text-sm" href="/">
-                  Back to Toolkit
-                </Link>
+                <NavDropdown />
               </div>
             </div>
 

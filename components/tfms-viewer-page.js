@@ -1,9 +1,9 @@
 ﻿"use client";
 
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
+import NavDropdown from "@/components/nav-dropdown";
 import sectorsGeoJson from "@/data/tfms-sectors.json";
 import airportQueueBoxes from "@/data/tfms-airport-queue-boxes.json";
 import eventSplitsData from "@/data/tfms-event-splits.json";
@@ -1616,8 +1616,8 @@ export default function TfmsViewerPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden px-6 py-8 pb-28 md:px-10">
-      <div className="route-validator-bg" />
-      <div className="mx-auto max-w-7xl space-y-5">
+      <div className="ambient-bg" />
+      <div className="mx-auto max-w-7xl space-y-6">
         <header className="panel">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
@@ -1632,19 +1632,19 @@ export default function TfmsViewerPage() {
             </div>
             <div className="flex flex-col items-end gap-2">
               <ThemeSwitcher />
-              <Link className="button-secondary text-sm" href="/">
-                Back to Toolkit
-              </Link>
-              <button
-                className="button-secondary text-sm"
-                onClick={() => {
-                  setIsProjectionInfoOpen(false);
-                  setIsToolInfoOpen(true);
-                }}
-                type="button"
-              >
-                Tool Info
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  className="button-secondary text-sm"
+                  onClick={() => {
+                    setIsProjectionInfoOpen(false);
+                    setIsToolInfoOpen(true);
+                  }}
+                  type="button"
+                >
+                  Tool Info
+                </button>
+                <NavDropdown />
+              </div>
             </div>
           </div>
 

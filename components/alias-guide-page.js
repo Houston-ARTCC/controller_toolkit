@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
+import NavDropdown from "@/components/nav-dropdown";
 
 const SECTION_TABLE_CONFIG = {
   Autotrack: {
@@ -358,9 +358,7 @@ export default function AliasGuidePage({ guideData }) {
             </div>
             <div className="flex flex-col items-end gap-2">
               <ThemeSwitcher />
-              <Link className="button-secondary text-sm" href="/">
-                Back to Toolkit
-              </Link>
+              <NavDropdown />
             </div>
           </div>
 

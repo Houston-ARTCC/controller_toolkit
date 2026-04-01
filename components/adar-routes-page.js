@@ -1,8 +1,8 @@
 ﻿"use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
+import NavDropdown from "@/components/nav-dropdown";
 
 function normalizeAirport(value) {
   return value.trim().toUpperCase();
@@ -38,10 +38,13 @@ export default function AdarRoutesPage({ data }) {
   const [departure, setDeparture] = useState("");
   const [arrival, setArrival] = useState("");
   const [routeQuery, setRouteQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const PAGE_SIZE = 15;
 
   const normalizedRouteQuery = routeQuery.trim().toUpperCase();
 
   const results = useMemo(() => {
+    setPage(0);
     return (data.routes || []).filter((route) => {
       const departureMatch = includesAirport(route.departures || [], departure);
       const arrivalMatch = includesAirport(route.arrivals || [], arrival);
@@ -51,6 +54,9 @@ export default function AdarRoutesPage({ data }) {
       return departureMatch && arrivalMatch && routeMatch;
     });
   }, [arrival, data.routes, departure, normalizedRouteQuery]);
+
+  const pageCount = Math.ceil(results.length / PAGE_SIZE);
+  const pageResults = results.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
   const swapAirports = () => {
     setDeparture(arrival);
@@ -75,9 +81,7 @@ export default function AdarRoutesPage({ data }) {
             </div>
             <div className="flex flex-col items-end gap-2">
               <ThemeSwitcher />
-              <Link className="button-secondary text-sm" href="/">
-                Back to Toolkit
-              </Link>
+              <NavDropdown />
             </div>
           </div>
 
@@ -147,43 +151,69 @@ export default function AdarRoutesPage({ data }) {
           {results.length === 0 ? (
             <p className="text-muted">No matching ADAR records for this filter combination.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="adar-table min-w-full text-sm">
-                <thead className="bg-surface-soft">
-                  <tr>
-                    <th>ID</th>
-                    <th>Departure</th>
-                    <th>Arrival</th>
-                    <th>Route</th>
-                    <th>AC Criteria</th>
-                    <th>Altitudes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {results.map((route) => (
-                    <tr key={route.adarId}>
-                      <td className="font-mono font-semibold">{route.adarId}</td>
-                      <td>{(route.departures || []).join(", ")}</td>
-                      <td>{(route.arrivals || []).join(", ")}</td>
-                      <td className="font-mono">{routeText(route)}</td>
-                      <td>
-                        {(route.aircraftCriteriaDetails || []).length === 0
-                          ? "N/A"
-                          : route.aircraftCriteriaDetails
-                              .map((criteria) => {
-                                const suffix = criteria.isExcluded ? " (Excluded)" : "";
-                                return `${criteria.id} (${criteria.facility})${suffix}`;
-                              })
-                              .join(", ")}
-                      </td>
-                      <td>
-                        {route.lowerAltitude}-{route.upperAltitude}
-                      </td>
+            <>
+              <div className="overflow-x-auto">
+                <table className="adar-table min-w-full text-sm">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Departure</th>
+                      <th>Arrival</th>
+                      <th>Route</th>
+                      <th>AC Criteria</th>
+                      <th>Altitudes</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {pageResults.map((route) => (
+                      <tr key={route.adarId}>
+                        <td className="font-mono font-semibold">{route.adarId}</td>
+                        <td>{(route.departures || []).join(", ")}</td>
+                        <td>{(route.arrivals || []).join(", ")}</td>
+                        <td className="font-mono">{routeText(route)}</td>
+                        <td>
+                          {(route.aircraftCriteriaDetails || []).length === 0
+                            ? "N/A"
+                            : route.aircraftCriteriaDetails
+                                .map((criteria) => {
+                                  const suffix = criteria.isExcluded ? " (Excluded)" : "";
+                                  return `${criteria.id} (${criteria.facility})${suffix}`;
+                                })
+                                .join(", ")}
+                        </td>
+                        <td>
+                          {route.lowerAltitude}-{route.upperAltitude}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {pageCount > 1 && (
+                <div className="border-default mt-0 flex items-center justify-between border-t px-3 py-2">
+                  <span className="text-muted text-xs">
+                    {page * PAGE_SIZE + 1}–{Math.min((page + 1) * PAGE_SIZE, results.length)} of {results.length}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setPage((p) => Math.max(0, p - 1))}
+                      disabled={page === 0}
+                      className="button-secondary px-2 py-1 text-xs disabled:opacity-40"
+                    >
+                      ‹ Prev
+                    </button>
+                    <span className="text-muted px-2 text-xs">{page + 1} / {pageCount}</span>
+                    <button
+                      onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
+                      disabled={page === pageCount - 1}
+                      className="button-secondary px-2 py-1 text-xs disabled:opacity-40"
+                    >
+                      Next ›
+                    </button>
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </section>
       </div>

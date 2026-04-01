@@ -4,6 +4,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import MapErrorBoundary from "@/components/map-error-boundary";
+import NavDropdown from "@/components/nav-dropdown";
 import sectorsData from "@/data/split-map-sectors.json";
 
 // 8 colors evenly spaced on the hue wheel, arranged so grid neighbors
@@ -225,13 +226,16 @@ export default function SplitMapPage() {
           </button>
         )}
 
-        {/* Info button */}
-        <button
-          onClick={() => setShowInfo(true)}
-          className="border-default text-muted hover:text-foreground ml-auto rounded-lg border px-3 py-1 text-xs font-semibold transition-colors"
-        >
-          Tool Info
-        </button>
+        {/* Info button + nav */}
+        <div className="ml-auto flex items-center gap-2">
+          <button
+            onClick={() => setShowInfo(true)}
+            className="border-default text-muted hover:text-foreground rounded-lg border px-3 py-1 text-xs font-semibold transition-colors"
+          >
+            Tool Info
+          </button>
+          <NavDropdown />
+        </div>
 
       </header>
 

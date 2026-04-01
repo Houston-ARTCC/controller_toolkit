@@ -1,20 +1,30 @@
-﻿.adar-table th,
+.adar-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.adar-table th,
 .adar-table td {
   border-bottom: 1px solid var(--surface-border);
-  padding: 0.65rem 0.75rem;
+  padding: 0.62rem 0.75rem;
   text-align: left;
   vertical-align: top;
 }
 
 .adar-table th {
+  background: var(--surface-soft);
   color: var(--muted);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .adar-table tbody tr:last-child td {
   border-bottom: 0;
 }
 
+.adar-table tbody tr:hover td {
+  background: color-mix(in srgb, var(--surface-soft) 56%, transparent);
+}
