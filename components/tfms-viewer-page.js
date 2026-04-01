@@ -157,9 +157,9 @@ function getSpecialtyRowTone(row, thresholds) {
 function getSpecialtyChipStyle(specialty) {
   const colors = getSpecialtyColors(specialty);
   return {
-    backgroundColor: "transparent",
-    borderColor: colors.iconFill,
-    color: colors.iconFill,
+    "--chip-fill": colors.sectorFill,
+    "--chip-border": colors.iconFill,
+    "--chip-text": colors.chipText || colors.iconFill,
   };
 }
 
@@ -195,9 +195,9 @@ function applyTraconExclusionToProjections(projections, allTraconPolygons) {
     return {
       ...flight,
       specialty: nowInside ? null : flight.specialty,
-      proj10Specialty: p10Inside ? null : flight.proj10Specialty,
-      proj20Specialty: p20Inside ? null : flight.proj20Specialty,
-      proj30Specialty: p30Inside ? null : flight.proj30Specialty,
+      proj10Specialty: (nowInside || p10Inside) ? null : flight.proj10Specialty,
+      proj20Specialty: (nowInside || p20Inside) ? null : flight.proj20Specialty,
+      proj30Specialty: (nowInside || p30Inside) ? null : flight.proj30Specialty,
     };
   });
 }
@@ -627,7 +627,7 @@ function buildTowerStaffingByAirport(vatsim) {
     if (!callsign || !callsign.endsWith("_TWR")) {
       continue;
     }
-    const match = callsign.match(/^([A-Z0-9]{3,4})_(?:\d{1,3}_)?TWR$/);
+    const match = callsign.match(/^([A-Z0-9]{3,4})_(?:[A-Z0-9]{1,4}_)?TWR$/);
     if (!match) {
       continue;
     }
@@ -729,6 +729,9 @@ export default function TfmsViewerPage() {
   const projectedFlightsRef = useRef([]);
   const pilotMotionByCallsignRef = useRef({});
   const specialtyTickerTokenRef = useRef(0);
+  const [specialtyLogActive, setSpecialtyLogActive] = useState(false);
+  const [specialtyLogEntries, setSpecialtyLogEntries] = useState([]);
+  const specialtyLogColumnsRef = useRef([]);
   const eventSplitTickerTokenRef = useRef(0);
   const airportQueueTrackerRef = useRef({});
   const previousAirportQueueByIcaoRef = useRef({});
@@ -854,7 +857,6 @@ export default function TfmsViewerPage() {
       if (!sector || sector === "zhu") {
         continue;
       }
-      const floor = Number(props.floor);
       const ceiling = Number(props.ceiling);
       const ring = feature?.geometry?.coordinates?.[0] || [];
       const points = ring
@@ -947,6 +949,39 @@ export default function TfmsViewerPage() {
     () => (specialtySummary.length > 0 ? specialtySummary : defaultSpecialtySummary),
     [defaultSpecialtySummary, specialtySummary],
   );
+
+  // Append a log entry whenever data refreshes while logging is active
+  useEffect(() => {
+    if (!specialtyLogActive || specialtyDisplay.length === 0) return;
+    const time = new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
+    const counts = Object.fromEntries(specialtyDisplay.map((row) => [row.specialty, row.now]));
+    setSpecialtyLogEntries((prev) => [...prev, { time, counts }]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [specialtyLogActive, specialtySummary]); // intentionally use specialtySummary (not display) so TRACON toggle doesn't add duplicate rows
+
+  const handleSpecialtyLogToggle = useCallback(() => {
+    if (!specialtyLogActive) {
+      specialtyLogColumnsRef.current = specialtyDisplay.map((row) => row.specialty);
+      setSpecialtyLogEntries([]);
+      setSpecialtyLogActive(true);
+    } else {
+      const columns = specialtyLogColumnsRef.current;
+      const header = ["time", ...columns].join(",");
+      const rows = specialtyLogEntries.map((entry) =>
+        [entry.time, ...columns.map((col) => String(entry.counts[col] ?? 0))].join(","),
+      );
+      const csv = [header, ...rows].join("\n");
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `zhu-specialty-log-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.click();
+      URL.revokeObjectURL(url);
+      setSpecialtyLogActive(false);
+    }
+  }, [specialtyLogActive, specialtyDisplay, specialtyLogEntries]);
+
   const airportQueueDisplay = useMemo(
     () => (airportQueueSummary.length > 0 ? airportQueueSummary : defaultAirportQueueSummary),
     [airportQueueSummary, defaultAirportQueueSummary],
@@ -1619,6 +1654,17 @@ export default function TfmsViewerPage() {
           <article className="panel tfms-compact-card">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h2 className="font-heading text-main text-2xl">Specialty Summary</h2>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleSpecialtyLogToggle}
+                  className={`rounded-lg border px-3 py-1 text-xs font-semibold transition-colors ${
+                    specialtyLogActive
+                      ? "border-red-500/40 text-red-400 hover:border-red-500/70 hover:bg-red-500/10 hover:text-red-300"
+                      : "border-emerald-500/40 text-emerald-400 hover:border-emerald-500/70 hover:bg-emerald-500/10 hover:text-emerald-300"
+                  }`}
+                >
+                  {specialtyLogActive ? `Stop & Export (${specialtyLogEntries.length})` : "Start Logging"}
+                </button>
               <label className="toggle-chip border-default bg-surface-soft text-muted inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs">
                 <input
                   className="sr-only peer"
@@ -1629,6 +1675,7 @@ export default function TfmsViewerPage() {
                 <span className="toggle-chip-dot" aria-hidden="true" />
                 <span>Exclude TRACON Volumes</span>
               </label>
+              </div>
             </div>
             <div className="mt-3 overflow-x-auto">
               <table className="tfms-table tfms-specialty-table tfms-compact-table min-w-full">
