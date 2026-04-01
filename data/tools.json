@@ -6,9 +6,14 @@
     "url": "https://github.com/Houston-ARTCC/tfms",
     "liveUrl": "/tools/tfms",
     "category": "Traffic",
-    "status": "Migrated",
+    "devStatus": "LIVE",
     "icon": "radar",
-    "tags": ["TFMS", "Traffic", "Splits", "VATSIM"]
+    "tags": [
+      "TFMS",
+      "Traffic",
+      "Splits",
+      "VATSIM"
+    ]
   },
   {
     "id": "alias-guide",
@@ -17,9 +22,14 @@
     "url": "https://github.com/Houston-ARTCC/alias-guide",
     "liveUrl": "/tools/alias-guide",
     "category": "Reference",
-    "status": "Migrated",
+    "devStatus": "PROTOTYPE",
     "icon": "book",
-    "tags": ["Alias", "CRC", "Reference", "Training"]
+    "tags": [
+      "Alias",
+      "CRC",
+      "Reference",
+      "Training"
+    ]
   },
   {
     "id": "adar-routes",
@@ -28,9 +38,14 @@
     "url": "https://github.com/Houston-ARTCC/controller_toolkit",
     "liveUrl": "/tools/adar-routes",
     "category": "Reference",
-    "status": "Prototype",
+    "devStatus": "PROTOTYPE",
     "icon": "map",
-    "tags": ["ERAM", "ADAR", "Routes", "Airports"]
+    "tags": [
+      "ERAM",
+      "ADAR",
+      "Routes",
+      "Airports"
+    ]
   },
   {
     "id": "route-validator",
@@ -39,9 +54,14 @@
     "url": "https://github.com/Houston-ARTCC/controller_toolkit",
     "liveUrl": "/tools/route-validator",
     "category": "Traffic",
-    "status": "Prototype",
+    "devStatus": "LIVE",
     "icon": "radar",
-    "tags": ["VATSIM", "Validation", "Routing", "Aliases"]
+    "tags": [
+      "VATSIM",
+      "Validation",
+      "Routing",
+      "Aliases"
+    ]
   },
   {
     "id": "split-map",
@@ -50,9 +70,14 @@
     "url": "https://github.com/Houston-ARTCC/split-map",
     "liveUrl": "https://splits.houston.center/",
     "category": "Planning",
-    "status": "Live",
+    "devStatus": "REDESIGN PLANNED",
     "icon": "layers",
-    "tags": ["Sectors", "Enroute", "Planning", "Maps"]
+    "tags": [
+      "Sectors",
+      "Enroute",
+      "Planning",
+      "Maps"
+    ]
   },
   {
     "id": "rvm-list",
@@ -61,8 +86,13 @@
     "url": "https://github.com/Houston-ARTCC/rvm-list",
     "liveUrl": "https://rvm.houston.center/",
     "category": "Reference",
-    "status": "Refactor Planned",
+    "devStatus": "REDESIGN PLANNED",
     "icon": "map",
-    "tags": ["RVM", "Maps", "Reference", "TRACON"]
+    "tags": [
+      "RVM",
+      "Maps",
+      "Reference",
+      "TRACON"
+    ]
   }
 ]

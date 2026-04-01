@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/convert-alias-markup.mjs && node scripts/convert-adar-xml.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

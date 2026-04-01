@@ -16,9 +16,12 @@ import {
   buildSpecialtySummary,
   computeProjectedFlights,
   getZhuEnrouteControllers,
+  normalizeAirportCode,
   passesOperationalGate,
+  pointInPolygon,
 } from "@/lib/tfms/compute";
 import { getSpecialtyColors } from "@/lib/tfms/specialty-colors";
+import MapErrorBoundary from "@/components/map-error-boundary";
 import { buildTraconVolumeIndex, isInTraconVolume } from "@/lib/tfms/tracon-volumes";
 
 const TfmsProjectionMap = dynamic(() => import("@/components/tfms-projection-map"), {
@@ -395,44 +398,16 @@ function getOnlineDurationMs(logonTime) {
   return Number.isFinite(deltaMs) && deltaMs >= 0 ? deltaMs : -1;
 }
 
-function normalizeAirportCode(value) {
-  const text = String(value || "").trim().toUpperCase();
-  if (!text) {
-    return "";
-  }
-  if (/^[A-Z]{3}$/.test(text)) {
-    return `K${text}`;
-  }
-  if (/^[A-Z0-9]{4}$/.test(text)) {
-    return text;
-  }
-  return "";
-}
-
-function pointInRing(point, ring) {
-  const [x, y] = point;
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    const intersects =
-      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi + 1e-12) + xi;
-    if (intersects) {
-      inside = !inside;
-    }
-  }
-  return inside;
-}
 
 function pointInPolygonCoordinates(point, coordinates) {
   if (!Array.isArray(coordinates) || coordinates.length === 0) {
     return false;
   }
-  if (!pointInRing(point, coordinates[0])) {
+  if (!pointInPolygon(point, coordinates[0])) {
     return false;
   }
   for (let i = 1; i < coordinates.length; i += 1) {
-    if (pointInRing(point, coordinates[i])) {
+    if (pointInPolygon(point, coordinates[i])) {
       return false;
     }
   }
@@ -1894,12 +1869,14 @@ export default function TfmsViewerPage() {
             </div>
             {isMapVisible ? (
               <div className="mt-3">
-                <TfmsProjectionMap
-                  flights={mapFlights}
-                  sectorLayerOutlines={sectorLayerOutlines}
-                  specialtyBounds={specialtyBounds}
-                  zhuPerimeter={sectorIndex.zhuPerimeter}
-                />
+                <MapErrorBoundary>
+                  <TfmsProjectionMap
+                    flights={mapFlights}
+                    sectorLayerOutlines={sectorLayerOutlines}
+                    specialtyBounds={specialtyBounds}
+                    zhuPerimeter={sectorIndex.zhuPerimeter}
+                  />
+                </MapErrorBoundary>
               </div>
             ) : (
               <p className="text-muted mt-3 text-sm">

@@ -4,12 +4,24 @@ import Link from "next/link";
 import { useMemo } from "react";
 import ThemeSwitcher from "@/components/theme-switcher";
 
+const DEV_STATUS_STYLES = {
+  "LIVE":             "bg-sky-500/15 text-sky-400 ring-sky-500/25",
+  "PROTOTYPE":        "bg-violet-500/15 text-violet-400 ring-violet-500/25",
+  "REDESIGN PLANNED": "bg-orange-500/15 text-orange-400 ring-orange-500/25",
+};
+
 function ToolCard({ tool }) {
   const isInternalTool = tool.liveUrl.startsWith("/");
+  const chipClass = DEV_STATUS_STYLES[tool.devStatus] ?? "bg-slate-500/15 text-slate-400 ring-slate-500/25";
 
   return (
     <article className="card tool-launcher-card flex h-full flex-col justify-between p-3">
       <div>
+        <div className="mb-2">
+          <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ring-1 ${chipClass}`}>
+            {tool.devStatus}
+          </span>
+        </div>
         <h3 className="font-heading text-main text-2xl font-semibold tracking-wide">
           {tool.name}
         </h3>
@@ -93,8 +105,7 @@ export default function ToolkitHome({ tools }) {
               Quick Tool Access
             </h1>
             <p className="mt-3 max-w-2xl text-lg text-slate-100">
-              Unified launchpad for controller resources with a single registry
-              for current and future tools.
+              Tools and references for ZHU controllers, all in one place.
             </p>
           </div>
         </section>

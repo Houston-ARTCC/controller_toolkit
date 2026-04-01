@@ -31,195 +31,6 @@ const KIAH_FLOW_SID_RULES = [
   { prefix: "GUMBY", flow: "East" },
 ];
 
-const STATIC_CONNECTED_PILOTS = [
-  {
-    cid: 900001,
-    callsign: "UAL1423",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KAUS",
-      altitude: "FL240",
-      aircraft_short: "B738",
-      aircraft_faa: "B738/L",
-      route: "BNDTO5 MNURE WLEEE7",
-    },
-  },
-  {
-    cid: 900002,
-    callsign: "SWA2176",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KDFW",
-      altitude: "FL290",
-      aircraft_short: "B737",
-      aircraft_faa: "B737/L",
-      route: "BLTWY7 CRIED WHINY",
-    },
-  },
-  {
-    cid: 900003,
-    callsign: "AAL309",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KMSY",
-      altitude: "FL210",
-      aircraft_short: "A320",
-      aircraft_faa: "A320/L",
-      route: "MMUGS4 GUSTI AWDAD AWDAD1",
-    },
-  },
-  {
-    cid: 900004,
-    callsign: "DAL1884",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KDEN",
-      altitude: "FL340",
-      aircraft_short: "B739",
-      aircraft_faa: "B739/L",
-      route: "TRIOS4 CRIED J64 LAA",
-    },
-  },
-  {
-    cid: 900005,
-    callsign: "FFT921",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KMIA",
-      altitude: "FL370",
-      aircraft_short: "A321",
-      aircraft_faa: "A321/L",
-      route: "DCT MIA",
-    },
-  },
-  {
-    cid: 900006,
-    callsign: "N84JS",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KHOU",
-      arrival: "KIAH",
-      altitude: "050",
-      aircraft_short: "C56X",
-      route: "DCT",
-    },
-  },
-  {
-    cid: 900007,
-    callsign: "N732TX",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KBPT",
-      altitude: "120",
-      aircraft_short: "BE58",
-      aircraft_faa: "BE58/G",
-      route: "DIRECT",
-    },
-  },
-  {
-    cid: 900008,
-    callsign: "N52PC",
-    altitude: 0,
-    groundspeed: 0,
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KSAT",
-      altitude: "090",
-      aircraft_short: "C208",
-      aircraft_faa: "C208/L",
-      route: "LCH5 LCH V20 RQR",
-    },
-  },
-];
-
-const STATIC_PREFILES = [
-  {
-    cid: 910001,
-    callsign: "UAL1809",
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KATL",
-      altitude: "FL330",
-      aircraft_short: "B739",
-      aircraft_faa: "B739/A",
-      route: "LCH5 LCH J2 SJI MVC V222 TIROE",
-    },
-  },
-  {
-    cid: 910002,
-    callsign: "JBU1552",
-    flight_plan: {
-      departure: "KIAH",
-      arrival: "KBOS",
-      altitude: "FL340",
-      aircraft_short: "A220",
-      aircraft_faa: "A220/L",
-      route: "BLTWY6 HUMPS J29 SPA",
-    },
-  },
-  {
-    cid: 910003,
-    callsign: "SWA440",
-    flight_plan: {
-      departure: "KAUS",
-      arrival: "KIAH",
-      altitude: "FL200",
-      aircraft_short: "B737",
-      aircraft_faa: "B737/L",
-      route: "CWK CLUTCH4",
-    },
-  },
-];
-
-function buildStaticPilotList() {
-  const connectedPilots = STATIC_CONNECTED_PILOTS.filter((pilot) => pilot?.flight_plan?.departure).map(
-    (pilot) => ({
-      ...pilot,
-      __isPrefile: false,
-    }),
-  );
-
-  const prefilePilots = STATIC_PREFILES.filter((prefile) => prefile?.flight_plan?.departure).map(
-    (prefile) => ({
-      ...prefile,
-      altitude: 0,
-      groundspeed: 0,
-      __isPrefile: true,
-    }),
-  );
-
-  const connectedKeys = new Set(
-    connectedPilots.map((pilot) => {
-      const flightPlan = pilot.flight_plan || {};
-      return `${(pilot.callsign || "").toUpperCase()}|${normalizeAirport(flightPlan.departure)}|${normalizeAirport(
-        flightPlan.arrival,
-      )}`;
-    }),
-  );
-
-  const uniquePrefiles = prefilePilots.filter((prefile) => {
-    const flightPlan = prefile.flight_plan || {};
-    const key = `${(prefile.callsign || "").toUpperCase()}|${normalizeAirport(
-      flightPlan.departure,
-    )}|${normalizeAirport(flightPlan.arrival)}`;
-    return !connectedKeys.has(key);
-  });
-
-  return [...connectedPilots, ...uniquePrefiles];
-}
 
 function normalizeAirport(code) {
   const cleaned = (code || "").trim().toUpperCase();
@@ -839,32 +650,26 @@ function getFeedStatusTone({ mode, hasError, lastUpdatedMs, nowMs }) {
   return "green";
 }
 
-function AirportInput({ id, label, value, onChange, airports, compact = false }) {
+function AirportInput({ id, label, value, onChange }) {
   return (
-    <label className={compact ? "w-[9rem] shrink-0 space-y-1" : "min-w-[16rem] flex-1 space-y-1"} htmlFor={id}>
+    <label className="w-[9rem] shrink-0 space-y-1" htmlFor={id}>
       <span className="text-muted text-xs uppercase tracking-[0.16em]">{label}</span>
       <input
         className="search w-full"
         id={id}
-        list="route-validator-airports"
         onChange={(event) => onChange(event.target.value)}
         placeholder="KIAH"
         type="search"
         value={value}
       />
-      <datalist id="route-validator-airports">
-        {airports.map((airport) => (
-          <option key={airport} value={airport} />
-        ))}
-      </datalist>
     </label>
   );
 }
 
 export default function RouteValidatorPage({ routeData }) {
   const [controlledAirportInput, setControlledAirportInput] = useState("KIAH");
-  const [arrivalFilterInput, setArrivalFilterInput] = useState("");
-  const [searchInput, setSearchInput] = useState("");
+  const [lookupInput, setLookupInput] = useState("");
+  const [lookupOpen, setLookupOpen] = useState(false);
   const [showDeparted, setShowDeparted] = useState(false);
   const [showPrefiles, setShowPrefiles] = useState(true);
   const [callsignSortDir, setCallsignSortDir] = useState("asc");
@@ -887,8 +692,6 @@ export default function RouteValidatorPage({ routeData }) {
   const [copiedRouteKey, setCopiedRouteKey] = useState("");
 
   const controlledAirport = normalizeAirport(controlledAirportInput);
-  const arrivalFilter = normalizeAirport(arrivalFilterInput);
-  const search = searchInput.trim().toUpperCase();
   const nextTrafficRefreshLabel = formatRefreshCountdown(nextTrafficRefreshAt, nowMs);
   const nextAtisRefreshLabel = formatRefreshCountdown(nextAtisRefreshAt, nowMs);
   const trafficTone = getFeedStatusTone({
@@ -964,8 +767,8 @@ export default function RouteValidatorPage({ routeData }) {
         if (!active) {
           return;
         }
-        setFetchError(error?.message || "Failed to load VATSIM traffic feed.");
-        setPilots(buildStaticPilotList());
+        setFetchError("Unable to reach the VATSIM traffic feed. Data will refresh automatically.");
+        setPilots([]);
         setTrafficLastUpdated(Date.now());
       } finally {
         if (active) {
@@ -986,41 +789,43 @@ export default function RouteValidatorPage({ routeData }) {
     let active = true;
 
     const fetchAtisFeeds = async () => {
-      try {
-        const entries = await Promise.all(
-          Object.entries(ATIS_URLS).map(async ([airport, url]) => {
-            const response = await fetch(url, { cache: "no-store" });
-            if (!response.ok) {
-              throw new Error(`${airport} ATIS fetch failed (${response.status})`);
-            }
+      const results = await Promise.allSettled(
+        Object.entries(ATIS_URLS).map(async ([airport, url]) => {
+          const response = await fetch(url, { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error(`${airport} ATIS fetch failed (${response.status})`);
+          }
 
-            const data = await response.json();
-            const first = Array.isArray(data) ? data[0] : null;
-            const datis = first?.datis || "";
-            return [
-              airport,
-              {
-                flow: detectFlowFromAtis(airport, datis),
-                code: first?.code || "",
-              },
-            ];
-          }),
-        );
+          const data = await response.json();
+          const first = Array.isArray(data) ? data[0] : null;
+          const datis = first?.datis || "";
+          return [
+            airport,
+            {
+              flow: detectFlowFromAtis(airport, datis),
+              code: first?.code || "",
+            },
+          ];
+        }),
+      );
 
-        if (!active) {
-          return;
-        }
+      if (!active) {
+        return;
+      }
 
-        setFlowsByAirport(Object.fromEntries(entries));
+      const succeeded = results.filter((r) => r.status === "fulfilled").map((r) => r.value);
+      const failed = results.filter((r) => r.status === "rejected");
+
+      setFlowsByAirport(Object.fromEntries(succeeded));
+      setAtisLastUpdated(Date.now());
+      setNextAtisRefreshAt(Date.now() + ATIS_REFRESH_MS);
+
+      if (failed.length > 0) {
+        const airports = Object.keys(ATIS_URLS);
+        const failedAirports = failed.map((r) => airports[results.indexOf(r)]).filter(Boolean);
+        setAtisError(`D-ATIS unavailable for: ${failedAirports.join(", ")}`);
+      } else {
         setAtisError("");
-        setAtisLastUpdated(Date.now());
-        setNextAtisRefreshAt(Date.now() + ATIS_REFRESH_MS);
-      } catch (error) {
-        if (!active) {
-          return;
-        }
-        setAtisError(error?.message || "Failed to load one or more D-ATIS feeds.");
-        setNextAtisRefreshAt(Date.now() + ATIS_REFRESH_MS);
       }
     };
 
@@ -1046,6 +851,16 @@ export default function RouteValidatorPage({ routeData }) {
     return map;
   }, [routeData.routes]);
 
+  const lookupRaw = lookupInput.trim().toUpperCase().replace(/^\./, "").replace(/\s/g, "");
+  const lookupDep = normalizeAirport(lookupRaw.slice(0, 4));
+  const lookupArr = normalizeAirport(lookupRaw.slice(4, 8));
+  const lookupRules = useMemo(() => {
+    if (!lookupDep || !lookupArr) {
+      return null;
+    }
+    return routeMap.get(`${lookupDep}-${lookupArr}`) || [];
+  }, [routeMap, lookupDep, lookupArr]);
+
   const validations = useMemo(() => {
     if (!controlledAirport) {
       return [];
@@ -1054,9 +869,6 @@ export default function RouteValidatorPage({ routeData }) {
     const filteredPilots = pilots.filter((pilot) => {
       const flightPlan = pilot.flight_plan;
       const departure = normalizeAirport(flightPlan?.departure);
-      const arrival = normalizeAirport(flightPlan?.arrival);
-      const route = flightPlan?.route || "";
-      const callsign = (pilot?.callsign || "").toUpperCase();
       const isPrefile = Boolean(pilot?.__isPrefile);
 
       if (departure !== controlledAirport) {
@@ -1064,19 +876,6 @@ export default function RouteValidatorPage({ routeData }) {
       }
 
       if (isPrefile && !showPrefiles) {
-        return false;
-      }
-
-      if (arrivalFilter && arrival !== arrivalFilter) {
-        return false;
-      }
-
-      if (!search) {
-        return showDeparted ? true : !isLikelyDeparted(pilot);
-      }
-
-      const combined = `${callsign} ${arrival} ${route}`.toUpperCase();
-      if (!combined.includes(search)) {
         return false;
       }
 
@@ -1277,13 +1076,11 @@ export default function RouteValidatorPage({ routeData }) {
 
     return rows;
   }, [
-    arrivalFilter,
     callsignSortDir,
     controlledAirport,
     flowsByAirport,
     pilots,
     routeMap,
-    search,
     statusSortDir,
     showDeparted,
     showPrefiles,
@@ -1329,32 +1126,11 @@ export default function RouteValidatorPage({ routeData }) {
 
             <div className="mt-5 flex flex-wrap items-end gap-3">
               <AirportInput
-                airports={routeData.airports || []}
-                compact
                 id="controlled-airport"
                 label="Controlled Field"
                 onChange={setControlledAirportInput}
                 value={controlledAirportInput}
               />
-              <AirportInput
-                airports={routeData.airports || []}
-                compact
-                id="arrival-filter"
-                label="Arrival Filter"
-                onChange={setArrivalFilterInput}
-                value={arrivalFilterInput}
-              />
-              <label className="min-w-[16rem] flex-1 space-y-1" htmlFor="route-search">
-                <span className="text-muted text-xs uppercase tracking-[0.16em]">Search</span>
-                <input
-                  className="search w-full"
-                  id="route-search"
-                  onChange={(event) => setSearchInput(event.target.value)}
-                  placeholder="Callsign, route token, or airport"
-                  type="search"
-                  value={searchInput}
-                />
-              </label>
             </div>
 
             <div className="mt-3 flex flex-wrap gap-2">
@@ -1411,6 +1187,147 @@ export default function RouteValidatorPage({ routeData }) {
               </div>
             </div>
         </header>
+
+        <div
+          className={`fixed inset-y-0 right-0 z-50 flex w-[22rem] flex-col border-l transition-transform duration-300 ease-in-out border-default bg-surface shadow-2xl ${lookupOpen ? "translate-x-0" : "translate-x-full"}`}
+          aria-hidden={!lookupOpen}
+        >
+          <button
+            className="border-default bg-surface-soft text-accent absolute top-1/2 -left-7 -translate-y-1/2 rounded-l-lg border border-r-0 px-1.5 py-3 shadow-lg transition-colors hover:brightness-110"
+            onClick={() => setLookupOpen(!lookupOpen)}
+            type="button"
+            aria-label="Toggle route lookup"
+          >
+            <span className="block text-[10px] font-semibold uppercase tracking-[0.14em]" style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>
+              Route Lookup
+            </span>
+          </button>
+          <div className="border-default flex shrink-0 items-center justify-between border-b px-5 py-4">
+            <h2 className="text-main font-semibold">Route Lookup</h2>
+            <button
+              className="text-muted hover:text-main text-xl leading-none"
+              onClick={() => setLookupOpen(false)}
+              type="button"
+              aria-label="Close route lookup"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto px-5 py-4">
+          <div>
+            <label className="space-y-1 block" htmlFor="lookup-input">
+              <span className="text-muted text-xs uppercase tracking-[0.16em]">Airport Pair</span>
+              <input
+                className="search w-full font-mono"
+                id="lookup-input"
+                onChange={(e) => setLookupInput(e.target.value)}
+                placeholder=".KIAHKDFW"
+                spellCheck={false}
+                type="search"
+                value={lookupInput}
+              />
+            </label>
+          </div>
+          {lookupRules !== null && (
+            <div className="mt-4">
+              <div className="mb-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <p className="text-accent text-xs font-semibold uppercase tracking-[0.2em]">
+                  {lookupDep} to {lookupArr} Routing
+                </p>
+                {(() => {
+                  const allTags = lookupRules.flatMap((rule) =>
+                    rule.variants.flatMap((v) => extractFlowTagsFromVariantLabel(v.label))
+                  );
+                  const seen = new Set();
+                  const unique = allTags.filter((t) => {
+                    if (seen.has(t.airport)) return false;
+                    seen.add(t.airport);
+                    return true;
+                  });
+                  if (unique.length === 0) return null;
+                  return (
+                    <span className="text-muted flex flex-wrap gap-x-3 text-[11px]">
+                      {unique.map((t) => {
+                        const flow = flowsByAirport[t.airport]?.flow || "Unknown";
+                        return (
+                          <span key={t.airport} className="inline-flex items-center gap-1">
+                            <span
+                              className={`inline-block h-1.5 w-1.5 rounded-full ${flow === "Unknown" ? "bg-[color-mix(in_srgb,currentColor_30%,transparent)]" : "bg-emerald-500"}`}
+                              aria-hidden="true"
+                            />
+                            {t.airport.replace(/^K/, "")} {flow === "Unknown" ? "flow unknown" : `${flow} flow`}
+                          </span>
+                        );
+                      })}
+                    </span>
+                  );
+                })()}
+              </div>
+              {lookupRules.length === 0 ? (
+                <p className="text-muted text-sm">No preferred routes on file for this pair.</p>
+              ) : (
+                <div className="space-y-2">
+                  {lookupRules.flatMap((rule) =>
+                    rule.variants.map((variant, i) => {
+                      const conflict = variantHasFlowConflict(variant.label, flowsByAirport);
+                      const tags = extractFlowTagsFromVariantLabel(variant.label);
+                      const flowKnown = tags.length > 0 && tags.every(
+                        (t) => (flowsByAirport[t.airport]?.flow || "Unknown") !== "Unknown"
+                      );
+                      const constraint = parseAltitudeConstraint(variant);
+                      const copyKey = `lookup-${rule.alias}-${i}`;
+
+                      let flowDotClass = "bg-emerald-500";
+                      if (tags.length > 0 && flowKnown) {
+                        flowDotClass = conflict ? "bg-amber-500" : "bg-emerald-500";
+                      } else if (tags.length > 0 && !flowKnown) {
+                        flowDotClass = "bg-[color-mix(in_srgb,currentColor_30%,transparent)]";
+                      }
+
+                      const altLabel = constraint ? [
+                        constraint.minFeet !== null ? `Min ${constraint.minFeet >= 18000 ? `FL${constraint.minFeet / 100}` : `${constraint.minFeet / 1000}k`}` : null,
+                        constraint.maxFeet !== null ? `Max ${constraint.maxFeet >= 18000 ? `FL${constraint.maxFeet / 100}` : `${constraint.maxFeet / 1000}k`}` : null,
+                      ].filter(Boolean).join(" · ") : null;
+
+                      return (
+                        <div
+                          key={copyKey}
+                          className={`rounded-lg border px-3 py-2 ${conflict ? "border-default opacity-40" : "border-default bg-surface-soft"}`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-1.5">
+                              <span
+                                className={`h-1.5 w-1.5 shrink-0 rounded-full ${flowDotClass}`}
+                                aria-hidden="true"
+                              />
+                              <span className="text-muted text-[10px] font-semibold uppercase tracking-[0.12em]">
+                                {variant.label || rule.alias.toUpperCase()}
+                              </span>
+                              {altLabel && (
+                                <span className="text-muted text-[10px]">· {altLabel}</span>
+                              )}
+                            </div>
+                            <button
+                              className="button-secondary shrink-0 px-1.5 py-0.5 text-[9px] uppercase tracking-[0.08em]"
+                              onClick={() => copyRoute(copyKey, variant.route)}
+                              type="button"
+                            >
+                              {copiedRouteKey === copyKey ? "COPIED" : "COPY"}
+                            </button>
+                          </div>
+                          <div className="mt-0.5 pl-3 font-mono text-sm">
+                            {variant.route}
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          </div>
+        </div>
 
         <section className="panel">
           <div className="overflow-x-auto">
@@ -1471,7 +1388,9 @@ export default function RouteValidatorPage({ routeData }) {
                 {validations.length === 0 ? (
                   <tr>
                     <td className="text-muted" colSpan={8}>
-                      No departures match the current filters.
+                      {fetchError
+                        ? "Traffic feed unavailable. Data will refresh automatically."
+                        : "No departures match the current filters."}
                     </td>
                   </tr>
                 ) : (

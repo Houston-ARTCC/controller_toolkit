@@ -1,6 +1,6 @@
-# ZHU Controller Toolkit
+# Houston ARTCC Controller Toolkit
 
-Unified front-end shell for Houston ARTCC controller utilities.
+Unified launchpad for ZHU controller tools and references, deployed at [toolkit.houston.center](https://toolkit.houston.center/).
 
 Current tool launchers:
 - TFMS
@@ -66,7 +66,7 @@ Add a new object to `data/tools.json` with:
 - `url`
 - `liveUrl`
 - `category`
-- `status`
+- `devStatus` (`LIVE`, `PROTOTYPE`, or `REDESIGN PLANNED`)
 - `icon`
 - `tags` (optional)
 
@@ -93,9 +93,6 @@ node scripts/normalize-alias-ids.mjs
 Runtime data:
 - VATSIM feed: `https://data.vatsim.net/v3/vatsim-data.json` (60s refresh)
 - D-ATIS feeds (`KIAH`, `KHOU`, `KDFW`, `KDAL`, `KATL`) (30m refresh)
-
-Fallback:
-- Static traffic/prefile samples in `components/route-validator-page.js`
 
 Current statuses:
 - `CHECK ROUTE`
