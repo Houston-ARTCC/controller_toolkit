@@ -1,4 +1,5 @@
 import { Rajdhani, Source_Sans_3 } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const headingFont = Rajdhani({
@@ -20,20 +21,11 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  const themeInitScript = `
-    (() => {
-      const storedMode = localStorage.getItem("theme-mode") || "system";
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      const resolved = storedMode === "system" ? (prefersDark ? "dark" : "light") : storedMode;
-      document.documentElement.setAttribute("data-theme-mode", storedMode);
-      document.documentElement.setAttribute("data-theme", resolved);
-    })();
-  `;
 
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${headingFont.variable} ${bodyFont.variable} antialiased`}>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <Script src="/theme-init.js" strategy="beforeInteractive" />
         {children}
       </body>
     </html>

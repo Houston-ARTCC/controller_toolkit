@@ -163,6 +163,7 @@ function getSpecialtyChipStyle(specialty) {
   };
 }
 
+
 function applyTraconExclusionToProjections(projections, allTraconPolygons) {
   if (!Array.isArray(projections) || projections.length === 0 || !Array.isArray(allTraconPolygons) || allTraconPolygons.length === 0) {
     return projections || [];
@@ -732,6 +733,12 @@ export default function TfmsViewerPage() {
   const [specialtyLogActive, setSpecialtyLogActive] = useState(false);
   const [specialtyLogEntries, setSpecialtyLogEntries] = useState([]);
   const specialtyLogColumnsRef = useRef([]);
+  const [eventMode, setEventMode] = useState(false);
+  useEffect(() => {
+    try {
+      if (localStorage.getItem("tfms-event-mode") === "true") setEventMode(true);
+    } catch {}
+  }, []);
   const eventSplitTickerTokenRef = useRef(0);
   const airportQueueTrackerRef = useRef({});
   const previousAirportQueueByIcaoRef = useRef({});
@@ -742,6 +749,46 @@ export default function TfmsViewerPage() {
     () => Object.values(traconVolumeIndex.byId || {}).flat(),
     [traconVolumeIndex],
   );
+  const i90EventData = useMemo(() => {
+    const i90Polygons = traconVolumeIndex.byId?.["I90"] || [];
+    const empty = { now: 0, p10: 0, p20: 0, p30: 0 };
+    if (!i90Polygons.length) return { kiah: empty, khou: empty, total: empty, pipeline: [] };
+    const KIAH = new Set(["KIAH", "IAH"]);
+    const KHOU = new Set(["KHOU", "HOU"]);
+    let kiahNow = 0, kiahP10 = 0, kiahP20 = 0, kiahP30 = 0;
+    let khouNow = 0, khouP10 = 0, khouP20 = 0, khouP30 = 0;
+    let totalNow = 0, totalP10 = 0, totalP20 = 0, totalP30 = 0;
+    const pipeline = [];
+    for (const flight of mapFlights || []) {
+      const arr = String(flight.arrival || "").toUpperCase();
+      const isKiah = KIAH.has(arr);
+      const isKhou = KHOU.has(arr);
+      const nowIn  = isInTraconVolume(Number(flight.latitude), Number(flight.longitude), i90Polygons, Number(flight.altitude));
+      const p10In  = isInTraconVolume(Number(flight.proj10Latitude), Number(flight.proj10Longitude), i90Polygons, Number(flight.proj10Altitude));
+      const p20In  = isInTraconVolume(Number(flight.proj20Latitude), Number(flight.proj20Longitude), i90Polygons, Number(flight.proj20Altitude));
+      const p30In  = isInTraconVolume(Number(flight.proj30Latitude), Number(flight.proj30Longitude), i90Polygons, Number(flight.proj30Altitude));
+      if (nowIn)  { totalNow++;  if (isKiah) kiahNow++;  if (isKhou) khouNow++;  }
+      if (p10In)  { totalP10++;  if (isKiah) kiahP10++;  if (isKhou) khouP10++;  }
+      if (p20In)  { totalP20++;  if (isKiah) kiahP20++;  if (isKhou) khouP20++;  }
+      if (p30In)  { totalP30++;  if (isKiah) kiahP30++;  if (isKhou) khouP30++;  }
+      if (!nowIn && (p10In || p20In || p30In) && (isKiah || isKhou)) {
+        pipeline.push({
+          callsign: flight.callsign,
+          arrival: arr,
+          specialty: flight.specialty,
+          altitude: flight.altitude,
+          eta: p10In ? "+10" : p20In ? "+20" : "+30",
+        });
+      }
+    }
+    const etaOrder = { "+10": 0, "+20": 1, "+30": 2 };
+    return {
+      kiah:  { now: kiahNow,  p10: kiahP10,  p20: kiahP20,  p30: kiahP30  },
+      khou:  { now: khouNow,  p10: khouP10,  p20: khouP20,  p30: khouP30  },
+      total: { now: totalNow, p10: totalP10, p20: totalP20, p30: totalP30 },
+      pipeline: pipeline.sort((a, b) => (etaOrder[a.eta] ?? 3) - (etaOrder[b.eta] ?? 3)),
+    };
+  }, [mapFlights, traconVolumeIndex]);
   const eventSplits = useMemo(() => normalizeEventSplitConfig(eventSplitsData), []);
   const queueBoxes = useMemo(() => {
     const raw = Array.isArray(airportQueueBoxes?.airports) ? airportQueueBoxes.airports : [];
@@ -1634,6 +1681,17 @@ export default function TfmsViewerPage() {
               <ThemeSwitcher />
               <div className="flex items-center gap-2">
                 <button
+                  className={`button-secondary text-sm ${eventMode ? "!border-amber-500/60 !bg-amber-500/15 !text-amber-400 hover:!bg-amber-500/25" : ""}`}
+                  onClick={() => setEventMode((prev) => {
+                    const next = !prev;
+                    try { localStorage.setItem("tfms-event-mode", String(next)); } catch {}
+                    return next;
+                  })}
+                  type="button"
+                >
+                  {eventMode ? "Event Mode ON" : "Event Mode"}
+                </button>
+                <button
                   className="button-secondary text-sm"
                   onClick={() => {
                     setIsProjectionInfoOpen(false);
@@ -1777,44 +1835,138 @@ export default function TfmsViewerPage() {
             </div>
           </article>
 
-          <article className="panel tfms-compact-card">
-            <h2 className="font-heading text-main text-2xl">Online Positions</h2>
-            <div className="mt-3 overflow-x-auto">
-              <table className="tfms-table tfms-compact-table min-w-full">
-                <thead>
-                  <tr>
-                    <th>Sector</th>
-                    <th>Name</th>
-                    <th>CID</th>
-                    <th>Online</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {enrouteDisplay.length === 0 ? (
+          {eventMode ? (() => {
+            const i90Card = traconCoreCards.find((c) => c.id === "I90") || { id: "I90", staffed: false, aircraftCount: 0, arrivalsCount: 0, departuresCount: 0, overflightsCount: 0, queueAirports: [] };
+            return (
+            <article className="panel">
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-3">
+                  <h2 className="font-heading text-main text-2xl">I90 Event Focus</h2>
+                  <span className={`tfms-core-status-pill ${i90Card.staffed ? "tfms-core-status-pill-online" : "tfms-core-status-pill-offline"}`}>
+                    APP {i90Card.staffed ? "Online" : "Offline"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-muted text-xs tabular-nums">
+                    {i90Card.aircraftCount} total
+                  </span>
+                  <span className="border-amber-500/40 bg-amber-500/10 text-amber-400 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.16em]">
+                    Event Mode
+                  </span>
+                </div>
+              </div>
+
+              {/* ARR / DEP / OVR hero grid */}
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                {[
+                  { type: "arrival",    label: "Arrivals",    value: i90Card.arrivalsCount    },
+                  { type: "departure",  label: "Departures",  value: i90Card.departuresCount  },
+                  { type: "overflight", label: "Overflights", value: i90Card.overflightsCount },
+                ].map(({ type, label, value }) => (
+                  <div key={label} className="border-default bg-surface-soft flex flex-col items-center gap-2 rounded-xl border p-4">
+                    <span className="tfms-tracon-core-metric-icon opacity-60"><TraconFlowIcon type={type} /></span>
+                    <span className="font-heading text-main text-5xl font-bold tabular-nums leading-none">{value}</span>
+                    <span className="text-muted text-xs uppercase tracking-[0.16em]">{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* KIAH / KHOU airport cards */}
+              {i90Card.queueAirports.length > 0 && (
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  {i90Card.queueAirports.map((airport) => (
+                    <div className="tfms-tracon-airport-card-lg" key={airport.icao}>
+                      <div className="tfms-tracon-airport-card-header">
+                        <p className="tfms-tracon-airport-card-title">{airport.label}</p>
+                        <span className={`tfms-core-status-pill ${airport.towerOnline ? "tfms-core-status-pill-online" : "tfms-core-status-pill-offline"}`}>
+                          TWR {airport.towerOnline ? "Online" : "Offline"}
+                        </span>
+                      </div>
+                      <div className="tfms-tracon-core-stat-row">
+                        <span>Queue</span>
+                        <span className="text-main text-4xl font-bold tabular-nums leading-none">{airport.count}</span>
+                      </div>
+                      <div className="tfms-tracon-core-stat-row">
+                        <span>Avg</span>
+                        <span className="text-main font-semibold">{formatQueueMinutes(airport.avgMinutes)}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Pipeline */}
+              {i90EventData.pipeline.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-muted text-xs font-semibold uppercase tracking-[0.16em]">Pipeline → I90</p>
+                  <div className="mt-2 overflow-x-auto">
+                    <table className="tfms-table tfms-compact-table min-w-full">
+                      <thead>
+                        <tr>
+                          <th>Callsign</th>
+                          <th>Dest</th>
+                          <th>Sector</th>
+                          <th>Alt</th>
+                          <th>ETA</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {i90EventData.pipeline.map((f) => (
+                          <tr key={f.callsign}>
+                            <td className="font-mono font-semibold">{f.callsign}</td>
+                            <td>{f.arrival}</td>
+                            <td>{f.specialty || "—"}</td>
+                            <td>{f.altitude ? `FL${String(Math.round(f.altitude / 100)).padStart(3, "0")}` : "—"}</td>
+                            <td className="text-muted">{f.eta}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </article>
+            );
+          })() : (
+            <article className="panel tfms-compact-card">
+              <h2 className="font-heading text-main text-2xl">Online Positions</h2>
+              <div className="mt-3 overflow-x-auto">
+                <table className="tfms-table tfms-compact-table min-w-full">
+                  <thead>
                     <tr>
-                      <td className="text-muted" colSpan={4}>
-                        No enroute controllers online.
-                      </td>
+                      <th>Sector</th>
+                      <th>Name</th>
+                      <th>CID</th>
+                      <th>Online</th>
                     </tr>
-                  ) : (
-                    enrouteDisplay.map((controller) => (
-                      <tr key={`${controller.callsign}-${controller.cid}`}>
-                        <td>
-                          {formatEnroutePosition(controller.callsign)}
-                          {isReliefSignOn(controller.callsign) ? (
-                            <span className="text-muted ml-1 text-[10px] align-super">(relief)</span>
-                          ) : null}
+                  </thead>
+                  <tbody>
+                    {enrouteDisplay.length === 0 ? (
+                      <tr>
+                        <td className="text-muted" colSpan={4}>
+                          No enroute controllers online.
                         </td>
-                        <td>{controller.name || "-"}</td>
-                        <td>{controller.cid || "-"}</td>
-                        <td>{formatOnlineDuration(controller.logon_time)}</td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </article>
+                    ) : (
+                      enrouteDisplay.map((controller) => (
+                        <tr key={`${controller.callsign}-${controller.cid}`}>
+                          <td>
+                            {formatEnroutePosition(controller.callsign)}
+                            {isReliefSignOn(controller.callsign) ? (
+                              <span className="text-muted ml-1 text-[10px] align-super">(relief)</span>
+                            ) : null}
+                          </td>
+                          <td>{controller.name || "-"}</td>
+                          <td>{controller.cid || "-"}</td>
+                          <td>{formatOnlineDuration(controller.logon_time)}</td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          )}
         </section>
 
         {SHOW_EVENT_SPLIT_SUMMARY ? (

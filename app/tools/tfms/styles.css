@@ -323,6 +323,33 @@
   letter-spacing: 0.03em;
 }
 
+.tfms-tracon-airport-card-lg {
+  border: 1px solid color-mix(in srgb, var(--surface-border) 94%, black);
+  border-radius: 0.75rem;
+  padding: 1rem 1.1rem;
+  background: color-mix(in srgb, var(--surface-soft) 66%, transparent);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.tfms-tracon-airport-card-lg .tfms-tracon-airport-card-header {
+  margin-bottom: 0.75rem;
+}
+
+.tfms-tracon-airport-card-lg .tfms-tracon-airport-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.tfms-tracon-airport-card-lg .tfms-tracon-core-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+
 .tfms-tracon-airport-stack {
   display: grid;
   gap: 0.32rem;
