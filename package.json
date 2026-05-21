@@ -4,13 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/convert-alias-markup.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "alias:convert": "node scripts/convert-alias-markup.mjs",
     "adar:convert": "node scripts/convert-adar-xml.mjs",
     "routing:convert": "node scripts/convert-zhu-routing-aliases.mjs"
   },
