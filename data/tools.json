@@ -16,25 +16,9 @@
     ]
   },
   {
-    "id": "alias-guide",
-    "name": "Alias Guide",
-    "description": "Searchable command reference for CRC aliases and controller workflows.",
-    "url": "https://github.com/Houston-ARTCC/alias-guide",
-    "liveUrl": "/tools/alias-guide",
-    "category": "Reference",
-    "devStatus": "PROTOTYPE",
-    "icon": "book",
-    "tags": [
-      "Alias",
-      "CRC",
-      "Reference",
-      "Training"
-    ]
-  },
-  {
     "id": "adar-routes",
     "name": "ADAR Routes",
-    "description": "Search adapted departure and arrival route strings between airport pairs.",
+    "description": "Search adapted departure and arrival route strings between airport pairs. Not intended for use during active controlling.",
     "url": "https://github.com/Houston-ARTCC/controller_toolkit",
     "liveUrl": "/tools/adar-routes",
     "category": "Reference",
@@ -77,6 +61,22 @@
       "Enroute",
       "Planning",
       "Maps"
+    ]
+  },
+  {
+    "id": "alias-guide",
+    "name": "Alias Guide",
+    "description": "Searchable command reference for CRC aliases and controller workflows.",
+    "url": "https://github.com/Houston-ARTCC/alias-guide",
+    "liveUrl": "https://alias.houston.center/",
+    "category": "Reference",
+    "devStatus": "REDESIGN PLANNED",
+    "icon": "book",
+    "tags": [
+      "Alias",
+      "CRC",
+      "Reference",
+      "Training"
     ]
   },
   {

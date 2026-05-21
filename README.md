@@ -2,13 +2,19 @@
 
 Unified launchpad for ZHU controller tools and references, deployed at [toolkit.houston.center](https://toolkit.houston.center/).
 
-Current tool launchers:
-- TFMS
-- Alias Guide
+## Tool Groups
+
+**Controller Reference**
+- Alias Guide (external: alias.houston.center)
+- RVM Reference (external: rvm.houston.center)
 - Route Validator
-- ADAR Routes
+
+**Staff Tools**
+- TFMS
 - Split Map
-- RVM Reference
+
+**Experimental**
+- ADAR Routes
 
 ## Getting Started
 
@@ -24,17 +30,9 @@ Then open [http://localhost:3000](http://localhost:3000).
 
 - `data/tools.json`: tool registry used by the homepage launcher
 - `app/page.js`: homepage entry
-- `components/toolkit-home.js`: tool launcher grid UI
-- `app/tools/[id]/page.js`: per-tool detail pages
+- `components/toolkit-home.js`: tool launcher grid UI (grouped by `GROUPS` constant)
 - `app/globals.css`: shared theme + base UI styles
 - `reference/`: source/reference docs used during development (not runtime)
-
-### Alias Guide
-
-- `app/tools/alias-guide/page.js`
-- `components/alias-guide-page.js`
-- `data/alias-guide.json`
-- `scripts/convert-alias-markup.mjs`
 
 ### Route Validator
 
@@ -64,29 +62,13 @@ Add a new object to `data/tools.json` with:
 - `name`
 - `description`
 - `url`
-- `liveUrl`
+- `liveUrl` (internal path like `/tools/foo` or external URL)
 - `category`
 - `devStatus` (`LIVE`, `PROTOTYPE`, or `REDESIGN PLANNED`)
 - `icon`
 - `tags` (optional)
 
-The homepage and `/tools/[id]` route will automatically include it.
-
-## Alias Data Workflow
-
-Alias Guide renders from `data/alias-guide.json`.
-
-If you update legacy markup, regenerate JSON:
-
-```bash
-npm run alias:convert
-```
-
-Optional ID normalization pass:
-
-```bash
-node scripts/normalize-alias-ids.mjs
-```
+Then add the `id` to the appropriate group in the `GROUPS` array in `components/toolkit-home.js`. Tools not listed in `GROUPS` are not shown on the homepage.
 
 ## Route Validator Notes
 
@@ -119,13 +101,14 @@ Default sort priority:
 
 Current cards/modules:
 - Specialty Summary (`Now`, `+10`, `+20`, `+30`)
-- Online Positions (ZHU enroute controllers)
+- Online Positions (ZHU enroute controllers) — hidden when Event Mode is active
 - TRACON Summary
   - Core cards: `I90`, `AUS`, `SAT`, `MSY`
   - Core metrics: total airborne, arrivals, departures, overflights
   - Airport subcards: queue count, average queue minutes, `TWR Online/Offline`
   - Remaining TRACONs: online shown as compact cards; offline consolidated into `TRACONs Offline (N)` hover list
 - Enhanced Projection Map
+- **Event Mode** toggle: replaces Online Positions with an I90 Event Focus card showing ARR/DEP/OVR hero stats and KIAH/KHOU queue cards. State persisted in `localStorage` (`tfms-event-mode`).
 
 Event split summary:
 - Logic/data retained
@@ -163,7 +146,8 @@ npm run build
 ## Theme Modes
 
 The app supports `Light`, `Dark`, and `System` mode via `Auto / Sun / Moon` controls in tool/page headers.  
-Preference is saved in `localStorage` (`theme-mode`).
+Preference is saved in `localStorage` (`theme-mode`).  
+Theme is applied synchronously via an inline script in `<head>` (not `next/script`) to prevent flash on load — required for static export.
 
 ## GitHub Pages Deployment
 
@@ -183,8 +167,10 @@ Pushes to `main` then build/deploy automatically.
 
 ## PowerShell Notes
 
-If `npm`/`npx` PowerShell script execution is blocked, use:
-- `npm.cmd run dev`
-- `npm.cmd run lint`
-- `npm.cmd run test -- --run`
-- `npm.cmd run build`
+If `npm`/`npx` PowerShell script execution is blocked, run once in an elevated PowerShell:
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Then `npm run dev` etc. will work normally.

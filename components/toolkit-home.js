@@ -6,11 +6,17 @@ import ThemeSwitcher from "@/components/theme-switcher";
 import NavDropdown from "@/components/nav-dropdown";
 
 const DEV_STATUS_STYLES = {
-  "LIVE":             { chip: "bg-emerald-500/15 text-emerald-400 ring-emerald-500/25", color: "#10b981" },
-  "PROTOTYPE":        { chip: "bg-violet-500/15 text-violet-400 ring-violet-500/25",   color: "#8b5cf6" },
-  "REDESIGN PLANNED": { chip: "bg-orange-500/15 text-orange-400 ring-orange-500/25",   color: "#f97316" },
+  "LIVE":             { chip: "bg-emerald-500/20 text-emerald-400 ring-emerald-500/35", color: "#10b981" },
+  "PROTOTYPE":        { chip: "bg-violet-500/20 text-violet-400 ring-violet-500/35",   color: "#8b5cf6" },
+  "REDESIGN PLANNED": { chip: "bg-orange-500/20 text-orange-400 ring-orange-500/35",   color: "#f97316" },
 };
 const DEFAULT_STATUS = { chip: "bg-slate-500/15 text-slate-400 ring-slate-500/25", color: "#64748b" };
+
+const GROUPS = [
+  { label: "Controller Reference", ids: ["alias-guide", "rvm-list", "route-validator"] },
+  { label: "Staff Tools",          ids: ["tfms", "split-map"] },
+  { label: "Experimental",         ids: ["adar-routes"] },
+];
 
 function ToolCard({ tool }) {
   const isInternalTool = tool.liveUrl.startsWith("/");
@@ -43,27 +49,8 @@ function ToolCard({ tool }) {
   );
 }
 
-
 export default function ToolkitHome({ tools }) {
-  const orderedTools = useMemo(() => {
-    const preferredOrder = [
-      "alias-guide",
-      "rvm-list",
-      "route-validator",
-      "split-map",
-      "tfms",
-      "adar-routes",
-    ];
-    const orderIndex = new Map(preferredOrder.map((id, index) => [id, index]));
-    return [...tools].sort((a, b) => {
-      const aIndex = orderIndex.has(a.id) ? orderIndex.get(a.id) : Number.MAX_SAFE_INTEGER;
-      const bIndex = orderIndex.has(b.id) ? orderIndex.get(b.id) : Number.MAX_SAFE_INTEGER;
-      if (aIndex !== bIndex) {
-        return aIndex - bIndex;
-      }
-      return a.name.localeCompare(b.name);
-    });
-  }, [tools]);
+  const toolsById = useMemo(() => Object.fromEntries(tools.map((t) => [t.id, t])), [tools]);
 
   return (
     <main className="relative min-h-screen overflow-hidden px-6 py-8 md:px-10">
@@ -87,19 +74,24 @@ export default function ToolkitHome({ tools }) {
           </div>
         </header>
 
-        <section aria-live="polite">
-          {orderedTools.length === 0 ? (
-            <div className="card">
-              <p className="text-muted">No tools are currently configured.</p>
-            </div>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {orderedTools.map((tool) => (
-                <ToolCard key={tool.id} tool={tool} />
-              ))}
-            </div>
-          )}
-        </section>
+        <div className="space-y-8">
+          {GROUPS.map((group) => {
+            const groupTools = group.ids.map((id) => toolsById[id]).filter(Boolean);
+            if (groupTools.length === 0) return null;
+            return (
+              <section key={group.label}>
+                <h2 className="font-heading text-muted mb-3 text-sm font-semibold uppercase tracking-[0.2em]">
+                  {group.label}
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {groupTools.map((tool) => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+        </div>
       </div>
     </main>
   );
